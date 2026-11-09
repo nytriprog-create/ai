@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-<title>Мозгоштурм — мультиагентный ИИ</title>
-<meta name="description" content="Мозгоштурм — целая команда ИИ-агентов в одном приложении: исследователь, аналитик, программист, критик и редактор работают вместе. Подключай Claude, GPT, Gemini, DeepSeek, Llama или работай без лимитов прямо на своём устройстве.">
+<title>Swarmind.ai — твой личный ИИ</title>
+<meta name="description" content="Swarmind.ai — твой личный ИИ: чертежи и схемы, сайты, переводчик, сочинения, код и задачи. Подстраивается под тебя, три уровня ума. Бесплатно, на телефоне и ПК.">
 <meta name="theme-color" content="#0b0d12">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Мозгоштурм">
+<meta name="apple-mobile-web-app-title" content="Swarmind">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta property="og:title" content="Мозгоштурм — мультиагентный ИИ">
-<meta property="og:description" content="Не один ИИ, а целая команда. Бесплатно, в браузере, на телефоне и ПК.">
+<meta property="og:title" content="Swarmind.ai — твой личный ИИ">
+<meta property="og:description" content="Чертит, делает сайты, переводит, пишет сочинения и подстраивается под тебя. Бесплатно, на телефоне и ПК.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1218'/%3E%3Cpath d='M32 11 50 21.5v21L32 53 14 42.5v-21Z' fill='none' stroke='%23f5b301' stroke-width='4' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%23f5b301'/%3E%3C/svg%3E">
 <style>
 :root{--bg:#0b0d12;--panel:#12151d;--panel2:#181c26;--hover:#1f2431;--line:#272d3b;--text:#eaecf2;--muted:#8d95a9;--acc:#f5b301;--acc2:#ff8a00;--ink:#1a1300;--acc-soft:rgba(245,179,1,.13);--ok:#38cf8f;--err:#ff5f6d;--code:#0c0f15;--shadow:0 12px 40px rgba(0,0,0,.45);color-scheme:dark}
@@ -65,7 +65,7 @@ body.can-install .only-install{display:inline-flex!important}
 .l-brand svg{width:32px;height:32px}
 .l-links a{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 10px}
 .l-links a:hover{color:var(--text)}
-.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:44px;align-items:center;padding:72px 0 56px}
+.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:44px;align-items:center;padding:72px 16px 56px}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--acc);background:var(--acc-soft);padding:5px 12px;border-radius:999px;font-weight:600;margin-bottom:18px}
 .hero h1{font-size:clamp(36px,5.6vw,62px);line-height:1.04;margin:0 0 18px;letter-spacing:-.025em}
 .grad{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -74,6 +74,15 @@ body.can-install .only-install{display:inline-flex!important}
 .micro{margin-top:16px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px}
 .demo{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
 .demo-q{background:var(--panel2);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:10px 14px;font-size:14px;margin:0 0 14px auto;width:fit-content;max-width:90%}
+.d-lv{display:flex;gap:4px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px;width:fit-content;margin-bottom:14px;font-size:13px}
+.d-lv span{padding:5px 10px;border-radius:9px;color:var(--muted)}
+.d-lv span.on{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.22)}
+.d-ans{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--code)}
+.d-h{display:flex;justify-content:space-between;padding:6px 12px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
+.d-plan{display:block;width:100%;height:auto}
+.d-draw path{stroke-dasharray:900;stroke-dashoffset:900;animation:draw 8s infinite}
+@keyframes draw{0%{stroke-dashoffset:900}35%,100%{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.d-draw path{animation:none;stroke-dashoffset:0}}
 .flow{display:flex;flex-direction:column;gap:8px}
 .flow .par{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ag{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px;opacity:.3;animation:act 8s infinite both}
@@ -115,7 +124,7 @@ body.can-install .only-install{display:inline-flex!important}
 .final-cta{text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:44px 20px}
 .final-cta .cta{justify-content:center}
 footer{padding:30px 0 40px;color:var(--muted);font-size:13px;text-align:center}
-@media (max-width:880px){.hero{grid-template-columns:1fr;padding:40px 0 30px;gap:30px}.inst{grid-template-columns:1fr}.inst-tabs{flex-direction:row;overflow-x:auto}.inst-tabs button{white-space:nowrap}.tiers{grid-template-columns:1fr}.l-links{display:none}}
+@media (max-width:880px){.hero{grid-template-columns:1fr;padding:40px 16px 30px;gap:30px}.inst{grid-template-columns:1fr}.inst-tabs{flex-direction:row;overflow-x:auto}.inst-tabs button{white-space:nowrap}.tiers{grid-template-columns:1fr}.l-links{display:none}}
 @media (max-width:520px){.flow .par{grid-template-columns:1fr}.l-nav .btn.ghost{display:none}.cta .btn{flex:1 1 100%}}
 
 /* ---------- ПРИЛОЖЕНИЕ ---------- */
@@ -139,6 +148,7 @@ footer{padding:30px 0 40px;color:var(--muted);font-size:13px;text-align:center}
 main{flex:1;display:flex;flex-direction:column;min-width:0}
 .top{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line);padding-top:max(9px,env(safe-area-inset-top))}
 .menu-btn{display:none!important}
+.dotai{font-style:normal;background:linear-gradient(90deg,#f5a524,#ff6a3d);-webkit-background-clip:text;background-clip:text;color:transparent}
 .modes{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
 .modes button{border:0;background:none;padding:6px 12px;border-radius:9px;cursor:pointer;color:var(--muted);font-size:14px;white-space:nowrap}
 .modes button.on{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.22)}
@@ -229,6 +239,23 @@ details[open]>summary .chev{transform:rotate(180deg)}
 .md .code-h{display:flex;justify-content:space-between;align-items:center;padding:5px 8px 5px 12px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
 .md .code-h button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px;padding:3px 6px;border-radius:6px}
 .md .code-h button:hover{background:var(--hover);color:var(--text)}
+.md .code-h .cbs{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
+.md .code-h button.pri{background:var(--acc);color:#1b1300;font-weight:600}
+.md .code-h button.pri:hover{background:var(--acc);filter:brightness(1.08);color:#1b1300}
+.md .viz{background:#fff;padding:10px;display:flex;justify-content:center;border-bottom:1px solid var(--line)}
+.md .viz img{max-width:100%;max-height:70vh;height:auto}
+.md .viz .muted{color:#666;font-size:13px;padding:8px}
+.md .code.collapsed pre{display:none}
+.md .code.collapsed .viz{border-bottom:0}
+.mem-list{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
+.mem-i{display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px 4px 4px 10px;font-size:14px}
+.mem-i span{flex:1}
+#site-ov{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);display:flex;flex-direction:column;padding:12px;gap:8px}
+#site-ov .site-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--panel);color:var(--text);border-radius:12px;padding:8px 10px}
+#site-ov .sp{flex:1}
+#site-ov .site-wrap{flex:1;display:flex;justify-content:center;min-height:0}
+#site-ov iframe{width:100%;height:100%;border:0;border-radius:12px;background:#fff;transition:width .2s}
+#site-ov.mobile iframe{width:390px;max-width:100%}
 .md pre{margin:0;padding:12px 14px;overflow:auto}
 .md pre code{border:0;background:none;padding:0;font-size:13px;white-space:pre}
 .md blockquote{margin:.7em 0;padding:.2em 1em;border-left:3px solid var(--acc);color:var(--muted)}
@@ -294,57 +321,79 @@ details.card>summary::-webkit-details-marker{display:none}
 <!-- ======================= САЙТ (ЛЕНДИНГ) ======================= -->
 <div id="landing" hidden>
   <nav class="l-nav"><div class="wrap">
-    <a class="l-brand" href="#about"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><path class="t" d="M32 32V9M32 32l20-11.5M32 32l20 11.5M32 32v23M32 32 12 43.5M32 32 12 20.5"/><path class="s" d="M32 9 52 20.5v23L32 55 12 43.5v-23Z"/><g class="f"><circle cx="32" cy="32" r="6.5"/><circle cx="32" cy="9" r="4.3"/><circle cx="52" cy="20.5" r="4.3"/><circle cx="52" cy="43.5" r="4.3"/><circle cx="32" cy="55" r="4.3"/><circle cx="12" cy="43.5" r="4.3"/><circle cx="12" cy="20.5" r="4.3"/></g></svg>Мозгоштурм</a>
-    <span class="l-links"><a href="#features">Возможности</a><a href="#install">Установка</a><a href="#limits">Без лимитов</a><a href="#faq">Вопросы</a></span>
+    <a class="l-brand" href="#about"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><path class="t" d="M32 32V9M32 32l20-11.5M32 32l20 11.5M32 32v23M32 32 12 43.5M32 32 12 20.5"/><path class="s" d="M32 9 52 20.5v23L32 55 12 43.5v-23Z"/><g class="f"><circle cx="32" cy="32" r="6.5"/><circle cx="32" cy="9" r="4.3"/><circle cx="52" cy="20.5" r="4.3"/><circle cx="52" cy="43.5" r="4.3"/><circle cx="32" cy="55" r="4.3"/><circle cx="12" cy="43.5" r="4.3"/><circle cx="12" cy="20.5" r="4.3"/></g></svg><span>Swarmind<i class="dotai">.ai</i></span></a>
+    <span class="l-links"><a href="#features">Навыки</a><a href="#levels">Уровни ума</a><a href="#install">Установка</a><a href="#faq">Вопросы</a></span>
     <button class="btn ghost" type="button" data-install>Установить</button>
-    <a class="btn primary" href="#app">Открыть Мозгоштурм</a>
+    <a class="btn primary" href="#app">Открыть Swarmind</a>
   </div></nav>
 
   <header class="wrap hero">
     <div>
-      <div class="eyebrow">🐝 Мультиагентный ИИ</div>
-      <h1>Не один ИИ,<br>а <span class="grad">целая команда</span></h1>
-      <p class="lead">Твой вопрос разбирают сразу несколько агентов: Исследователь, Аналитик, Программист, Креативщик и Практик работают параллельно, Критик ищет ошибки, Редактор собирает лучший ответ. Подключи любые ИИ — Claude, GPT, Gemini, DeepSeek, Llama — или работай бесплатно и без лимитов прямо на своём устройстве.</p>
+      <div class="eyebrow">✨ Твой личный ИИ</div>
+      <h1>Один ИИ —<br><span class="grad">сотня навыков</span></h1>
+      <p class="lead">Swarmind чертит и рисует схемы, делает готовые сайты, переводит, пишет сочинения, решает задачи и пишет код. Он подстраивается под тебя и запоминает, что тебе важно. Три уровня ума — от мгновенного ответа до целой команды ИИ-агентов.</p>
       <div class="cta">
-        <a class="btn primary lg" href="#app">🚀 Открыть Мозгоштурм</a>
+        <a class="btn primary lg" href="#app">🚀 Открыть Swarmind</a>
         <button class="btn lg" type="button" data-install>⬇ Установить на телефон / ПК</button>
       </div>
-      <div class="micro"><span>✓ Бесплатно</span><span>✓ Без регистрации</span><span>✓ Android, iPhone, Windows, Mac</span><span>✓ Ключи и чаты — только у тебя</span></div>
+      <div class="micro"><span>✓ Бесплатно</span><span>✓ Подключение в один клик</span><span>✓ Android, iPhone, Windows, Mac</span><span>✓ Чаты — только у тебя</span></div>
     </div>
     <div class="demo" aria-hidden="true">
-      <div class="demo-q">Составь бизнес-план кофейни с расчётом окупаемости</div>
-      <div class="flow">
-        <div class="ag a1">🧭 <div><b>Координатор</b><small>делит задачу на части</small></div></div>
-        <div class="par">
-          <div class="ag a2">🔎 <b>Исследователь</b><small>рынок и цены</small></div>
-          <div class="ag a3">📊 <b>Аналитик</b><small>расчёт окупаемости</small></div>
-          <div class="ag a4">🛠️ <b>Практик</b><small>план запуска</small></div>
-        </div>
-        <div class="ag a5">🧐 <div><b>Критик</b><small>нашёл 2 ошибки в расчётах</small></div></div>
-        <div class="ag a6">✍️ <div><b>Редактор</b><small>собирает итоговый ответ</small></div></div>
+      <div class="d-lv"><span>⚡ Быстрый</span><span class="on">🧠 Средний</span><span>🚀 Максимум</span></div>
+      <div class="demo-q">Начерти план квартиры 40 м² с размерами</div>
+      <div class="d-ans">
+        <div class="d-h"><span>📐 Чертёж</span><span>⬇ PNG &nbsp;⬇ SVG</span></div>
+        <svg class="d-plan" viewBox="0 0 360 200"><rect width="360" height="200" fill="#fff"/>
+          <g fill="none" stroke="#111" stroke-width="5" class="d-draw"><path d="M30 30H330V170H30Z"/><path d="M190 30V95M190 125V170"/><path d="M30 110H120M150 110H190"/></g>
+          <path d="M190 95A30 30 0 0 1 220 125" fill="none" stroke="#888" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <g stroke="#2563eb" stroke-width="1.4"><path d="M30 186H330"/><path d="M30 181V191M330 181V191"/><path d="M345 30V170"/><path d="M340 30H350M340 170H350"/></g>
+          <g font-family="Arial" font-size="12" fill="#111"><text x="78" y="72">Комната</text><text x="82" y="88" fill="#555">22 м²</text><text x="236" y="96">Кухня</text><text x="240" y="112" fill="#555">12 м²</text><text x="62" y="146">Ванная 6 м²</text></g>
+          <g font-family="Arial" font-size="11" fill="#2563eb"><text x="165" y="182">8000</text><text transform="translate(358 115) rotate(-90)">5000</text></g>
+        </svg>
       </div>
-      <div class="demo-a"><b>Готово:</b> бизнес-план с таблицей затрат, прогнозом выручки и сроком окупаемости — проверенный командой.</div>
+      <div class="demo-a">🧠 <b>Запомнил:</b> ты готовишься к ОГЭ — буду объяснять проще и с примерами.</div>
     </div>
   </header>
 
   <section class="sec" id="features"><div class="wrap">
-    <h2>Умнее, чем любой ИИ в одиночку</h2>
-    <p class="sub">Один ИИ отвечает «с первой попытки». Мозгоштурм — думает командой: делит задачу, проверяет себя и исправляет ошибки до того, как ты их увидишь.</p>
+    <h2>Что умеет Swarmind</h2>
+    <p class="sub">Не просто отвечает текстом: рисует, верстает, переводит и пишет — и сразу показывает результат.</p>
     <div class="grid">
-      <div class="feat"><div class="i">🐝</div><h3>Команда агентов</h3><p>Координатор раздаёт подзадачи, специалисты работают одновременно, Критик проверяет, Редактор собирает итог.</p></div>
-      <div class="feat"><div class="i">⚖️</div><h3>Консилиум разных ИИ</h3><p>Claude, GPT, Gemini, DeepSeek и Llama отвечают независимо — Судья сравнивает и берёт лучшее от каждого.</p></div>
-      <div class="feat"><div class="i">♾️</div><h3>Без лимитов</h3><p>Встроенная модель прямо в браузере или Ollama на твоём ПК — бесплатно, без ключей и без ограничений.</p></div>
-      <div class="feat"><div class="i">🔌</div><h3>Любые нейросети</h3><p>OpenRouter, Claude, OpenAI, Gemini, Groq, DeepSeek, LM Studio и любой OpenAI-совместимый сервер.</p></div>
-      <div class="feat"><div class="i">🔁</div><h3>Автопереключение</h3><p>Один ИИ упёрся в лимит или не отвечает — Мозгоштурм сам продолжит на другом.</p></div>
-      <div class="feat"><div class="i">🛠️</div><h3>Свои агенты</h3><p>Меняй роли и инструкции, добавляй своих экспертов и назначай каждому свою нейросеть.</p></div>
-      <div class="feat"><div class="i">🎤</div><h3>Голос и файлы</h3><p>Говори голосом, прикрепляй документы и код — агенты разберут их вместе с вопросом.</p></div>
-      <div class="feat"><div class="i">🔒</div><h3>Приватно</h3><p>Нет серверов и регистрации. Ключи и переписка хранятся только на твоём устройстве.</p></div>
+      <div class="feat"><div class="i">📐</div><h3>Чертежи и рисунки</h3><p>Планы квартир с размерами, детали, графики функций, логотипы и иконки. Скачивай в PNG или SVG.</p></div>
+      <div class="feat"><div class="i">🗺️</div><h3>Схемы</h3><p>Блок-схемы, алгоритмы, этапы проекта, карты мыслей — нарисованные, а не описанные словами.</p></div>
+      <div class="feat"><div class="i">🌐</div><h3>Сайты за минуту</h3><p>Попроси лендинг, портфолио или игру — нажми «▶ Открыть сайт» и сразу смотри. Готовый index.html — в один клик.</p></div>
+      <div class="feat"><div class="i">🌍</div><h3>Переводчик</h3><p>Переводит смысл, а не слова: с вариантами, транскрипцией и примерами. Любые языки.</p></div>
+      <div class="feat"><div class="i">✍️</div><h3>Сочинения и тексты</h3><p>Эссе, рефераты, доклады по критериям ОГЭ и ЕГЭ, стихи, поздравления, посты и письма.</p></div>
+      <div class="feat"><div class="i">💻</div><h3>Код и задачи</h3><p>Рабочий код на любом языке, боты, поиск ошибок. Математика, физика и химия — пошагово, с проверкой.</p></div>
+      <div class="feat"><div class="i">🧠</div><h3>Подстраивается под тебя</h3><p>Понимает твой стиль, запоминает, кто ты и что тебе важно, и объясняет так, как удобно именно тебе.</p></div>
+      <div class="feat"><div class="i">🎤</div><h3>Голос</h3><p>Говори вместо того, чтобы печатать, — Swarmind ответит и прочитает ответ вслух.</p></div>
+    </div>
+  </div></section>
+
+  <section class="sec" id="levels"><div class="wrap">
+    <h2>Три уровня ума</h2>
+    <p class="sub">Выбирай скорость или глубину — переключается одной кнопкой прямо в чате.</p>
+    <div class="tiers">
+      <div class="tier"><h3>⚡ Быстрый</h3><div class="who">Ответ за секунды</div><ul><li>Короткий ответ по делу</li><li>Сам берёт самую быструю нейросеть</li><li>Для простых вопросов и перевода</li></ul></div>
+      <div class="tier"><h3>🧠 Средний</h3><div class="who">Лучший баланс · по умолчанию</div><ul><li>Сначала продумывает, потом проверяет</li><li>Чертежи, сайты, сочинения, код</li><li>Один запрос — экономит лимиты</li></ul></div>
+      <div class="tier"><h3>🚀 Максимум</h3><div class="who">Команда ИИ-агентов</div><ul><li>Координатор делит задачу на части</li><li>Специалисты работают одновременно</li><li>Для сложных проектов и исследований</li></ul></div>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <h2>Под капотом</h2>
+    <p class="sub">Swarmind думает с помощью лучших нейросетей мира — и сам выбирает, какую использовать.</p>
+    <div class="grid">
+      <div class="feat"><div class="i">🔌</div><h3>Любые нейросети</h3><p>Claude, GPT, Gemini, Groq, DeepSeek, OpenRouter, Ollama, LM Studio и встроенный ИИ прямо в браузере.</p></div>
+      <div class="feat"><div class="i">🔁</div><h3>Автопереключение</h3><p>Одна нейросеть упёрлась в лимит или молчит — Swarmind сам продолжит на другой.</p></div>
+      <div class="feat"><div class="i">⚖️</div><h3>Консилиум</h3><p>Несколько разных ИИ отвечают независимо, Судья собирает из них лучший ответ.</p></div>
+      <div class="feat"><div class="i">🔒</div><h3>Приватно</h3><p>Нет своего сервера и регистрации. Ключи, чаты и память — только на твоём устройстве.</p></div>
     </div>
   </div></section>
 
   <section class="sec" id="install"><div class="wrap">
     <h2>Установка на телефон и компьютер</h2>
-    <p class="sub">Мозгоштурм ставится как обычное приложение: иконка на главном экране, своё окно, без магазина приложений. Выбери своё устройство:</p>
+    <p class="sub">Swarmind ставится как обычное приложение: иконка на главном экране, своё окно, без магазина приложений. Выбери своё устройство:</p>
     <div class="inst">
       <div class="inst-tabs" id="inst-tabs">
         <button type="button" data-plat="android">🤖 Android</button>
@@ -353,51 +402,53 @@ details.card>summary::-webkit-details-marker{display:none}
         <button type="button" data-plat="file">📄 Скачать файлом</button>
       </div>
       <div>
-        <div class="inst-panel" data-panel="android"><h3>Android</h3><ol><li>Открой этот сайт в <b>Chrome</b>.</li><li>Нажми кнопку ниже — или меню <span class="kbd">⋮</span> → <b>«Установить приложение»</b> (или «Добавить на главный экран»).</li><li>Иконка Мозгоштурма появится на рабочем столе.</li></ol><div class="row wrap"><button class="btn primary" type="button" data-install>⬇ Установить</button><span class="dl-extra"></span></div></div>
+        <div class="inst-panel" data-panel="android"><h3>Android</h3><ol><li>Открой этот сайт в <b>Chrome</b>.</li><li>Нажми кнопку ниже — или меню <span class="kbd">⋮</span> → <b>«Установить приложение»</b> (или «Добавить на главный экран»).</li><li>Иконка Swarmind появится на рабочем столе.</li></ol><div class="row wrap"><button class="btn primary" type="button" data-install>⬇ Установить</button><span class="dl-extra"></span></div></div>
         <div class="inst-panel" data-panel="ios" hidden><h3>iPhone и iPad</h3><ol><li>Открой этот сайт в <b>Safari</b>.</li><li>Нажми <b>«Поделиться»</b> <span class="kbd">⬆</span> внизу экрана.</li><li>Выбери <b>«На экран «Домой»»</b> → <b>«Добавить»</b>.</li></ol><p class="hint">На iPhone встроенная модель работает только на новых устройствах — лучше подключить ИИ по ключу или Ollama.</p></div>
-        <div class="inst-panel" data-panel="desktop" hidden><h3>Windows, Mac, Linux</h3><ol><li>Открой сайт в <b>Chrome</b> или <b>Edge</b>.</li><li>Нажми кнопку ниже — или значок установки <span class="kbd">⊕</span> справа в адресной строке (или меню <span class="kbd">⋮</span> → «Установить Мозгоштурм»).</li><li>Мозгоштурм появится в меню «Пуск» / Launchpad и будет открываться в своём окне.</li></ol><div class="row wrap"><button class="btn primary" type="button" data-install>⬇ Установить</button><span class="dl-extra"></span></div></div>
-        <div class="inst-panel" data-panel="file" hidden><h3>Одним файлом</h3><p>Весь Мозгоштурм — это один файл. Скачай его и открывай двойным кликом в любом браузере, даже без этого сайта.</p><div class="row wrap"><a class="btn primary" id="dl-self" href="#" download="Mozgoshturm.html">⬇ Скачать Mozgoshturm.html</a></div><p class="hint">Для установки «как приложение» с иконкой — используй вкладки выше.</p></div>
+        <div class="inst-panel" data-panel="desktop" hidden><h3>Windows, Mac, Linux</h3><ol><li>Открой сайт в <b>Chrome</b> или <b>Edge</b>.</li><li>Нажми кнопку ниже — или значок установки <span class="kbd">⊕</span> справа в адресной строке (или меню <span class="kbd">⋮</span> → «Установить Swarmind»).</li><li>Swarmind появится в меню «Пуск» / Launchpad и будет открываться в своём окне.</li></ol><div class="row wrap"><button class="btn primary" type="button" data-install>⬇ Установить</button><span class="dl-extra"></span></div></div>
+        <div class="inst-panel" data-panel="file" hidden><h3>Одним файлом</h3><p>Весь Swarmind — это один файл. Скачай его и открывай двойным кликом в любом браузере, даже без этого сайта.</p><div class="row wrap"><a class="btn primary" id="dl-self" href="#" download="Swarmind.html">⬇ Скачать Swarmind.html</a></div><p class="hint">Для установки «как приложение» с иконкой — используй вкладки выше.</p></div>
       </div>
     </div>
   </div></section>
 
   <section class="sec" id="limits"><div class="wrap">
     <h2>«Без лимитов» — честно</h2>
-    <p class="sub">Бесплатного безлимитного доступа к самым умным облачным моделям не бывает ни у кого. Но Мозгоштурм даёт три пути — и умеет их совмещать:</p>
+    <p class="sub">Бесплатного безлимитного доступа к самым умным облачным моделям не бывает ни у кого. Но Swarmind даёт три пути — и умеет их совмещать:</p>
     <div class="tiers">
       <div class="tier"><h3>♾️ Без лимитов</h3><div class="who">Встроенный ИИ · Ollama · LM Studio</div><ul><li>Модель работает на твоём устройстве</li><li>Бесплатно, без ключей, без ограничений</li><li>Работает даже без интернета</li><li>Скорость и ум зависят от мощности ПК/телефона</li></ul></div>
-      <div class="tier"><h3>🆓 Бесплатно с лимитами</h3><div class="who">OpenRouter :free · Groq · Gemini</div><ul><li>Мощные облачные модели</li><li>Бесплатно, но есть лимит запросов в день/минуту</li><li>Подключи несколько — Мозгоштурм переключается, когда один упёрся в лимит</li></ul></div>
-      <div class="tier"><h3>💎 Максимум ума</h3><div class="who">Claude · GPT · Gemini Pro · DeepSeek</div><ul><li>Самые умные модели по своему ключу</li><li>Оплата только за использование</li><li>Можно дать их только Редактору и Критику, а остальным — бесплатные</li></ul></div>
+      <div class="tier"><h3>🆓 Бесплатно с лимитами</h3><div class="who">OpenRouter :free · Groq · Gemini</div><ul><li>Мощные облачные модели</li><li>Бесплатно, но есть лимит запросов в день/минуту</li><li>Подключи несколько — Swarmind переключается, когда один упёрся в лимит</li></ul></div>
+      <div class="tier"><h3>💎 Максимум ума</h3><div class="who">Claude · GPT · Gemini Pro · DeepSeek</div><ul><li>Самые умные модели по своему ключу</li><li>Оплата только за использование</li><li>Лучше всего рисуют чертежи и делают сайты</li></ul></div>
     </div>
   </div></section>
 
   <section class="sec faq" id="faq"><div class="wrap">
     <h2>Вопросы</h2>
-    <details><summary>Нужна регистрация или подписка?</summary><p>Нет. Мозгоштурм бесплатный и работает сразу. Платишь только сервисам ИИ, если сам подключишь платный ключ.</p></details>
-    <details><summary>Куда уходят мои ключи и переписка?</summary><p>Никуда, кроме выбранного тобой ИИ. У Мозгоштурма нет своего сервера: ключи, настройки и чаты хранятся только в браузере на твоём устройстве.</p></details>
-    <details><summary>Почему в режиме «Команда» ответ дольше?</summary><p>Над ответом работают 4–7 агентов: планируют, пишут черновики, проверяют и исправляют. Это дольше, но ответ заметно точнее. Для быстрых вопросов есть режим «Соло».</p></details>
+    <details><summary>Нужна регистрация или подписка?</summary><p>Нет. Swarmind бесплатный. Нажми «⚡ В один клик — бесплатно», войди через Google на OpenRouter — и бесплатная нейросеть подключится сама. Платишь только сервисам ИИ, если сам подключишь платный ключ.</p></details>
+    <details><summary>Как он запоминает меня?</summary><p>Когда ты рассказываешь о себе (имя, возраст, учёба, интересы), Swarmind сохраняет это и показывает «🧠 Запомнил». Всё запомненное видно в Настройках → «👤 Обо мне» — там же можно удалить любой факт или выключить память. Хранится только на твоём устройстве.</p></details>
+    <details><summary>Как сделать сайт и выложить его?</summary><p>Попроси, например: «Сделай сайт-портфолио фотографа». Нажми «▶ Открыть сайт», чтобы посмотреть, и «⬇ .html», чтобы скачать. Чтобы сайт открывался по ссылке — загрузи файл как index.html на GitHub Pages.</p></details>
+    <details><summary>Куда уходят мои ключи и переписка?</summary><p>Никуда, кроме выбранного тобой ИИ. У Swarmind нет своего сервера: ключи, настройки и чаты хранятся только в браузере на твоём устройстве.</p></details>
+    <details><summary>Чем отличаются ⚡ Быстрый, 🧠 Средний и 🚀 Максимум?</summary><p><b>⚡ Быстрый</b> — один короткий ответ от самой быстрой подключённой нейросети (быстрее всего с бесплатным ключом Groq). <b>🧠 Средний</b> — один продуманный и проверенный ответ, лучший баланс скорости и ума. <b>🚀 Максимум</b> — над ответом работает команда агентов: планируют, пишут черновики и собирают итог. Это дольше, но для сложных задач заметно умнее.</p></details>
     <details><summary>Работает без интернета?</summary><p>Да — со встроенным ИИ (после первой загрузки модели) или с Ollama/LM Studio на компьютере.</p></details>
-    <details><summary>Можно поменять агентов?</summary><p>Да. В настройках можно менять инструкции, отключать агентов, добавлять своих и назначать каждому отдельную нейросеть.</p></details>
+    <details><summary>Можно поменять агентов уровня «Максимум»?</summary><p>Да. В Настройках → «🐝 Агенты» можно менять инструкции, отключать агентов, добавлять своих и назначать каждому отдельную нейросеть.</p></details>
   </div></section>
 
   <section class="sec"><div class="wrap final-cta">
-    <h2>Собери свою команду ИИ</h2>
-    <p class="sub" style="margin:0 auto 24px">Открой Мозгоштурм прямо сейчас — подключить первый ИИ займёт минуту.</p>
-    <div class="cta"><a class="btn primary lg" href="#app">🚀 Открыть Мозгоштурм</a><button class="btn lg" type="button" data-install>⬇ Установить</button></div>
+    <h2>Попробуй Swarmind прямо сейчас</h2>
+    <p class="sub" style="margin:0 auto 24px">Начерти, переведи, напиши, собери сайт — подключение занимает один клик.</p>
+    <div class="cta"><a class="btn primary lg" href="#app">🚀 Открыть Swarmind</a><button class="btn lg" type="button" data-install>⬇ Установить</button></div>
   </div></section>
-  <footer class="wrap">Мозгоштурм — мультиагентный ИИ · работает в браузере, данные хранятся только на твоём устройстве</footer>
+  <footer class="wrap">Swarmind.ai — твой личный ИИ · работает в браузере, данные хранятся только на твоём устройстве</footer>
 </div>
 
 <!-- ======================= ПРИЛОЖЕНИЕ ======================= -->
 <div id="app" class="app" hidden>
   <aside class="side" id="side">
-    <div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><path class="t" d="M32 32V9M32 32l20-11.5M32 32l20 11.5M32 32v23M32 32 12 43.5M32 32 12 20.5"/><path class="s" d="M32 9 52 20.5v23L32 55 12 43.5v-23Z"/><g class="f"><circle cx="32" cy="32" r="6.5"/><circle cx="32" cy="9" r="4.3"/><circle cx="52" cy="20.5" r="4.3"/><circle cx="52" cy="43.5" r="4.3"/><circle cx="32" cy="55" r="4.3"/><circle cx="12" cy="43.5" r="4.3"/><circle cx="12" cy="20.5" r="4.3"/></g></svg><div>Мозгоштурм<small>мультиагентный ИИ</small></div></div>
+    <div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><path class="t" d="M32 32V9M32 32l20-11.5M32 32l20 11.5M32 32v23M32 32 12 43.5M32 32 12 20.5"/><path class="s" d="M32 9 52 20.5v23L32 55 12 43.5v-23Z"/><g class="f"><circle cx="32" cy="32" r="6.5"/><circle cx="32" cy="9" r="4.3"/><circle cx="52" cy="20.5" r="4.3"/><circle cx="52" cy="43.5" r="4.3"/><circle cx="32" cy="55" r="4.3"/><circle cx="12" cy="43.5" r="4.3"/><circle cx="12" cy="20.5" r="4.3"/></g></svg><div>Swarmind<i class="dotai">.ai</i><small>твой личный ИИ</small></div></div>
     <button class="btn primary" id="new-chat" type="button">＋ Новый чат</button>
     <div class="chats" id="chats"></div>
     <div class="side-foot">
       <button class="btn ghost left only-install" type="button" data-install>⬇ Установить приложение</button>
       <button class="btn ghost left" type="button" data-open-settings>⚙️ Настройки и ИИ</button>
-      <a class="btn ghost left" href="#about">ℹ️ О Мозгоштурме и установка</a>
+      <a class="btn ghost left" href="#about">ℹ️ О Swarmind и установка</a>
     </div>
   </aside>
   <div class="backdrop" id="backdrop"></div>
@@ -414,7 +465,7 @@ details.card>summary::-webkit-details-marker{display:none}
     <div class="composer-wrap">
       <form class="composer" id="composer" autocomplete="off">
         <div class="files" id="files" hidden></div>
-        <textarea id="input" rows="1" placeholder="Спроси что угодно — команда разберётся…"></textarea>
+        <textarea id="input" rows="1" placeholder="Спроси что угодно…"></textarea>
         <div class="row">
           <button class="btn icon-btn ghost" id="attach" type="button" title="Прикрепить текстовый файл" aria-label="Прикрепить файл"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m20.5 11.5-8.4 8.4a5 5 0 0 1-7.1-7.1L13.5 4.3a3.4 3.4 0 0 1 4.8 4.8L9.8 17.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg></button>
           <button class="btn icon-btn ghost" id="mic" type="button" title="Голосовой ввод" aria-label="Голосовой ввод"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
@@ -430,17 +481,17 @@ details.card>summary::-webkit-details-marker{display:none}
 <!-- ======================= НАСТРОЙКИ ======================= -->
 <dialog id="dlg"><div class="dlg">
   <div class="dlg-h"><b>Настройки</b><button class="btn icon-btn ghost" type="button" id="dlg-close" aria-label="Закрыть">✕</button></div>
-  <div class="tabs"><button type="button" data-tab="brains">🧠 Нейросети</button><button type="button" data-tab="agents">🐝 Агенты</button><button type="button" data-tab="modes">⚙️ Режимы</button><button type="button" data-tab="data">🔒 Данные</button></div>
+  <div class="tabs"><button type="button" data-tab="brains">🧠 Нейросети</button><button type="button" data-tab="me">👤 Обо мне</button><button type="button" data-tab="agents">🐝 Агенты</button><button type="button" data-tab="modes">⚙️ Режимы</button><button type="button" data-tab="data">🔒 Данные</button></div>
   <div class="dlg-b" id="dlg-body"></div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
 </div></dialog>
 <div id="toasts"></div>
-<noscript><p style="padding:20px">Для работы Мозгоштурма нужен включённый JavaScript.</p></noscript>
+<noscript><p style="padding:20px">Для работы Swarmind нужен включённый JavaScript.</p></noscript>
 
 <script>
 'use strict';
 /* =====================================================================
-   РОЙ — мультиагентный ИИ. Весь сайт и приложение в одном файле.
+   Swarmind.ai — личный ИИ. Весь сайт и приложение в одном файле.
    ===================================================================== */
 const VERSION = '1.0';
 const $ = (s, r = document) => r.querySelector(s);
@@ -449,7 +500,19 @@ const ESC = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const clip = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n) + '\n…[обрезано]' : s; };
-const stripThink = s => String(s || '').replace(/<think>[\s\S]*?<\/think>\s*/g, '').replace(/<think>[\s\S]*$/, '');
+const stripThink = s => String(s || '').replace(/<think>[\s\S]*?<\/think>\s*/g, '').replace(/<think>[\s\S]*$/, '')
+  .replace(/\s*<remember>[\s\S]*?<\/remember>/g, '').replace(/\s*<rem(e(m(b(e(r(>[\s\S]*)?)?)?)?)?)?$/, '');
+/* бот сам запоминает факты о пользователе */
+function learn(raw) {
+  if (S.learn === false) return;
+  const found = [...String(raw || '').matchAll(/<remember>([\s\S]*?)<\/remember>/g)].map(m => m[1].replace(/\s+/g, ' ').trim()).filter(x => x && x.length < 300);
+  if (!found.length) return;
+  S.memory = Array.isArray(S.memory) ? S.memory : [];
+  const added = found.filter(f => !S.memory.some(x => x.toLowerCase() === f.toLowerCase()));
+  if (!added.length) return;
+  S.memory.push(...added); if (S.memory.length > 60) S.memory = S.memory.slice(-60);
+  saveSettings(); toast('🧠 Запомнил: ' + added.join('; '), 3200);
+}
 const todayStr = () => new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const store = {
@@ -486,10 +549,10 @@ const PRESETS = [
 const P = Object.fromEntries(PRESETS.map(p => [p.id, p]));
 
 /* Пошаговые инструкции и рекомендуемые модели для каждого подключения */
-const K_WARN = '🔒 Ключ — как пароль: никому не показывай и не выкладывай в интернет. В Мозгоштурме он хранится только на твоём устройстве.';
+const K_WARN = '🔒 Ключ — как пароль: никому не показывай и не выкладывай в интернет. В Swarmind он хранится только на твоём устройстве.';
 const GUIDES = {
   webllm: {title:'Как включить встроенный ИИ (ключ не нужен)', steps:[
-    'Открой Мозгоштурм в <b>Chrome</b> или <b>Edge</b> (на телефоне — Chrome для Android).',
+    'Открой Swarmind в <b>Chrome</b> или <b>Edge</b> (на телефоне — Chrome для Android).',
     'Выбери модель ниже (или оставь «Авто» — подберу под устройство).',
     'Нажми <b>«Скачать и проверить»</b>. Модель скачается один раз (1–5 ГБ) — лучше по Wi-Fi.',
     'Готово: дальше работает бесплатно, без лимитов и даже без интернета.'],
@@ -544,7 +607,7 @@ const GUIDES = {
     ['openai/gpt-oss-120b', 'Самая умная на Groq и очень быстрая.', 'рекомендую'],
     ['llama-3.3-70b-versatile', 'Универсальная, хорошо пишет тексты.', ''],
     ['qwen/qwen3-32b', 'Хорошо рассуждает и знает русский.', ''],
-    ['llama-3.1-8b-instant', 'Молниеносная, но простая — для Соло и простых вопросов.', 'лёгкая']]},
+    ['llama-3.1-8b-instant', 'Молниеносная, но простая — для уровня «Быстрый» и простых вопросов.', 'лёгкая']]},
   gemini: {title:'Как получить бесплатный ключ Google Gemini', steps:[
     'Зайди на <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> и войди в Google-аккаунт.',
     'Нажми <b>Create API key</b> (если спросит проект — выбери любой или создай новый).',
@@ -602,7 +665,7 @@ function guideHtml(p, c) {
 const CORE = ['planner', 'critic', 'editor'];
 const DEFAULT_AGENTS = [
   {id:'planner', emoji:'🧭', name:'Координатор', core:true, desc:'разбивает задачу и раздаёт подзадачи',
-   prompt:'Ты — Координатор команды ИИ-агентов «Мозгоштурм». Ты не отвечаешь на вопрос сам: ты продумываешь, как команде решить его лучше всего — разбиваешь запрос на части и даёшь каждому нужному специалисту чёткую, конкретную подзадачу.'},
+   prompt:'Ты — Координатор команды ИИ-агентов «Swarmind». Ты не отвечаешь на вопрос сам: ты продумываешь, как команде решить его лучше всего — разбиваешь запрос на части и даёшь каждому нужному специалисту чёткую, конкретную подзадачу.'},
   {id:'researcher', emoji:'🔎', name:'Исследователь', desc:'факты, определения, контекст, данные, примеры',
    prompt:'Ты — Исследователь. Собери всё важное по теме: факты, определения, контекст, цифры, примеры, разные точки зрения. Чётко отделяй проверенные факты от предположений. Если чего-то не знаешь или данные могли устареть — прямо скажи об этом.'},
   {id:'analyst', emoji:'📊', name:'Аналитик', desc:'логика, расчёты, сравнение вариантов, плюсы и минусы',
@@ -618,24 +681,140 @@ const DEFAULT_AGENTS = [
   {id:'editor', emoji:'✍️', name:'Редактор', core:true, desc:'собирает итоговый ответ',
    prompt:'Ты — Редактор. Из черновиков специалистов и замечаний Критика собери один итоговый ответ пользователю — лучше, чем каждый черновик по отдельности: точный, полный, без воды, с понятной структурой. Исправь всё, на что указал Критик. Если черновики противоречат друг другу — разберись, кто прав. Пиши как единый ассистент: не упоминай команду, агентов, черновики и критику.'},
 ];
-const SOLO_PROMPT = 'Ты — Мозгоштурм, умный и полезный ИИ-ассистент. Отвечай точно, по делу и понятно. Сложные вопросы разбирай пошагово.';
+/* Собственный бот: характер и правила мышления */
+const BOT_CORE = `Ты — Swarmind (Swarmind.ai), собственный ИИ-ассистент. Ты работаешь поверх подключённых нейросетей, но ты — отдельная личность со своим характером.
+ХАРАКТЕР: умный и эрудированный, честный, тёплый, уверенный, без воды и канцелярита. Лёгкий юмор — когда уместно, но не в серьёзных темах. Любопытный: любишь разбираться до сути. Говоришь как сильный эксперт-друг, а не как справочное бюро. Не льстишь и не поддакиваешь: если человек ошибается — мягко, но прямо скажи и объясни почему.
+КАК ДУМАЕШЬ: 1) пойми, что человеку на самом деле нужно (цель за вопросом); 2) если запрос неоднозначен и от этого сильно зависит ответ — уточни 1 коротким вопросом, иначе сделай разумное допущение и назови его; 3) реши задачу; 4) проверь себя: факты, логику, расчёты, код, соответствие запросу; 5) дай готовый результат, а не план, как его получить.
+ПОДСТРОЙКА ПОД ЧЕЛОВЕКА: зеркаль его стиль и уровень. Пишет коротко и просто — отвечай проще и короче; пишет сленгом — можно живее; школьник — объясняй на примерах из жизни; специалист — говори на его языке без азов. Учитывай всё, что знаешь о нём (раздел «О пользователе»). Пишет с ошибками или в неправильной раскладке (например «ghbdtn» = «привет») — пойми смысл и не делай замечаний.
+ЧЕСТНОСТЬ: никогда не выдумывай факты, цитаты, ссылки, цифры и источники. Свежие события после даты твоего обучения можешь не знать — так и скажи. Медицина, право, финансы — давай полезную информацию, но советуй специалиста, когда это реально важно.
+ЧТО ТЫ УМЕЕШЬ ПОКАЗЫВАТЬ (интерфейс рисует это сам):
+- Чертёж, рисунок, схема с размерами, логотип, иконка, график → блок \`\`\`svg с полным кодом <svg xmlns="http://www.w3.org/2000/svg" viewBox="...">…</svg>. Пользователь увидит картинку и сможет скачать PNG/SVG.
+- Блок-схема, алгоритм, структура, связи, этапы, диаграмма Ганта, mind-map, последовательность действий → блок \`\`\`mermaid (синтаксис Mermaid; подписи в узлах бери в кавычки: A["Текст"]).
+- Сайт, лендинг, страница, игра в браузере, калькулятор → ОДИН блок \`\`\`html с полным файлом (<!DOCTYPE html>…, CSS и JS внутри). Пользователь нажмёт «▶ Открыть сайт» и сразу увидит результат.
+- Таблицы — Markdown-таблицы. Формулы — обычным текстом (x² + 2x = 0), без LaTeX.`;
+
+/* Библиотека навыков: подключаются только нужные — так бот умный, но не медленный */
+const SKILLS = [
+  {id:'draw', re:/черт[её]ж|чертит|начерт|схем|диаграм|нарису|рисун|рисова|эскиз|svg|логотип|иконк|план (дома|квартир|комнат|участ)|планировк|график функц|блок.?схем|mind.?map|интеллект.?карт|инфограф/i, p:`НАВЫК «ЧЕРТЕЖИ И СХЕМЫ»:
+- Технический чертёж/план/деталь → \`\`\`svg. viewBox с запасом по краям (поля ≥ 40), белый фон <rect width="100%" height="100%" fill="#fff"/>. Контуры stroke="#111" stroke-width="2", скрытые линии stroke-dasharray="6 4", осевые — штрихпунктир "12 4 2 4" тонким цветом.
+- Размеры: выносные линии + размерная линия со стрелками (<marker> со стрелкой), число над линией, font-family="Arial" font-size 14–16. Указывай единицы (мм/м). Соблюдай масштаб: пропорции на рисунке = реальные пропорции. Добавь подпись-штамп: название, масштаб, единицы.
+- План квартиры/дома: стены толщиной 10–20 px, проёмы дверей с дугой открывания, окна двойной линией, подписи комнат с площадью (м²).
+- Логотип/иконка/рисунок: чистая векторная графика, продуманная палитра (2–4 цвета), градиенты через <defs>, никаких внешних картинок и шрифтов.
+- График функции: оси со стрелками и делениями, сетка светло-серым, кривая <polyline>/<path> по ВЫЧИСЛЕННЫМ точкам (посчитай 20–60 точек), подпиши оси и ключевые точки.
+- Процессы, алгоритмы, структуры, связи, этапы → \`\`\`mermaid (flowchart TD/LR, sequenceDiagram, gantt, mindmap, classDiagram, erDiagram, pie). Узлы с кириллицей — в кавычках.
+- SVG должен быть валидным XML: закрывай все теги, экранируй & как &amp;. Не пиши JS внутри SVG. После картинки — 1–3 строки пояснения.`},
+  {id:'web', re:/сайт|лендинг|landing|веб.?стран|html|css|вёрстк|верстк|страниц[ауы] для|портфолио|интернет.?магазин|браузерн(ая|ую) игр|сделай игру|web.?app|веб.?прилож/i, p:`НАВЫК «САЙТЫ»:
+- Выдавай ОДИН самодостаточный файл в блоке \`\`\`html: <!DOCTYPE html>, <meta charset="utf-8">, <meta name="viewport" content="width=device-width,initial-scale=1">, <title>, весь CSS в <style>, весь JS в <script>. Без сборщиков и npm. Шрифты — только Google Fonts или системные, картинки — эмодзи, CSS-градиенты, inline SVG или https://picsum.photos.
+- Дизайн уровня студии: современная типографика (clamp() для заголовков), продуманная палитра через CSS-переменные, много воздуха, сетка grid/flex, скругления, мягкие тени, hover-эффекты, плавная прокрутка, адаптив под телефон (проверь ширину 375px), тёмная тема если уместно.
+- Структура лендинга: шапка с меню → hero (сильный заголовок, подзаголовок, кнопка) → преимущества → как это работает → отзывы/кейсы → цены/FAQ → призыв к действию → подвал. Пиши настоящие продающие тексты под тему, не «Lorem ipsum».
+- JS — рабочий: меню-бургер, формы с проверкой, модалки, анимации появления (IntersectionObserver), игры с canvas. Никаких заглушек «здесь будет код».
+- После кода: 2–4 строки — что внутри и как выложить (например, GitHub Pages: загрузить как index.html).`},
+  {id:'translate', re:/перев[её]д|переведи|translat|по.?английск|на английск|на русск|на немецк|на испанск|на француз|на китайск|на японск|на корейск|на итальянск|на турецк|на украинск|на казахск|на арабск|как будет .{1,40} на|что значит .{1,40} на|in english|in russian/i, p:`НАВЫК «ПЕРЕВОДЧИК»:
+- Переводи смысл, а не слова: естественно, как написал бы носитель. Сохраняй стиль (официальный, разговорный, сленг), тон, форматирование, имена и числа.
+- Идиомы и шутки — передавай аналогом в языке перевода. Термины — общепринятые в отрасли.
+- Формат: сначала сам перевод (без кавычек и вступлений). Если есть варианты/тонкости — коротко ниже: «Варианты:», «Примечание:». Для одного слова/фразы — дай 2–3 варианта с оттенками смысла, транскрипцию для англ. и пример в предложении.
+- Если язык не указан: русский текст → на английский, иной язык → на русский.
+- Длинные тексты переводи целиком, ничего не пропуская.`},
+  {id:'essay', re:/сочинени|эссе|реферат|доклад|изложени|рецензи|отзыв о (книг|фильм)|аргумент|сочини|курсов(ая|ую)|дипломн|статью|статья|пост для|текст про|напиши текст|поздравлени|письмо|речь|резюме для/i, p:`НАВЫК «СОЧИНЕНИЯ И ТЕКСТЫ»:
+- Сочинение/эссе: заголовок → вступление (тезис, зацепка) → основная часть (2–4 аргумента; каждый: мысль → пример из литературы/истории/жизни → микровывод) → заключение (ответ на вопрос, вывод, личная позиция). Логические связки между абзацами.
+- ОГЭ/ЕГЭ: соблюдай критерии — формулировка проблемы, комментарий с 2 примерами-иллюстрациями и связью между ними, позиция автора, своё мнение с обоснованием, объём (ЕГЭ ≥ 150 слов, обычно 250–350). Литературные примеры — только реальные произведения и персонажи, без выдумок.
+- Пиши живо и по-человечески, разнообразный синтаксис, без штампов «в наше время», «с давних времён». Учитывай возраст: для 5–7 класса — проще, для 10–11 и вуза — глубже.
+- Соблюдай заданный объём (слова/страницы), тему, стиль. Реферат/доклад: план, введение, главы, заключение, список литературы (только реально существующие источники; если не уверен — так и пометь).
+- Стихи: держи ритм (размер) и рифму, образы, а не набор рифм. Поздравления — тёплые и персональные.`},
+  {id:'code', re:/код|python|питон|javascript|\bjs\b|typescript|java\b|c\+\+|c#|php|golang|\bgo\b|rust|sql|бот[ауе]? |телеграм.?бот|скрипт|программ|функци[юя]|алгоритм|ошибк[аи] в|баг|error|exception|traceback|api\b|приложени|кнопк|база данных|regex|регуляр/i, p:`НАВЫК «ПРОГРАММИСТ»:
+- Пиши полный рабочий код, который запускается сразу: все импорты, без «…» и «здесь ваша логика». Современные версии языков и библиотек. Понятные имена, короткие комментарии в важных местах.
+- Перед кодом — 1–2 строки о подходе; после — как запустить (установка, команда) и что можно улучшить.
+- Отладка: найди причину, а не симптом; покажи исправленный фрагмент и объясни, почему падало.
+- Безопасность: ключи — в переменных окружения, SQL — параметризованный, ввод — проверяй.
+- Телеграм-бот: python-telegram-bot v21 (async) или aiogram 3. Веб — без лишних фреймворков, если не просили.`},
+  {id:'math', re:/реши|решени|посчита|вычисл|уравнени|неравенств|задач[ауи]|производн|интеграл|предел|матриц|вероятност|процент|геометр|треугольн|площад|объ[её]м|физик|химик|химич|формул[ау]|сколько будет|\d+\s*[-+*/^×÷]\s*\d+/i, p:`НАВЫК «МАТЕМАТИКА И ТОЧНЫЕ НАУКИ»:
+- Решай пошагово: Дано → Найти → Решение (каждый шаг с формулой и пояснением) → Ответ (жирным, с единицами измерения).
+- Все вычисления делай аккуратно и ПЕРЕПРОВЕРЯЙ (подставь ответ обратно, проверь размерность, оценку порядка величины). Для арифметики с большими числами считай по столбику в уме, не на глаз.
+- Физика/химия: переводи в СИ, пиши уравнения реакций с коэффициентами, проверяй баланс.
+- Школьнику объясняй так, чтобы он мог решить похожую задачу сам; если уместно — добавь короткий чертёж в \`\`\`svg.`},
+  {id:'teach', re:/объясни|что такое|как работает|почему|зачем|в ч[её]м разниц|чем отличается|расскажи про|расскажи о|кто так(ой|ая)|что значит|простыми словами|для чайник|научи|как устроен/i, p:`НАВЫК «УЧИТЕЛЬ»:
+- Начни с простого определения в 1–2 предложения, затем аналогия из жизни, затем как это устроено по шагам, затем пример, затем частые заблуждения. В конце — «Коротко:» в одну строку.
+- Уровень — под человека. Сложные термины объясняй сразу при первом упоминании.
+- Если тема с процессом или структурой — добавь схему \`\`\`mermaid.`},
+  {id:'biz', re:/бизнес|стартап|маркетинг|продаж|реклам|smm|контент.?план|бренд|монетиз|инвест|бюджет|окупаем|юнит.?эконом|стратег|конкурент|резюме|собеседован|ваканси|карьер|зарплат/i, p:`НАВЫК «БИЗНЕС И КАРЬЕРА»:
+- Конкретика вместо общих слов: цифры, расчёты (таблицей), сроки, шаги, примеры формулировок. Помечай допущения в расчётах.
+- Бизнес-план: идея и ЦА → рынок и конкуренты → продукт и цена → каналы привлечения → вложения (таблица) → ежемесячная экономика → точка безубыточности/окупаемость → риски и как их снизить → план первых 90 дней.
+- Резюме и сопроводительные: под конкретную вакансию, достижения в цифрах, сильные глаголы. Собеседование: частые вопросы + сильные ответы по STAR.`},
+  {id:'advice', re:/посоветуй|совет|что делать|как быть|помоги (мне )?(решить|выбрать|понять)|не знаю как|мне грустно|одиноко|тревож|стресс|депресс|поссорил|отношени|мотивац|прокрастин|лень|выгоран/i, p:`НАВЫК «СОВЕТЧИК»:
+- Сначала коротко покажи, что понял ситуацию и чувства человека (без пафоса). Потом — практичные варианты действий с плюсами/минусами и конкретный первый шаг.
+- Не морализируй и не читай лекций. Задай 1 уточняющий вопрос, если без него совет будет пальцем в небо.
+- Если есть признаки серьёзного кризиса или угрозы жизни — бережно, но ясно посоветуй обратиться к близким и на линию психологической помощи (в России: 8-800-2000-122 для детей и подростков, 112 — экстренно).`},
+  {id:'creative', re:/придумай|идеи|идею|сценари|рассказ|сказк|истори[юя] про|стих|песн|рэп|шутк|анекдот|название для|никнейм|слоган|персонаж|мир для|сюжет|квест|игру для/i, p:`НАВЫК «КРЕАТИВ»:
+- Предлагай неожиданные, но точные идеи, а не первые банальные. Если просят варианты — 5–10 разных по стилю, лучшие отметь ⭐.
+- Истории: яркий герой с целью, конфликт, нарастание, поворот, развязка; показывай, а не рассказывай; живые диалоги.
+- Названия/слоганы: коротко, звучно, легко запомнить; проверяй, что смысл не двусмысленный.`},
+  {id:'docs', re:/таблиц|excel|эксель|формул[аы] в|google.?sheets|ворд|word|презентац|слайд|pdf|договор|заявлени|служебн|акт |инструкци[юя] по/i, p:`НАВЫК «ДОКУМЕНТЫ И ТАБЛИЦЫ»:
+- Таблицы — Markdown; формулы Excel/Google Sheets — точные, с примером, в какую ячейку вставить (русская локаль: разделитель «;»).
+- Презентация: план слайдов — заголовок, 3–5 тезисов, что показать визуально, заметки докладчика.
+- Официальные документы: правильная структура (шапка, суть, подпись/дата), деловой стиль, поля для заполнения в [квадратных скобках].`},
+  {id:'health', re:/болит|болезн|симптом|лекарств|таблетк|врач|диагноз|давлени|температур|диет|похуд|калори|тренировк|спорт|питани|витамин|сон |не могу уснуть/i, p:`НАВЫК «ЗДОРОВЬЕ И СПОРТ»:
+- Давай понятную, основанную на доказательной медицине информацию: возможные причины, что можно сделать самому, когда срочно к врачу (красные флаги — отдельным списком).
+- Не ставь диагнозов и не назначай рецептурные препараты и дозировки; при тревожных симптомах — к врачу/103.
+- Тренировки и питание: конкретная программа (упражнения, подходы, повторы, отдых), расчёт калорий/БЖУ с формулой.`},
+];
+function skillsFor(q) {
+  const t = String(q || '').slice(0, 1500);
+  return SKILLS.filter(s => s.re.test(t)).slice(0, 3);
+}
+const LEVEL_PROMPTS = {
+  fast: '\n\nРежим «Быстрый»: отвечай сразу и коротко — 1–5 предложений или короткий список. Подробности — только если о них прямо попросили. Код давай целиком, без пояснений сверх нужного.',
+  smart: '\n\nРежим «Средний»: прежде чем отвечать, про себя пойми, что на самом деле нужно пользователю, продумай решение и проверь его (логику, факты, расчёты, код). ' +
+    'Не показывай черновые рассуждения — дай готовый, выверенный ответ: сначала главное, потом детали. Структурируй заголовками и списками, если ответ длинный. Для кода — рабочий полный код. Для задач с числами — проверь вычисления.',
+};
+const SOLO_PROMPT = BOT_CORE + LEVEL_PROMPTS.smart;
 const JUDGE_PROMPT = 'Ты — Судья консилиума. Несколько разных ИИ независимо ответили на один и тот же запрос. Сравни ответы: в чём они сходятся — скорее всего верно; где расходятся — разберись, кто прав; собери уникальные ценные мысли каждого. Напиши один итоговый ответ пользователю, лучше любого из исходных. Не упоминай консилиум, другие ИИ и их ответы — пиши как единый ассистент.';
 const PERSPECTIVES = [
   {emoji:'📊', name:'Взгляд аналитика', prompt:'Ответь как строгий аналитик: пошагово, с проверкой логики и цифр.'},
   {emoji:'🧪', name:'Взгляд скептика', prompt:'Ответь как скептик: сначала найди подвохи, ошибки, риски и альтернативные объяснения, затем дай свой ответ.'},
   {emoji:'🛠️', name:'Взгляд практика', prompt:'Ответь как практик: максимально конкретно и применимо, с шагами и примерами.'},
 ];
-const COMMON = (mdown = true) => `\n\nСегодня: ${todayStr()}. Отвечай на языке пользователя (по умолчанию — на русском).${mdown ? ' Оформляй ответ в Markdown.' : ''} Не выдумывай факты: если не уверен — так и скажи.`;
+/* Что бот знает о пользователе: анкета + то, что он сам запомнил */
+const STYLE_TXT = {simple:'объясняй максимально просто, как школьнику, с примерами из жизни', short:'отвечай коротко и по делу, без лишних подробностей', detailed:'отвечай подробно и глубоко, с деталями и нюансами', expert:'общайся как с экспертом: без азов, точная терминология'};
+const TONE_TXT = {friendly:'дружелюбный, живой, с лёгким юмором', strict:'деловой и строгий, без шуток', fun:'весёлый, с юмором и эмодзи', calm:'спокойный и поддерживающий'};
+function aboutUser() {
+  const p = S.profile || {}, L = [];
+  if (p.name) L.push('Имя: ' + p.name);
+  if (p.about) L.push('О себе: ' + clip(p.about, 600));
+  if (STYLE_TXT[p.style]) L.push('Как отвечать: ' + STYLE_TXT[p.style]);
+  if (TONE_TXT[p.tone]) L.push('Тон общения: ' + TONE_TXT[p.tone]);
+  if (p.address === 'vy') L.push('Обращайся на «вы».'); else if (p.address === 'ty') L.push('Обращайся на «ты».');
+  const mem = (S.memory || []).slice(-40);
+  if (mem.length) L.push('Ты помнишь о нём:\n' + mem.map(x => '- ' + x).join('\n'));
+  return L.length ? '\n\nО ПОЛЬЗОВАТЕЛЕ (учитывай в ответе, но не пересказывай это без повода):\n' + L.join('\n') : '';
+}
+const LEARN_TXT = '\n\nПАМЯТЬ: если пользователь сообщил о себе что-то новое и полезное надолго (имя, возраст, класс/учёба, профессия, город, интересы, цели, как ему удобнее получать ответы), в самом конце ответа добавь служебную строку <remember>короткий факт от третьего лица</remember>. Только новые факты, не больше двух, пользователь эту строку не увидит. Если нового нет — ничего не добавляй.';
+let curQ = '';
+const COMMON = (mdown = true) => `\n\nСегодня: ${todayStr()}. Отвечай на языке пользователя (по умолчанию — на русском).${mdown ? ' Оформляй ответ в Markdown.' : ''} Не выдумывай факты: если не уверен — так и скажи.` +
+  (mdown ? aboutUser() + skillsFor(curQ).map(s => '\n\n' + s.p).join('') + (S.learn !== false ? LEARN_TXT : '') : '');
 const MODES = [
-  {id:'solo', icon:'⚡', name:'Соло', desc:'один ИИ отвечает сразу — быстро'},
-  {id:'team', icon:'🐝', name:'Команда', desc:'агенты делят задачу, Критик проверяет, Редактор собирает — умнее всего'},
-  {id:'council', icon:'⚖️', name:'Консилиум', desc:'несколько разных ИИ отвечают независимо, Судья берёт лучшее'},
+  {id:'fast', icon:'⚡', name:'Быстрый', desc:'мгновенный короткий ответ самой быстрой нейросетью'},
+  {id:'smart', icon:'🧠', name:'Средний', desc:'продуманный и проверенный ответ за один заход — лучший баланс'},
+  {id:'team', icon:'🚀', name:'Максимум', desc:'команда агентов делит задачу и собирает ответ — умнее всего, но дольше'},
+  {id:'council', icon:'⚖️', name:'Консилиум', desc:'несколько разных ИИ отвечают независимо, Судья берёт лучшее', extra:true},
 ];
+/* ⚡ Быстрый: самая быстрая из подключённых нейросетей */
+const FAST_ORDER = ['groq', 'gemini', 'anthropic', 'openai', 'deepseek', 'openrouter', 'custom', 'lmstudio', 'ollama', 'webllm'];
+function fastPick() {
+  if (S.fastProvider && isReady(S.fastProvider)) return S.fastProvider;
+  const r = readyList();
+  return FAST_ORDER.find(id => r.includes(id)) || mainProvider();
+}
+const fastModel = id => id === 'anthropic' ? 'claude-haiku-5-5' : modelOf(id);
+let runEffort = '';
 const EXAMPLES = [
-  {i:'🚀', t:'Бизнес-план', q:'Составь бизнес-план кофейни на 20 м² с расчётом вложений и окупаемости'},
+  {i:'📐', t:'Чертёж', q:'Начерти план однокомнатной квартиры 40 м² с размерами'},
+  {i:'🌐', t:'Сайт', q:'Сделай красивый сайт-лендинг для кофейни «Зерно» с меню и контактами'},
+  {i:'🌍', t:'Переводчик', fill:'Переведи на английский: '},
+  {i:'✍️', t:'Сочинение', q:'Напиши сочинение на тему «Что такое настоящая дружба» для 8 класса'},
   {i:'💻', t:'Код', q:'Напиши на Python Telegram-бота, который напоминает о задачах'},
-  {i:'🎓', t:'Объясни просто', q:'Объясни, как работают нейросети, так, чтобы понял школьник'},
-  {i:'🧭', t:'Помоги решить', q:'Что выгоднее: ипотека или аренда плюс вклад? Разбери на примере с цифрами'},
+  {i:'🗺️', t:'Схема', q:'Нарисуй схему, как устроен интернет: от компьютера до сайта'},
+  {i:'🧮', t:'Задача', fill:'Реши задачу: '},
+  {i:'🚀', t:'Бизнес-план', q:'Составь бизнес-план кофейни на 20 м² с расчётом вложений и окупаемости'},
 ];
 
 /* ============================ НАСТРОЙКИ ============================ */
@@ -643,7 +822,7 @@ const defaultAgents = () => DEFAULT_AGENTS.map(a => ({...a, on:true, provider:''
 function defaultSettings() {
   const providers = {};
   for (const p of PRESETS) providers[p.id] = {on:false, key:'', base:p.base || '', model:p.model || ''};
-  return {v:2, providers, main:'', mode:'team', critic:0, maxAgents:3, fallback:true, effort:'medium', speak:false, voiceSend:true, council:[], agents:defaultAgents()};
+  return {v:3, providers, main:'', mode:'smart', fastProvider:'', profile:{}, memory:[], learn:true, critic:0, maxAgents:3, fallback:true, effort:'medium', speak:false, voiceSend:true, council:[], agents:defaultAgents()};
 }
 function mergeSettings(s) {
   const d = defaultSettings();
@@ -654,8 +833,13 @@ function mergeSettings(s) {
   out.agents = Array.isArray(s.agents) && s.agents.length ? s.agents.map(a => ({on:true, provider:'', model:'', ...a})) : d.agents;
   for (const c of DEFAULT_AGENTS.filter(a => a.core)) if (!out.agents.some(a => a.id === c.id)) out.agents.push({...c, on:true, provider:'', model:''});
   if (!Array.isArray(out.council)) out.council = [];
+  if (!Array.isArray(out.memory)) out.memory = [];
+  if (!out.profile || typeof out.profile !== 'object') out.profile = {};
   /* переход на быстрые настройки по умолчанию (старые версии были слишком медленными) */
   if ((s.v || 1) < 2) { out.critic = 0; out.maxAgents = Math.min(+out.maxAgents || 3, 3); out.effort = 'medium'; out.v = 2; }
+  /* v3: уровни ума вместо режимов; по умолчанию — «Средний» */
+  if ((s.v || 1) < 3) { out.mode = out.mode === 'council' ? 'council' : 'smart'; out.v = 3; }
+  if (!['fast', 'smart', 'team', 'council'].includes(out.mode)) out.mode = 'smart';
   return out;
 }
 let S = mergeSettings(store.get('roi.settings', null));
@@ -739,7 +923,7 @@ async function callOpenAI(id, model, system, messages, signal, onText) {
   const c = S.providers[id], p = P[id];
   const headers = {'Content-Type':'application/json'};
   if (c.key) headers.Authorization = 'Bearer ' + c.key.trim();
-  if (id === 'openrouter') { headers['X-Title'] = 'Mozgoshturm AI'; if (/^https?:$/.test(location.protocol)) headers['HTTP-Referer'] = location.origin; }
+  if (id === 'openrouter') { headers['X-Title'] = 'Swarmind.ai'; if (/^https?:$/.test(location.protocol)) headers['HTTP-Referer'] = location.origin; }
   const body = {model, stream:true, messages:[{role:'system', content:system}, ...alternate(messages)]};
   /* Gemini по умолчанию долго «думает» — просим думать меньше, это сильно ускоряет ответы */
   if (id === 'gemini') body.reasoning_effort = 'low';
@@ -763,7 +947,7 @@ async function callAnthropic(id, model, system, messages, signal, onText) {
   const c = S.providers[id];
   const headers = {'content-type':'application/json', 'x-api-key':c.key.trim(), 'anthropic-version':'2026-10-21', 'anthropic-dangerous-direct-browser-access':'true'};
   const body = {model, max_tokens:32000, system, messages:alternate(messages), stream:true};
-  if (/claude-(opus-4-[6-9]|opus-5|sonnet-4-[6-9]|sonnet-5|haiku-5|fable|mythos)/.test(model)) body.output_config = {effort:S.effort || 'high'};
+  if (/claude-(opus-4-[6-9]|opus-5|sonnet-4-[6-9]|sonnet-5|haiku-5|fable|mythos)/.test(model)) body.output_config = {effort:runEffort || S.effort || 'high'};
   if (/^claude-(opus-5(-5)?|sonnet-5-5|fable-5-1)$/.test(model)) { headers['anthropic-beta'] = 'server-side-fallback-2026-07-01'; body.fallbacks = 'default'; }
   let res;
   try { res = await fetch(c.base.replace(/\/+$/, '') + '/messages', {method:'POST', headers, body:JSON.stringify(body), signal}); }
@@ -804,7 +988,7 @@ async function webllmDefault() {
   return list[0] && list[0].id;
 }
 async function webllmEngine(model, onMeta) {
-  if (!('gpu' in navigator)) throw new Error('Встроенный ИИ: этот браузер не поддерживает WebGPU. Открой Мозгоштурм в Chrome или Edge (на телефоне — Chrome для Android) или подключи Ollama / ключ.');
+  if (!('gpu' in navigator)) throw new Error('Встроенный ИИ: этот браузер не поддерживает WebGPU. Открой Swarmind в Chrome или Edge (на телефоне — Chrome для Android) или подключи Ollama / ключ.');
   const lib = await webllmLib();
   if (!model) model = await webllmDefault();
   while (wl.loading) { await wl.loading.catch(() => {}); }
@@ -937,7 +1121,88 @@ function inline(t) {
   t = t.replace(/~~([^~\n]+)~~/g, '<del>$1</del>');
   return t.replace(/\u0000(\d+)\u0000/g, (_, i) => '<code>' + esc(codes[+i]) + '</code>');
 }
-const codeBlock = (code, lang) => `<div class="code"><div class="code-h"><span>${esc(lang || 'код')}</span><button type="button" class="copy-code">Копировать</button></div><pre><code>${esc(code)}</code></pre></div>`;
+/* Код-блоки: svg → картинка-чертёж, mermaid → схема, html → живой сайт */
+function codeKind(code, lang) {
+  const l = String(lang || '').toLowerCase();
+  if (l === 'svg' || (/^(xml|html|)$/.test(l) && /^\s*(<\?xml[^>]*>\s*)?<svg[\s>]/i.test(code))) return 'svg';
+  if (l === 'mermaid') return 'mermaid';
+  if (/^(html|htm)$/.test(l) && /<(html|body|div|section|main|h1|style|script|canvas)\b/i.test(code)) return 'html';
+  return '';
+}
+const KIND_LABEL = {svg:'📐 Чертёж / рисунок', mermaid:'🗺️ Схема', html:'🌐 Сайт'};
+const codeBlock = (code, lang) => {
+  const kind = codeKind(code, lang);
+  const btns = kind === 'html' ? '<button type="button" class="cb pri" data-cb="run">▶ Открыть сайт</button><button type="button" class="cb" data-cb="dl-html">⬇ .html</button>'
+    : kind ? '<button type="button" class="cb" data-cb="png">⬇ PNG</button><button type="button" class="cb" data-cb="dl-svg">⬇ SVG</button><button type="button" class="cb" data-cb="code">Код</button>' : '';
+  return `<div class="code${kind ? ' k-' + kind : ''}" data-kind="${kind}"><div class="code-h"><span>${kind ? KIND_LABEL[kind] : esc(lang || 'код')}</span><span class="cbs">${btns}<button type="button" class="copy-code">Копировать</button></span></div>${kind === 'svg' || kind === 'mermaid' ? '<div class="viz"></div>' : ''}<pre><code>${esc(code)}</code></pre></div>`;
+};
+const vizCache = new Map();
+let mermaidLib = null;
+function loadMermaid() {
+  if (!mermaidLib) mermaidLib = import('https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs').then(m => {
+    const mm = m.default; mm.initialize({startOnLoad:false, theme:matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default', securityLevel:'strict', fontFamily:'Arial, sans-serif'}); return mm;
+  }).catch(e => { mermaidLib = null; throw e; });
+  return mermaidLib;
+}
+function fixSvg(src) {
+  let s = String(src).trim().replace(/^<\?xml[^>]*>\s*/i, '');
+  if (!/xmlns=/.test(s.slice(0, 300))) s = s.replace(/^<svg/i, '<svg xmlns="http://www.w3.org/2000/svg"');
+  /* без width/height картинка рисуется крошечной — берём размер из viewBox */
+  const head = (s.match(/^<svg[^>]*>/i) || [''])[0], vb = head.match(/viewBox\s*=\s*["']\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/i);
+  if (vb && !/\swidth\s*=/.test(head)) s = s.replace(/^<svg/i, `<svg width="${vb[1]}" height="${vb[2]}"`);
+  return s;
+}
+const svgUrl = s => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+function showViz(box, svg) {
+  box._svg = svg;
+  const viz = $('.viz', box);
+  viz.innerHTML = `<img alt="Рисунок" src="${svgUrl(svg)}">`;
+  const img = $('img', viz);
+  img.onerror = () => { viz.innerHTML = '<div class="muted">Не получилось нарисовать — ниже код. Попроси «исправь чертёж».</div>'; box.classList.remove('collapsed'); };
+  box.classList.add('collapsed');
+}
+/* после того как ответ дописан — превращаем блоки в картинки */
+function enhance(root) {
+  for (const box of $$('.code[data-kind="svg"], .code[data-kind="mermaid"]', root)) {
+    if (box._done) continue; box._done = true;
+    const code = $('pre', box).textContent;
+    if (box.dataset.kind === 'svg') { showViz(box, fixSvg(code)); continue; }
+    const viz = $('.viz', box);
+    if (vizCache.has(code)) { showViz(box, vizCache.get(code)); continue; }
+    viz.innerHTML = '<div class="muted"><span class="spinner"></span> Рисую схему…</div>';
+    loadMermaid().then(mm => mm.render('mmd' + uid(), code)).then(r => { const s = fixSvg(r.svg); vizCache.set(code, s); showViz(box, s); })
+      .catch(() => { viz.innerHTML = '<div class="muted">Схему не удалось нарисовать (ошибка в разметке или нет интернета) — ниже код.</div>'; });
+  }
+}
+function saveBlob(name, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); }
+function svgToPng(svg, name) {
+  const img = new Image();
+  img.onload = () => {
+    let w = img.naturalWidth || 800, h = img.naturalHeight || 600;
+    const k = Math.min(4, Math.max(1, 2000 / Math.max(w, h)));
+    const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+    c.toBlob(b => b && saveBlob(name, b), 'image/png');
+  };
+  img.onerror = () => toast('Не получилось сохранить PNG — скачай SVG');
+  img.src = svgUrl(svg);
+}
+/* живой предпросмотр сайта в изолированной рамке (без доступа к ключам и данным приложения) */
+function openSite(html) {
+  closeSite();
+  const ov = document.createElement('div'); ov.id = 'site-ov';
+  ov.innerHTML = `<div class="site-bar"><b>🌐 Предпросмотр сайта</b><span class="sp"></span><button type="button" class="btn small" data-site="w">📱/🖥</button><button type="button" class="btn small" data-site="dl">⬇ Скачать index.html</button><button type="button" class="btn small primary" data-site="x">✕ Закрыть</button></div><div class="site-wrap"><iframe sandbox="allow-scripts allow-forms allow-modals allow-popups" referrerpolicy="no-referrer"></iframe></div>`;
+  document.body.appendChild(ov);
+  $('iframe', ov).srcdoc = html;
+  ov.addEventListener('click', e => {
+    const b = e.target.closest('[data-site]'); if (!b) return;
+    if (b.dataset.site === 'x') closeSite();
+    else if (b.dataset.site === 'dl') saveBlob('index.html', new Blob([html], {type:'text/html'}));
+    else ov.classList.toggle('mobile');
+  });
+}
+function closeSite() { const o = $('#site-ov'); if (o) o.remove(); }
+addEventListener('keydown', e => { if (e.key === 'Escape') closeSite(); });
 const RX = {
   fence: l => /^\s{0,3}(```|~~~)/.test(l),
   head: l => /^\s{0,3}#{1,6}\s/.test(l),
@@ -1031,7 +1296,7 @@ async function runAgent(am, v, agent, o) {
       onText: full => { if (o.toFinal) { am.content = full; v.touch(); } else { st.text = full; v.touch(st); } },
       onMeta: s => { st.sub = s; if (o.toFinal) am.via = s; v.touch(st); }});
     st.status = 'ok';
-    if (o.toFinal) st.text = '_Итоговый ответ — ниже._';
+    if (o.toFinal) { st.text = '_Итоговый ответ — ниже._'; learn(text); }
     v.touch(st);
     return stripThink(text).trim();
   } catch (e) {
@@ -1060,14 +1325,16 @@ function parsePlan(text, specs, maxA) {
 const isTight = () => { const p = P[mainProvider()]; return !!(p && p.local); };
 const aborted = () => new DOMException('Остановлено', 'AbortError');
 
-async function runSolo(am, v, q, hist, signal) {
-  const pid = mainProvider();
-  const msgs = hist.filter(m => m.role === 'user' || m.content).slice(isTight() ? -6 : -20)
-    .map(m => ({role:m.role, content:m.role === 'user' ? userContent(m) : stripThink(m.content)}));
+async function runSolo(am, v, q, hist, signal, level = 'smart') {
+  const fast = level === 'fast';
+  const pid = fast ? fastPick() : mainProvider();
+  const msgs = hist.filter(m => m.role === 'user' || m.content).slice(fast || isTight() ? -6 : -20)
+    .map(m => ({role:m.role, content:m.role === 'user' ? userContent(m) : clip(stripThink(m.content), fast ? 2000 : 12000)}));
   msgs.push({role:'user', content:q});
-  am.status = 'Думаю…';
-  const text = await callLLM({provider:pid, model:modelOf(pid), system:SOLO_PROMPT + COMMON(), messages:msgs, signal,
+  am.status = fast ? 'Отвечаю…' : 'Думаю…';
+  const text = await callLLM({provider:pid, model:fast ? fastModel(pid) : modelOf(pid), system:BOT_CORE + LEVEL_PROMPTS[fast ? 'fast' : 'smart'] + COMMON(), messages:msgs, signal,
     onText: f => { am.content = f; v.touch(); }, onMeta: s => { am.via = s; v.touch(); }});
+  learn(text);
   am.content = stripThink(text).trim();
 }
 
@@ -1108,7 +1375,7 @@ async function runTeam(am, v, q, hist, signal) {
     catch (e) { if (signal.aborted) throw e; }
   }
   const selfCheck = critique ? '' : '\n\nКритика в этот раз нет — перед ответом сам внимательно проверь черновики: факты, логику, расчёты и код; исправь ошибки и убери противоречия.';
-  let final = await runAgent(am, v, editor, {system:editor.prompt + selfCheck + COMMON(), toFinal:true, task:'Собирает итоговый ответ', signal,
+  let final = await runAgent(am, v, editor, {system:BOT_CORE + '\n\n' + editor.prompt + selfCheck + COMMON(), toFinal:true, task:'Собирает итоговый ответ', signal,
     user:ctx + `Запрос пользователя:\n${q}\n\nЧерновики специалистов:\n\n${draftsText}` + (critique ? `\n\nЗамечания Критика:\n${clip(critique, tight ? 1500 : 8000)}` : '') + '\n\nНапиши итоговый ответ пользователю.'});
   am.content = final;
   if (S.critic > 1 && critic) {
@@ -1119,7 +1386,7 @@ async function runTeam(am, v, q, hist, signal) {
     const ok = ['OK', 'ОК'].includes(check.replace(/[\s.!"«»*`]/g, '').toUpperCase());
     if (check && !ok) {
       try {
-        am.content = await runAgent(am, v, editor, {system:editor.prompt + COMMON(), toFinal:true, task:'Исправляет ответ по замечаниям', signal,
+        am.content = await runAgent(am, v, editor, {system:BOT_CORE + '\n\n' + editor.prompt + COMMON(), toFinal:true, task:'Исправляет ответ по замечаниям', signal,
           user:`Запрос пользователя:\n${q}\n\nТвой предыдущий ответ:\n${final}\n\nЗамечания проверки:\n${check}\n\nИсправь ответ с учётом замечаний и выдай полную исправленную версию.`});
       } catch (e) { if (signal.aborted) throw e; am.content = final; v.touch(); }
     }
@@ -1143,7 +1410,7 @@ async function runCouncil(am, v, q, hist, signal) {
   const answers = results.map((r, i) => r.status === 'fulfilled' && r.value ? {label:jobs[i].agent.name, text:r.value} : null).filter(Boolean);
   if (!answers.length) throw (results.find(r => r.status === 'rejected') || {}).reason || new Error('Никто из участников не ответил');
   const list = answers.map((a, i) => `### Ответ ${i + 1} (${a.label})\n${clip(a.text, tight ? 1800 : 14000)}`).join('\n\n');
-  am.content = await runAgent(am, v, {emoji:'⚖️', name:'Судья'}, {system:JUDGE_PROMPT + COMMON(), toFinal:true, task:'Сравнивает ответы и пишет итог', signal,
+  am.content = await runAgent(am, v, {emoji:'⚖️', name:'Судья'}, {system:BOT_CORE + '\n\n' + JUDGE_PROMPT + COMMON(), toFinal:true, task:'Сравнивает ответы и пишет итог', signal,
     user:ctx + `Запрос пользователя:\n${q}\n\nОтветы участников консилиума:\n\n${list}\n\nНапиши итоговый ответ.`});
 }
 
@@ -1209,7 +1476,7 @@ function aiView(m) {
 function paintFinal(v) {
   const m = v.m, txt = stripThink(m.content || '').trim();
   if (v.live && !txt) v.final.innerHTML = `<div class="typing"><span class="spinner"></span> ${esc(/<think>/.test(m.content || '') ? 'Размышляет…' : (m.status || 'Думаю…'))}</div>`;
-  else v.final.innerHTML = md(txt) + (v.live ? '<span class="cursor"></span>' : '') + (m.stopped ? '<p class="muted">⏹ Остановлено</p>' : '');
+  else { v.final.innerHTML = md(txt) + (v.live ? '<span class="cursor"></span>' : '') + (m.stopped ? '<p class="muted">⏹ Остановлено</p>' : ''); if (!v.live) enhance(v.final); }
   v.errbox.hidden = !m.error;
   if (m.error) v.errbox.innerHTML = `<b>Не получилось:</b> ${esc(m.error)}<div class="row"><button class="btn small" type="button" data-open-settings>Настройки нейросетей</button></div>`;
   v.actions.hidden = v.live || (!txt && !m.error);
@@ -1229,10 +1496,11 @@ function renderThread() {
 }
 function renderEmpty() {
   const ready = readyList().length > 0;
-  emptyEl.innerHTML = `<svg class="logo big-logo" viewBox="0 0 64 64" aria-hidden="true">${LOGO.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg><h1>Мозгоштурм — команда ИИ-агентов</h1>` +
-    `<p>Задай вопрос: Координатор разобьёт его на части, специалисты поработают параллельно, Критик найдёт ошибки, а Редактор соберёт лучший ответ.</p>` +
+  const nm = (S.profile && S.profile.name) ? ', ' + esc(S.profile.name) : '';
+  emptyEl.innerHTML = `<svg class="logo big-logo" viewBox="0 0 64 64" aria-hidden="true">${LOGO.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg><h1>Привет${nm}! Я Swarmind<span class="dotai">.ai</span></h1>` +
+    `<p>Чертежи и схемы, сайты, переводы, сочинения, код, задачи, советы — и я подстраиваюсь под тебя. Выбери, с чего начнём, или просто напиши:</p>` +
     (ready
-      ? `<div class="examples">${EXAMPLES.map(e => `<button class="ex" type="button" data-q="${esc(e.q)}"><b>${e.i} ${esc(e.t)}</b><span>${esc(e.q)}</span></button>`).join('')}</div>`
+      ? `<div class="examples">${EXAMPLES.map(e => `<button class="ex" type="button" ${e.fill ? `data-fill="${esc(e.fill)}"` : `data-q="${esc(e.q)}"`}><b>${e.i} ${esc(e.t)}</b><span>${esc(e.q || e.fill + '…')}</span></button>`).join('')}</div>`
       : `<div class="setup"><h3>Сначала подключи «мозг» — выбери вариант:</h3><div class="examples">
           <button class="ex" type="button" data-orlogin style="border-color:var(--acc);background:var(--acc-soft)"><b>⚡ В один клик — бесплатно</b><span>Войди через Google на OpenRouter — ключ и бесплатная умная модель подключатся сами. Ничего искать не нужно.</span></button>
           <button class="ex" type="button" data-setup="webllm"><b>🧠 Встроенный ИИ</b><span>Бесплатно и без лимитов. Работает прямо в браузере, без ключей. Нужен мощный ПК или телефон.</span></button>
@@ -1247,7 +1515,7 @@ function renderChatList() {
     : '<div class="hint pad">Здесь появятся твои чаты</div>';
 }
 function renderModes() {
-  $('#modes').innerHTML = MODES.map(m => `<button type="button" data-mode="${m.id}" class="${S.mode === m.id ? 'on' : ''}" title="${esc(m.desc)}">${m.icon} <span class="mname">${m.name}</span></button>`).join('');
+  $('#modes').innerHTML = MODES.filter(m => !m.extra || S.mode === m.id).map(m => `<button type="button" data-mode="${m.id}" class="${S.mode === m.id ? 'on' : ''}" title="${esc(m.desc)}">${m.icon} <span class="mname">${m.name}</span></button>`).join('');
   const m = MODES.find(x => x.id === S.mode) || MODES[1];
   $('#mode-hint').textContent = `${m.icon} ${m.name}: ${m.desc}`;
 }
@@ -1291,7 +1559,9 @@ async function runAssistant(chat) {
   const byVoice = voiceTurn; voiceTurn = false;
   const q = userContent(chat.messages[uIdx]), hist = chat.messages.slice(0, uIdx);
   try {
-    if (S.mode === 'solo') await runSolo(am, v, q, hist, ctrl.signal);
+    runEffort = S.mode === 'fast' ? 'low' : S.mode === 'smart' ? 'medium' : '';
+    curQ = chat.messages[uIdx].content || q;
+    if (S.mode === 'fast' || S.mode === 'smart') await runSolo(am, v, q, hist, ctrl.signal, S.mode);
     else if (S.mode === 'council') await runCouncil(am, v, q, hist, ctrl.signal);
     else await runTeam(am, v, q, hist, ctrl.signal);
     am.content = stripThink(am.content).trim();
@@ -1343,8 +1613,9 @@ function openSettings(tab, focusId) {
 function renderSettings() {
   const st = dlgBody.scrollTop;
   $$('#dlg .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === setTab));
-  dlgBody.innerHTML = ({brains:tabBrains, agents:tabAgents, modes:tabModes, data:tabData})[setTab]();
+  dlgBody.innerHTML = ({brains:tabBrains, me:tabMe, agents:tabAgents, modes:tabModes, data:tabData})[setTab]();
   $$('select[data-k]', dlgBody).forEach(s => { s.value = String(S[s.dataset.k] ?? ''); });
+  $$('select[data-pf]', dlgBody).forEach(s => { s.value = String((S.profile || {})[s.dataset.pf] || ''); });
   refreshMainSelect();
   dlgBody.scrollTop = st;
 }
@@ -1356,7 +1627,7 @@ function refreshMainSelect() {
 }
 function tabBrains() {
   return `<label class="field"><span>Главный ИИ — им пользуются все агенты, если не указано иное</span><select data-k="main"></select></label>
-  <p class="hint" style="margin:0">Можно включить несколько: если один ИИ не ответит или упрётся в лимит, Мозгоштурм сам переключится на другой. В режиме «Консилиум» они отвечают все вместе.</p>` + PRESETS.map(provCard).join('');
+  <p class="hint" style="margin:0">Можно включить несколько: если один ИИ не ответит или упрётся в лимит, Swarmind сам переключится на другой. В режиме «Консилиум» они отвечают все вместе.</p>` + PRESETS.map(provCard).join('');
 }
 function provCard(p) {
   const c = S.providers[p.id], ok = isReady(p.id);
@@ -1365,7 +1636,7 @@ function provCard(p) {
 function provBody(p, c) {
   let h = (p.note && !GUIDES[p.id] ? `<div class="note">${p.note}</div>` : '') + guideHtml(p, c);
   if (p.kind === 'webllm') {
-    if (!('gpu' in navigator)) h += '<div class="note warn">⚠️ Этот браузер не поддерживает WebGPU — встроенный ИИ здесь не запустится. Открой Мозгоштурм в Chrome или Edge, либо выбери Ollama или ключ.</div>';
+    if (!('gpu' in navigator)) h += '<div class="note warn">⚠️ Этот браузер не поддерживает WebGPU — встроенный ИИ здесь не запустится. Открой Swarmind в Chrome или Edge, либо выбери Ollama или ключ.</div>';
     return h + `<label class="field"><span>Модель</span><select data-pk="model" class="wl-sel"><option value="">Авто — подберу под устройство</option>${c.model ? `<option value="${esc(c.model)}" selected>${esc(c.model)}</option>` : ''}</select></label>
       <div class="row wrap"><button class="btn small" data-act="models" type="button">Показать все модели</button><button class="btn small primary" data-act="test" type="button">Скачать и проверить</button></div><div class="test-out hint"></div>`;
   }
@@ -1378,7 +1649,7 @@ function provBody(p, c) {
 }
 function tabAgents() {
   const provOpts = a => '<option value="">Главный ИИ</option>' + PRESETS.filter(p => S.providers[p.id].on).map(p => `<option value="${p.id}"${a.provider === p.id ? ' selected' : ''}>${esc(p.short)}</option>`).join('');
-  return '<p class="hint" style="margin:0">Агенты — роли в команде. Меняй их инструкции, отключай лишних, добавляй своих и назначай каждому свой ИИ (например: Редактор и Критик — Claude, остальные — бесплатная модель).</p>' +
+  return '<p class="hint" style="margin:0">Агенты работают на уровне «🚀 Максимум» — это роли в команде. Меняй их инструкции, отключай лишних, добавляй своих и назначай каждому свой ИИ (например: Редактор и Критик — Claude, остальные — бесплатная модель).</p>' +
     S.agents.map(a => `<details class="card agent" data-id="${esc(a.id)}"><summary class="card-h"><span class="ag-e">${esc(a.emoji)}</span><div class="grow"><b class="ag-n">${esc(a.name)}</b>${a.core ? ' <span class="tag">ядро</span>' : ''}${a.on === false ? ' <span class="tag off">выключен</span>' : ''}<div class="hint">${esc(a.desc || '')}</div></div><span class="hint">${a.provider && S.providers[a.provider] && S.providers[a.provider].on ? esc(P[a.provider].short) : ''}</span><span class="chev">⌄</span></summary><div class="card-b">
       ${a.core ? '' : `<label class="row-check"><span class="sw"><input type="checkbox" data-ak="on"${a.on !== false ? ' checked' : ''}><span></span></span>Агент включён</label>`}
       <div class="grid2"><label class="field"><span>Имя</span><input data-ak="name" value="${esc(a.name)}"></label><label class="field"><span>Значок (эмодзи)</span><input data-ak="emoji" value="${esc(a.emoji)}"></label></div>
@@ -1389,11 +1660,23 @@ function tabAgents() {
     </div></details>`).join('') +
     '<div class="row wrap"><button class="btn" data-act="add-agent" type="button">＋ Добавить агента</button><button class="btn ghost" data-act="reset-agents" type="button">Сбросить к стандартным</button></div>';
 }
+function tabMe() {
+  const p = S.profile || {}, mem = S.memory || [];
+  return `<p class="hint" style="margin-top:0">Swarmind подстраивается под тебя: как объяснять, каким тоном говорить, что ты уже рассказывал. Всё хранится только на этом устройстве.</p>
+  <label class="field"><span>Как тебя зовут</span><input data-pf="name" value="${esc(p.name || '')}" placeholder="например, Артём" autocomplete="off"></label>
+  <label class="field"><span>Расскажи о себе (возраст, учёба/работа, интересы, цели)</span><textarea data-pf="about" rows="3" placeholder="например: учусь в 9 классе, люблю программировать и футбол, готовлюсь к ОГЭ">${esc(p.about || '')}</textarea></label>
+  <div class="grid2"><label class="field"><span>Как отвечать</span><select data-pf="style"><option value="">Сам решит по вопросу</option><option value="simple">Просто, с примерами</option><option value="short">Коротко и по делу</option><option value="detailed">Подробно и глубоко</option><option value="expert">Как эксперту</option></select></label>
+  <label class="field"><span>Характер общения</span><select data-pf="tone"><option value="">Обычный</option><option value="friendly">Дружелюбный</option><option value="fun">Весёлый, с юмором</option><option value="calm">Спокойный, поддерживающий</option><option value="strict">Деловой, строгий</option></select></label></div>
+  <label class="field"><span>Обращение</span><select data-pf="address"><option value="">Как удобнее</option><option value="ty">На «ты»</option><option value="vy">На «вы»</option></select></label>
+  <label class="row-check"><span class="sw"><input type="checkbox" data-k="learn"${S.learn !== false ? ' checked' : ''}><span></span></span>🧠 Запоминать важное обо мне из разговоров</label>
+  <div class="field"><span>Что Swarmind запомнил (${mem.length})</span>${mem.length ? `<div class="mem-list">${mem.map((x, i) => `<div class="mem-i"><span>${esc(x)}</span><button type="button" class="btn small ghost" data-act="del-mem" data-i="${i}" title="Забыть">✕</button></div>`).join('')}</div><div><button class="btn small ghost" data-act="clear-mem" type="button">Забыть всё</button></div>` : '<div class="hint">Пока ничего. Расскажи о себе в чате — например «мне 14, я люблю рисовать» — и он запомнит.</div>'}</div>`;
+}
 function tabModes() {
   const ready = readyList();
   const rows = (S.council || []).map((m, i) => `<div class="member row" data-i="${i}"><select data-mk="provider">${ready.map(id => `<option value="${id}"${m.provider === id ? ' selected' : ''}>${esc(P[id].short)}</option>`).join('') || '<option value="">нет подключённых ИИ</option>'}</select><input data-mk="model" value="${esc(m.model || '')}" placeholder="модель (по умолчанию — из настроек)" spellcheck="false"><button class="btn small ghost" data-act="del-member" type="button" title="Убрать">✕</button></div>`).join('');
   return `<div class="field"><span>Режим работы</span><div class="seg" data-k="mode">${MODES.map(m => `<button type="button" data-v="${m.id}" class="${S.mode === m.id ? 'on' : ''}">${m.icon} ${m.name}</button>`).join('')}</div><div class="hint">${MODES.map(m => `<div><b>${m.icon} ${m.name}</b> — ${m.desc}</div>`).join('')}</div></div>
-  <label class="field"><span>Проверка Критиком (режим «Команда»)</span><select data-k="critic"><option value="0">Быстро — Редактор проверяет сам (рекомендуется)</option><option value="1">Отдельный Критик — точнее, но дольше</option><option value="2">Двойная проверка и исправление — максимум качества, медленно</option></select></label>
+  <label class="field"><span>⚡ Какой ИИ отвечает в режиме «Быстрый»</span><select data-k="fastProvider"><option value="">Авто — самый быстрый из подключённых (лучше всего Groq)</option>${ready.map(id => `<option value="${id}">${esc(provLabel(id, fastModel(id)))}</option>`).join('')}</select></label>
+  <label class="field"><span>Проверка Критиком (уровень «Максимум»)</span><select data-k="critic"><option value="0">Быстро — Редактор проверяет сам (рекомендуется)</option><option value="1">Отдельный Критик — точнее, но дольше</option><option value="2">Двойная проверка и исправление — максимум качества, медленно</option></select></label>
   <label class="field"><span>Сколько специалистов максимум</span><select data-k="maxAgents"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></label>
   <label class="row-check"><span class="sw"><input type="checkbox" data-k="fallback"${S.fallback ? ' checked' : ''}><span></span></span>Автопереключение на другой ИИ, если этот не отвечает или упёрся в лимит</label>
   <label class="row-check"><span class="sw"><input type="checkbox" data-k="voiceSend"${S.voiceSend !== false ? ' checked' : ''}><span></span></span>🎤 Отправлять сразу, как закончил говорить (на голосовой вопрос отвечаю голосом)</label>
@@ -1402,10 +1685,10 @@ function tabModes() {
   <div class="field"><span>Участники консилиума</span>${rows || '<div class="hint">Пусто — в консилиуме участвуют все подключённые ИИ (до 5). Если подключён только один, он ответит с трёх разных точек зрения.</div>'}<div><button class="btn small" data-act="add-member" type="button">＋ Добавить участника</button></div></div>`;
 }
 function tabData() {
-  return `<div class="card"><div class="card-b" style="padding-top:14px"><b>Где хранятся данные</b><p class="hint" style="margin:0">Чаты, настройки и ключи хранятся только в этом браузере на этом устройстве. У Мозгоштурма нет своего сервера — запросы идут напрямую к выбранным нейросетям.</p>
+  return `<div class="card"><div class="card-b" style="padding-top:14px"><b>Где хранятся данные</b><p class="hint" style="margin:0">Чаты, настройки и ключи хранятся только в этом браузере на этом устройстве. У Swarmind нет своего сервера — запросы идут напрямую к выбранным нейросетям.</p>
     <div class="row wrap"><button class="btn small" data-act="export" type="button">Экспорт настроек</button><button class="btn small" data-act="import" type="button">Импорт настроек</button><button class="btn small" data-act="export-chats" type="button">Экспорт чатов</button></div>
     <div class="row wrap"><button class="btn small danger" data-act="clear-chats" type="button">Удалить все чаты</button><button class="btn small danger" data-act="clear-keys" type="button">Стереть все ключи</button></div></div></div>
-    <p class="hint" style="margin:0">⚠️ Файл экспорта настроек содержит твои ключи — не выкладывай его в открытый доступ. Мозгоштурм ${VERSION}.</p>`;
+    <p class="hint" style="margin:0">⚠️ Файл экспорта настроек содержит твои ключи — не выкладывай его в открытый доступ. Swarmind ${VERSION}.</p>`;
 }
 function updateDot(card) {
   const id = card.dataset.id, d = $('.card-h .dot', card);
@@ -1466,6 +1749,7 @@ dlgBody.addEventListener('input', e => {
   const t = e.target;
   if (t.type === 'checkbox' || t.tagName === 'SELECT') return;
   const prov = t.closest('.prov'), ag = t.closest('.agent'), mem = t.closest('.member');
+  if (t.dataset.pf) { S.profile = {...(S.profile || {}), [t.dataset.pf]:t.value}; saveSoon(); return; }
   if (prov && t.dataset.pk) { S.providers[prov.dataset.id][t.dataset.pk] = t.value.trim(); saveSoon(); updateDot(prov); return; }
   if (ag && t.dataset.ak) {
     const a = S.agents.find(x => x.id === ag.dataset.id); if (!a) return;
@@ -1478,6 +1762,7 @@ dlgBody.addEventListener('input', e => {
 });
 dlgBody.addEventListener('change', e => {
   const t = e.target, prov = t.closest('.prov'), ag = t.closest('.agent'), mem = t.closest('.member');
+  if (t.dataset.pf) { S.profile = {...(S.profile || {}), [t.dataset.pf]:t.value}; saveSettings(); return; }
   if (t.classList.contains('model-pick') && prov) {
     if (!t.value) return;
     S.providers[prov.dataset.id].model = t.value; $('input[data-pk="model"]', prov).value = t.value; saveSettings(); updateDot(prov); return;
@@ -1525,6 +1810,8 @@ dlgBody.addEventListener('click', e => {
     }
     case 'del-agent': if (confirm('Удалить этого агента?')) { S.agents = S.agents.filter(a => a.id !== ag.dataset.id); saveSettings(); renderSettings(); } break;
     case 'reset-agents': if (confirm('Вернуть стандартных агентов? Твои изменения в агентах пропадут.')) { S.agents = defaultAgents(); saveSettings(); renderSettings(); } break;
+    case 'del-mem': S.memory.splice(+b.dataset.i, 1); saveSettings(); renderSettings(); break;
+    case 'clear-mem': if (confirm('Забыть всё, что Swarmind запомнил о тебе?')) { S.memory = []; saveSettings(); renderSettings(); } break;
     case 'add-member': S.council.push({provider:readyList()[0] || '', model:''}); saveSettings(); renderSettings(); break;
     case 'del-member': S.council.splice(+mem.dataset.i, 1); saveSettings(); renderSettings(); break;
     case 'export': download('roi-settings.json', JSON.stringify(S, null, 2)); break;
@@ -1580,7 +1867,7 @@ function startVoice() {
     const base = input.value.trim(); let heard = '';
     rec.onresult = ev => { heard = ''; for (const r of ev.results) heard += r[0].transcript; input.value = (base ? base + ' ' : '') + heard; autosize(); };
     rec.onend = () => {
-      rec = null; $('#mic').classList.remove('rec'); input.placeholder = 'Спроси что угодно — команда разберётся…';
+      rec = null; $('#mic').classList.remove('rec'); input.placeholder = 'Спроси что угодно…';
       if (heard.trim() && S.voiceSend !== false) { voiceTurn = true; submit(); }
     };
     rec.onerror = ev => { if (ev.error !== 'no-speech' && ev.error !== 'aborted') toast('Микрофон: ' + (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? 'нет доступа — разреши микрофон в настройках браузера' : ev.error), 5000); };
@@ -1640,8 +1927,20 @@ document.addEventListener('click', e => {
   if (t.closest('[data-open-settings]')) { openSettings('brains'); closeSide(); return; }
   if (t.closest('[data-install]')) { doInstall(); return; }
   if (t.closest('[data-orlogin]')) { openrouterLogin(); return; }
+  const cb = t.closest('[data-cb]');
+  if (cb) {
+    const box = cb.closest('.code'), code = $('pre', box).textContent, svg = box._svg || fixSvg(code);
+    if (cb.dataset.cb === 'run') openSite(code);
+    else if (cb.dataset.cb === 'dl-html') saveBlob('index.html', new Blob([code], {type:'text/html'}));
+    else if (cb.dataset.cb === 'dl-svg') saveBlob('swarmind-drawing.svg', new Blob([svg], {type:'image/svg+xml'}));
+    else if (cb.dataset.cb === 'png') svgToPng(svg, 'swarmind-drawing.png');
+    else if (cb.dataset.cb === 'code') box.classList.toggle('collapsed');
+    return;
+  }
   const cc = t.closest('.copy-code');
   if (cc) { copyText($('pre', cc.closest('.code')).textContent); flash(cc, 'Скопировано ✓'); return; }
+  const fl = t.closest('[data-fill]');
+  if (fl) { const inp = $('#input'); inp.value = fl.dataset.fill; inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); inp.dispatchEvent(new Event('input')); return; }
   const ex = t.closest('[data-q]');
   if (ex) { send(ex.dataset.q); return; }
   const su = t.closest('[data-setup]');
@@ -1652,15 +1951,15 @@ document.addEventListener('click', e => {
 let deferredPrompt = null;
 const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.body.classList.add('can-install'); });
-addEventListener('appinstalled', () => { deferredPrompt = null; document.body.classList.remove('can-install'); toast('Мозгоштурм установлен! Ищи иконку на главном экране или в меню приложений.', 5000); });
+addEventListener('appinstalled', () => { deferredPrompt = null; document.body.classList.remove('can-install'); toast('Swarmind установлен! Ищи иконку на главном экране или в меню приложений.', 5000); });
 async function doInstall() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     try { await deferredPrompt.userChoice; } catch (e) {}
     deferredPrompt = null; document.body.classList.remove('can-install'); return;
   }
-  if (isStandalone()) { toast('Мозгоштурм уже установлен и открыт как приложение'); return; }
-  if (location.protocol === 'file:') { toast('Установка работает, когда Мозгоштурм открыт с сайта (https). Сейчас он открыт как файл.', 5000); }
+  if (isStandalone()) { toast('Swarmind уже установлен и открыт как приложение'); return; }
+  if (location.protocol === 'file:') { toast('Установка работает, когда Swarmind открыт с сайта (https). Сейчас он открыт как файл.', 5000); }
   if (location.hash !== '#install') location.hash = '#install'; else route();
   toast('Следуй шагам для своего устройства 👇', 3000);
 }
@@ -1681,7 +1980,7 @@ if (/^https?:$/.test(location.protocol)) {
     const box = $(`.inst-panel[data-panel="${d.plat}"] .dl-extra`);
     if (box) box.innerHTML += `<a class="btn" href="${d.f}" download>${d.t}</a>`;
   }).catch(() => {});
-} else { $('#dl-self').addEventListener('click', e => { e.preventDefault(); toast('Ты уже открыл Мозгоштурм как файл — его можно просто скопировать.'); }); }
+} else { $('#dl-self').addEventListener('click', e => { e.preventDefault(); toast('Ты уже открыл Swarmind как файл — его можно просто скопировать.'); }); }
 
 function drawIcon(size, maskable) {
   const c = document.createElement('canvas'); c.width = c.height = size;
@@ -1706,9 +2005,9 @@ function setupManifest() {
     const base = location.href.split(/[?#]/)[0];
     const scope = base.replace(/[^/]*$/, '');
     const manifest = {
-      name:'Мозгоштурм — мультиагентный ИИ', short_name:'Мозгоштурм', id:scope, start_url:base + '?app=1', scope,
+      name:'Swarmind.ai — твой личный ИИ', short_name:'Swarmind', id:scope, start_url:base + '?app=1', scope,
       display:'standalone', background_color:'#0b0d12', theme_color:'#0b0d12', lang:'ru', orientation:'any',
-      description:'Команда ИИ-агентов: исследователь, аналитик, программист, критик и редактор работают вместе.',
+      description:'Твой личный ИИ: чертежи, сайты, переводчик, сочинения, код. Подстраивается под тебя.',
       categories:['productivity', 'utilities'],
       icons:[{src:drawIcon(192), sizes:'192x192', type:'image/png', purpose:'any'}, {src:drawIcon(512), sizes:'512x512', type:'image/png', purpose:'any'}, {src:drawIcon(512, true), sizes:'512x512', type:'image/png', purpose:'maskable'}],
     };
