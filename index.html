@@ -552,9 +552,8 @@ const GUIDES = {
     'Бесплатно с лимитами. Если сервис пишет, что недоступен в твоей стране — используй OpenRouter.',
     K_WARN],
    models:[
-    ['gemini-2.5-flash', 'Быстрая и умная, щедрый бесплатный лимит. Лучший выбор для старта.', 'рекомендую'],
-    ['gemini-2.5-pro', 'Самая умная у Google, но бесплатный лимит маленький.', 'умная'],
-    ['gemini-2.5-flash-lite', 'Самая быстрая и дешёвая — для простых задач.', 'лёгкая']]},
+    ['gemini-3.8-flash', 'Быстрая и умная, щедрый бесплатный лимит. Лучший выбор для старта.', 'рекомендую']],
+   mnote:'Google часто меняет названия моделей. Нажми «Список» — там все доступные тебе модели: <b>flash</b> — быстрые, <b>pro</b> — самые умные (но маленький бесплатный лимит), <b>lite</b> — самые лёгкие.'},
   anthropic: {title:'Как получить ключ Claude (платно)', steps:[
     'Зарегистрируйся на <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.',
     'Открой <b>Billing</b> и пополни баланс (от $5) — без этого ключ работать не будет.',
@@ -845,10 +844,22 @@ async function callLLM({provider, model, system, messages, signal, onText, onMet
   let lastErr = null;
   for (const id of order) {
     if (!isReady(id)) continue;
-    const m = id === provider && model ? model : modelOf(id);
+    let m = id === provider && model ? model : modelOf(id);
     if (onMeta) onMeta(provLabel(id, m) + (lastErr ? ' (запасной)' : ''));
     try {
-      const text = await withSlot(id, P[id].conc, () => doCall(id, m, system, messages, signal, onText, onMeta));
+      let text;
+      try { text = await withSlot(id, P[id].conc, () => doCall(id, m, system, messages, signal, onText, onMeta)); }
+      catch (e) {
+        /* модель устарела — берём актуальную из списка провайдера и пробуем ещё раз */
+        if (signal && signal.aborted || P[id].kind === 'webllm' || e.status !== 404 || m !== S.providers[id].model) throw e;
+        let fresh = '';
+        try { fresh = pickDefault(id, await listModels(id)); } catch (_) {}
+        if (!fresh || fresh === m) throw e;
+        S.providers[id].model = m = fresh; saveSettings(); renderBrain();
+        toast(`${P[id].short}: старая модель недоступна — переключился на ${fresh}`, 4000);
+        if (onMeta) onMeta(provLabel(id, m));
+        text = await withSlot(id, P[id].conc, () => doCall(id, m, system, messages, signal, onText, onMeta));
+      }
       if (!stripThink(text).trim()) throw new Error(P[id].short + ': пустой ответ');
       if (onMeta) onMeta(provLabel(id, P[id].kind === 'webllm' ? wl.model : m) + (lastErr ? ' (запасной)' : ''));
       return text;
@@ -886,7 +897,11 @@ async function listModels(id) {
   return arr;
 }
 function pickDefault(id, list) {
-  for (const re of P[id].prefer || []) { const m = list.find(x => re.test(x.id)); if (m) return m.id; }
+  const ver = s => (String(s).match(/\d+(\.\d+)?/) || ['0'])[0];
+  for (const re of P[id].prefer || []) {
+    const ms = list.filter(x => re.test(x.id));
+    if (ms.length) return ms.sort((a, b) => parseFloat(ver(b.id)) - parseFloat(ver(a.id)) || (b.free ? 1 : 0) - (a.free ? 1 : 0))[0].id;
+  }
   return list[0] ? list[0].id : '';
 }
 
@@ -1396,8 +1411,21 @@ async function testProvider(card, btn) {
   }
   btn.disabled = true;
   const ctrl = new AbortController(), tm = setTimeout(() => ctrl.abort(), P[id].kind === 'webllm' ? 3600e3 : 90e3);
+  const ping = () => withSlot(id, P[id].conc, () => doCall(id, modelOf(id), 'Ты — ассистент. Отвечай очень коротко.', [{role:'user', content:'Поздоровайся и назови себя одним предложением.'}], ctrl.signal, () => {}, s => { out.textContent = s; }));
   try {
-    const t = await withSlot(id, P[id].conc, () => doCall(id, modelOf(id), 'Ты — ассистент. Отвечай очень коротко.', [{role:'user', content:'Поздоровайся и назови себя одним предложением.'}], ctrl.signal, () => {}, s => { out.textContent = s; }));
+    let t;
+    try { t = await ping(); }
+    catch (e) {
+      /* модель устарела или не найдена — сами подбираем актуальную из списка и пробуем ещё раз */
+      if (P[id].kind === 'webllm' || !(e.status === 404 || e.status === 400) || ctrl.signal.aborted) throw e;
+      let list = []; try { list = await listModels(id); } catch (_) { throw e; }
+      const fresh = pickDefault(id, list);
+      if (!fresh || fresh === c.model) throw e;
+      out.textContent = `Модель «${c.model}» недоступна — пробую «${fresh}»…`;
+      c.model = fresh; const inp = $('input[data-pk="model"]', card); if (inp) inp.value = fresh; saveSettings();
+      t = await ping();
+      toast('Старая модель недоступна — выбрал актуальную: ' + fresh, 4000);
+    }
     out.textContent = '✓ Работает! Ответ: ' + clip(stripThink(t).trim(), 160); out.className = 'test-out hint ok';
     if (!isReady(S.main)) S.main = id;
   } catch (e) { out.textContent = '✕ ' + (ctrl.signal.aborted ? 'нет ответа (таймаут)' : e.message); out.className = 'test-out hint err'; }
