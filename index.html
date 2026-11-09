@@ -256,6 +256,14 @@ details.card>summary::-webkit-details-marker{display:none}
 .card-b{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px}
 .note{font-size:13px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
 .note.warn{color:var(--err)}
+.guide summary{cursor:pointer;color:var(--text);font-weight:600;font-size:14px}
+.guide ol{margin:8px 0 2px;padding-left:20px;line-height:1.55}.guide li{margin:5px 0}
+.cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.cat-i{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--text)}
+.cat-i b{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;word-break:break-all}
+.cat-i .cd{color:var(--muted);font-size:12.5px;line-height:1.4}
+.cat-i:hover{border-color:var(--acc)}
+.cat-i.on{border-color:var(--acc);background:var(--acc-soft)}
 .note code{font-size:12px;background:var(--code);border-radius:5px;padding:1px 5px;user-select:all}
 .field{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted)}
 .field input,.field select,.field textarea,.member input,.member select,.pick select{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 10px;color:var(--text);font-size:14px;width:100%;min-width:0}
@@ -476,6 +484,120 @@ const PRESETS = [
   {id:'custom', kind:'openai', name:'Свой сервер (OpenAI-совместимый)', short:'Свой ИИ', conc:2, base:'', optKey:true, showBase:true, tags:[], blurb:'Mistral, Together, vLLM, LocalAI и любой другой.'},
 ];
 const P = Object.fromEntries(PRESETS.map(p => [p.id, p]));
+
+/* Пошаговые инструкции и рекомендуемые модели для каждого подключения */
+const K_WARN = '🔒 Ключ — как пароль: никому не показывай и не выкладывай в интернет. В Рое он хранится только на твоём устройстве.';
+const GUIDES = {
+  webllm: {title:'Как включить встроенный ИИ (ключ не нужен)', steps:[
+    'Открой Рой в <b>Chrome</b> или <b>Edge</b> (на телефоне — Chrome для Android).',
+    'Выбери модель ниже (или оставь «Авто» — подберу под устройство).',
+    'Нажми <b>«Скачать и проверить»</b>. Модель скачается один раз (1–5 ГБ) — лучше по Wi-Fi.',
+    'Готово: дальше работает бесплатно, без лимитов и даже без интернета.'],
+   models:[
+    ['Qwen3-4B-q4f16_1-MLC', 'Самая умная из лёгких: хорошо рассуждает и пишет по-русски. ≈3,4 ГБ. Для ПК и мощных телефонов.', 'рекомендую'],
+    ['Llama-3.2-3B-Instruct-q4f16_1-MLC', 'Быстрая и универсальная. ≈2,3 ГБ.', ''],
+    ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Сильна в логике и математике, по-русски слабее. ≈3,7 ГБ.', ''],
+    ['Qwen2.5-1.5B-Instruct-q4f16_1-MLC', 'Для слабых телефонов и ноутбуков: очень быстрая, но простая. ≈1,6 ГБ.', 'лёгкая']],
+   mnote:'Полный список — кнопка «Показать все модели».'},
+  ollama: {title:'Как подключить Ollama (бесплатно, без ключа)', steps:[
+    'Скачай и установи Ollama: <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a>.',
+    'Открой командную строку (Win+R → <code>cmd</code>) и скачай модель: <code>ollama pull qwen3:8b</code>',
+    'Разреши сайту доступ: <code>setx OLLAMA_ORIGINS "*"</code> (на Mac: <code>launchctl setenv OLLAMA_ORIGINS "*"</code>).',
+    'Перезапусти Ollama: значок в трее у часов → <b>Quit</b>, затем запусти Ollama снова.',
+    'Здесь нажми <b>«Список»</b>, выбери модель и нажми <b>«Проверить связь»</b>. Если браузер спросит про доступ к локальной сети — разреши.'],
+   models:[
+    ['qwen3:8b', 'Лучший выбор для большинства ПК: умная, хорошо знает русский. Нужно ~8 ГБ видеопамяти/ОЗУ.', 'рекомендую'],
+    ['qwen3:14b', 'Заметно умнее, но медленнее. Нужно ~16 ГБ.', ''],
+    ['qwen3:30b', 'Очень умная для локальной модели. Нужен мощный ПК (24+ ГБ).', 'мощный ПК'],
+    ['gemma3:12b', 'Модель от Google: аккуратные тексты, понимает картинки. ~12 ГБ.', ''],
+    ['deepseek-r1:8b', 'Долго «думает», зато хороша в математике и логике.', ''],
+    ['qwen2.5-coder:7b', 'Специалист по программированию — отдай её Программисту.', 'код'],
+    ['llama3.2:3b', 'Для слабых ноутбуков: быстрая, но простая.', 'лёгкая']],
+   mnote:'Сначала скачай модель командой <code>ollama pull название</code> — в «Список» попадают только скачанные.'},
+  lmstudio: {title:'Как подключить LM Studio (бесплатно, без ключа)', steps:[
+    'Скачай LM Studio: <a href="https://lmstudio.ai" target="_blank" rel="noopener">lmstudio.ai</a> и установи.',
+    'Во вкладке поиска (🔍) найди и скачай модель, например <b>Qwen3 8B</b>.',
+    'Открой вкладку <b>Developer</b> → включи <b>Start Server</b>.',
+    'В настройках сервера включи <b>Enable CORS</b>.',
+    'Здесь нажми <b>«Список»</b>, выбери модель и <b>«Проверить связь»</b>.']},
+  openrouter: {title:'Как получить ключ OpenRouter (есть бесплатные модели)', steps:[
+    'Зайди на <a href="https://openrouter.ai" target="_blank" rel="noopener">openrouter.ai</a> → <b>Sign in</b> (можно через Google).',
+    'Открой <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a> → <b>Create Key</b> → придумай любое название → <b>Create</b>.',
+    'Скопируй ключ (начинается с <code>sk-or-</code>) — он показывается только один раз.',
+    'Вставь ключ в поле ниже и нажми <b>«Список»</b> — бесплатные модели отмечены 🆓 и стоят сверху.',
+    'Без пополнения бесплатно ~50 запросов в день; если пополнить счёт на $10 — лимит на бесплатные модели станет ~1000 в день.',
+    K_WARN],
+   models:[
+    ['openai/gpt-oss-120b:free', 'Большая открытая модель от OpenAI: умная и универсальная.', 'бесплатно'],
+    ['deepseek/deepseek-r1:free', 'Сильно рассуждает: математика, логика, сложные задачи. Думает долго.', 'бесплатно'],
+    ['meta-llama/llama-3.3-70b-instruct:free', 'Надёжная универсальная модель от Meta.', 'бесплатно'],
+    ['qwen/qwen3-coder:free', 'Для программирования.', 'бесплатно'],
+    ['openrouter/auto', 'OpenRouter сам выбирает лучшую модель под вопрос.', 'платно']],
+   mnote:'Бесплатные модели на OpenRouter часто меняются. Если модель не отвечает — нажми «Список» и выбери другую с 🆓.'},
+  groq: {title:'Как получить бесплатный ключ Groq', steps:[
+    'Зайди на <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> и войди (можно через Google).',
+    'Нажми <b>Create API Key</b> → любое название → <b>Submit</b>.',
+    'Скопируй ключ (начинается с <code>gsk_</code>) и вставь ниже.',
+    'Нажми <b>«Список»</b> или выбери модель из рекомендуемых. Бесплатно, но есть лимит запросов в минуту и в день.',
+    K_WARN],
+   models:[
+    ['openai/gpt-oss-120b', 'Самая умная на Groq и очень быстрая.', 'рекомендую'],
+    ['llama-3.3-70b-versatile', 'Универсальная, хорошо пишет тексты.', ''],
+    ['qwen/qwen3-32b', 'Хорошо рассуждает и знает русский.', ''],
+    ['llama-3.1-8b-instant', 'Молниеносная, но простая — для Соло и простых вопросов.', 'лёгкая']]},
+  gemini: {title:'Как получить бесплатный ключ Google Gemini', steps:[
+    'Зайди на <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> и войди в Google-аккаунт.',
+    'Нажми <b>Create API key</b> (если спросит проект — выбери любой или создай новый).',
+    'Скопируй ключ (начинается с <code>AIza</code>) и вставь ниже.',
+    'Бесплатно с лимитами. Если сервис пишет, что недоступен в твоей стране — используй OpenRouter.',
+    K_WARN],
+   models:[
+    ['gemini-2.5-flash', 'Быстрая и умная, щедрый бесплатный лимит. Лучший выбор для старта.', 'рекомендую'],
+    ['gemini-2.5-pro', 'Самая умная у Google, но бесплатный лимит маленький.', 'умная'],
+    ['gemini-2.5-flash-lite', 'Самая быстрая и дешёвая — для простых задач.', 'лёгкая']]},
+  anthropic: {title:'Как получить ключ Claude (платно)', steps:[
+    'Зарегистрируйся на <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.',
+    'Открой <b>Billing</b> и пополни баланс (от $5) — без этого ключ работать не будет.',
+    'Открой <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">API Keys</a> → <b>Create Key</b>.',
+    'Скопируй ключ (начинается с <code>sk-ant-</code>) и вставь ниже.',
+    'Совет: чтобы тратить меньше — дай Claude только Редактору и Критику (вкладка «Агенты»), остальным — бесплатную модель.',
+    K_WARN],
+   models:[
+    ['claude-opus-5-5', 'Очень умная: сложные задачи, код, анализ. Лучший выбор для Редактора.', 'рекомендую'],
+    ['claude-sonnet-5-5', 'Быстрее и в 2 раза дешевле Opus, почти так же умна.', 'оптимально'],
+    ['claude-haiku-5-5', 'Самая быстрая и дешёвая — для специалистов и простых вопросов.', 'дёшево'],
+    ['claude-fable-5-1', 'Самая мощная модель Anthropic для самых трудных задач. Дорогая.', 'максимум']]},
+  openai: {title:'Как получить ключ OpenAI (платно)', steps:[
+    'Зарегистрируйся на <a href="https://platform.openai.com" target="_blank" rel="noopener">platform.openai.com</a>.',
+    'Открой <b>Settings → Billing</b> и пополни баланс.',
+    'Открой <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">API keys</a> → <b>Create new secret key</b>.',
+    'Скопируй ключ (начинается с <code>sk-</code>) и вставь ниже, затем нажми «Список».',
+    K_WARN],
+   models:[
+    ['gpt-5', 'Флагман OpenAI: умная и универсальная.', 'рекомендую'],
+    ['gpt-5-mini', 'Быстрее и дешевле, для большинства задач хватает.', 'дёшево'],
+    ['gpt-4.1', 'Хороша в коде и длинных текстах.', '']],
+   mnote:'Названия у OpenAI часто обновляются — точный список даст кнопка «Список».'},
+  deepseek: {title:'Как получить ключ DeepSeek (очень дёшево)', steps:[
+    'Зарегистрируйся на <a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a>.',
+    'Пополни баланс (хватит даже $2 на очень много запросов).',
+    'Открой <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">API keys</a> → <b>Create new API key</b>.',
+    'Скопируй ключ (начинается с <code>sk-</code>) и вставь ниже.',
+    K_WARN],
+   models:[
+    ['deepseek-chat', 'Быстрая и умная универсальная модель. Очень дешёвая.', 'рекомендую'],
+    ['deepseek-reasoner', 'Долго думает перед ответом — для математики, логики и кода.', 'умная']]},
+  custom: {title:'Как подключить свой сервер', steps:[
+    'Подойдёт любой сервис с OpenAI-совместимым API (Mistral, Together, Fireworks, vLLM, LocalAI…).',
+    'Впиши адрес API — обычно он заканчивается на <code>/v1</code>.',
+    'Вставь ключ этого сервиса (если нужен), нажми «Список» и «Проверить связь».']},
+};
+function guideHtml(p, c) {
+  const g = GUIDES[p.id]; if (!g) return '';
+  let h = `<details class="note guide"${isReady(p.id) ? '' : ' open'}><summary>📖 ${esc(g.title)}</summary><ol>${g.steps.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
+  if (g.models) h += `<div class="field"><span>Рекомендуемые модели — нажми, чтобы выбрать</span><div class="cat">${g.models.map(([id, d, t]) => `<button type="button" class="cat-i${c.model === id ? ' on' : ''}" data-act="pick-model" data-m="${esc(id)}"><div><b>${esc(id)}</b>${t ? ` <span class="tag${/бесплатно|рекомендую/.test(t) ? ' g' : ''}">${esc(t)}</span>` : ''}</div><span class="cd">${esc(d)}</span></button>`).join('')}</div>${g.mnote ? `<div class="hint">${g.mnote}</div>` : ''}</div>`;
+  return h;
+}
 
 /* ============================ АГЕНТЫ ============================ */
 const CORE = ['planner', 'critic', 'editor'];
@@ -1198,7 +1320,7 @@ function provCard(p) {
   return `<div class="card prov${c.on ? ' on' : ''}" data-id="${p.id}"><div class="card-h"><label class="sw" title="Включить"><input type="checkbox" data-pk="on"${c.on ? ' checked' : ''}><span></span></label><div class="grow"><div class="pname">${esc(p.name)} ${p.tags.map(([t, cl]) => `<span class="tag ${cl}">${esc(t)}</span>`).join(' ')}</div><div class="hint">${esc(p.blurb)}</div></div><span class="dot${c.on ? (ok ? ' ok' : ' err') : ''}" title="${ok ? 'Готов к работе' : 'Не настроен'}"></span></div>${c.on ? `<div class="card-b">${provBody(p, c)}</div>` : ''}</div>`;
 }
 function provBody(p, c) {
-  let h = p.note ? `<div class="note">${p.note}</div>` : '';
+  let h = (p.note && !GUIDES[p.id] ? `<div class="note">${p.note}</div>` : '') + guideHtml(p, c);
   if (p.kind === 'webllm') {
     if (!('gpu' in navigator)) h += '<div class="note warn">⚠️ Этот браузер не поддерживает WebGPU — встроенный ИИ здесь не запустится. Открой Рой в Chrome или Edge, либо выбери Ollama или ключ.</div>';
     return h + `<label class="field"><span>Модель</span><select data-pk="model" class="wl-sel"><option value="">Авто — подберу под устройство</option>${c.model ? `<option value="${esc(c.model)}" selected>${esc(c.model)}</option>` : ''}</select></label>
@@ -1325,6 +1447,17 @@ dlgBody.addEventListener('click', e => {
   switch (b.dataset.act) {
     case 'models': showModels(card, b); break;
     case 'test': testProvider(card, b); break;
+    case 'pick-model': {
+      const id = card.dataset.id, m = b.dataset.m;
+      S.providers[id].model = m;
+      const inp = $('input[data-pk="model"]', card); if (inp) inp.value = m;
+      const sel = $('.wl-sel', card);
+      if (sel) { if (![...sel.options].some(o => o.value === m)) sel.add(new Option(m, m)); sel.value = m; }
+      $$('.cat-i', card).forEach(x => x.classList.toggle('on', x === b));
+      saveSettings(); updateDot(card);
+      toast('Модель выбрана: ' + m + (P[id].kind === 'webllm' ? '' : ' — теперь нажми «Проверить связь»'), 2600);
+      break;
+    }
     case 'add-agent': {
       S.agents.push({id:'a' + uid(), emoji:'🤖', name:'Новый агент', desc:'опиши, в чём он силён', prompt:'Ты — эксперт по … . Твоя задача — …', on:true, provider:'', model:''});
       saveSettings(); renderSettings();
