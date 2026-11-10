@@ -301,6 +301,7 @@ details.card>summary::-webkit-details-marker{display:none}
 .member select{max-width:150px}
 .test-out{min-height:0}
 .test-out.ok{color:var(--ok)}.test-out.err{color:var(--err)}
+.key-warn:empty{display:none}.key-warn .ok{color:var(--ok)}.key-warn .err{color:var(--err)}
 .ag-e{font-size:22px;width:28px;text-align:center}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 14px;cursor:pointer}
@@ -385,6 +386,7 @@ details.card>summary::-webkit-details-marker{display:none}
     <p class="sub">Swarmind думает с помощью лучших нейросетей мира — и сам выбирает, какую использовать.</p>
     <div class="grid">
       <div class="feat"><div class="i">🐝</div><h3>Своя нейросеть Swarmind Mind</h3><p>Работает прямо на твоём устройстве: без ключей, без лимитов и даже без интернета. Три размера — Lite, Mind и Pro.</p></div>
+      <div class="feat"><div class="i">🧠</div><h3>Наш движок Swarmind Core</h3><p>Свой код с нуля, 2000+ строк: решает уравнения и задачи по физике, чертит планы и графики, делает сайты, переводит, пишет сочинения и код. Работает сразу, без ключа и интернета, и подменяет облачные ИИ, когда они недоступны.</p></div>
       <div class="feat"><div class="i">🔌</div><h3>Любые нейросети</h3><p>Или подключи Claude, GPT, Gemini, Groq, DeepSeek, OpenRouter, Ollama, LM Studio.</p></div>
       <div class="feat"><div class="i">🔁</div><h3>Автопереключение</h3><p>Одна нейросеть упёрлась в лимит или молчит — Swarmind сам продолжит на другой.</p></div>
       <div class="feat"><div class="i">⚖️</div><h3>Консилиум</h3><p>Несколько разных ИИ отвечают независимо, Судья собирает из них лучший ответ.</p></div>
@@ -428,7 +430,8 @@ details.card>summary::-webkit-details-marker{display:none}
     <details><summary>Как сделать сайт и выложить его?</summary><p>Попроси, например: «Сделай сайт-портфолио фотографа». Нажми «▶ Открыть сайт», чтобы посмотреть, и «⬇ .html», чтобы скачать. Чтобы сайт открывался по ссылке — загрузи файл как index.html на GitHub Pages.</p></details>
     <details><summary>Куда уходят мои ключи и переписка?</summary><p>Никуда, кроме выбранного тобой ИИ. У Swarmind нет своего сервера: ключи, настройки и чаты хранятся только в браузере на твоём устройстве.</p></details>
     <details><summary>Чем отличаются ⚡ Быстрый, 🧠 Средний и 🚀 Максимум?</summary><p><b>⚡ Быстрый</b> — один короткий ответ от самой быстрой подключённой нейросети (быстрее всего с бесплатным ключом Groq). <b>🧠 Средний</b> — один продуманный и проверенный ответ, лучший баланс скорости и ума. <b>🚀 Максимум</b> — над ответом работает команда агентов: планируют, пишут черновики и собирают итог. Это дольше, но для сложных задач заметно умнее.</p></details>
-    <details><summary>Работает без интернета?</summary><p>Да — со своей нейросетью Swarmind Mind (после первой загрузки модели) или с Ollama/LM Studio на компьютере.</p></details>
+    <details><summary>Работает без интернета?</summary><p>Да. Наш движок Swarmind Core работает без интернета всегда. Для свободной беседы подойдёт своя нейросеть Swarmind Mind (после первой загрузки модели) или Ollama/LM Studio на компьютере.</p></details>
+    <details><summary>Нейросеть подключилась, а потом пропала — почему?</summary><p>Чаще всего закончился бесплатный дневной лимит (у Gemini он небольшой) или сервис не работает в твоей стране. Swarmind теперь пишет точную причину. Пока облако недоступно, отвечает Swarmind Core. Надёжнее всего подключить две нейросети, например OpenRouter и Groq: если одна упрётся в лимит, Swarmind сам переключится на другую.</p></details>
     <details><summary>Можно поменять агентов уровня «Максимум»?</summary><p>Да. В Настройках → «🐝 Агенты» можно менять инструкции, отключать агентов, добавлять своих и назначать каждому отдельную нейросеть.</p></details>
   </div></section>
 
@@ -489,6 +492,2050 @@ details.card>summary::-webkit-details-marker{display:none}
 <div id="toasts"></div>
 <noscript><p style="padding:20px">Для работы Swarmind нужен включённый JavaScript.</p></noscript>
 
+<script id="swarmind-core">
+/* =====================================================================
+   SWARMIND CORE — собственный ИИ-движок Swarmind.ai
+   Работает целиком в браузере: без интернета, без ключей, без лимитов.
+   Модули: понимание текста · математика · единицы · чертежи и графики ·
+   сайты · переводчик · сочинения · база знаний · код · беседа.
+   ===================================================================== */
+(function () {
+'use strict';
+const SC = window.SwarmCore = {version:'1.0', name:'Swarmind Core'};
+
+/* ============================ 1. ТЕКСТ И ПОНИМАНИЕ ============================ */
+
+/* --- неверная раскладка: «ghbdtn» → «привет» --- */
+const EN_KEYS = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`";
+const RU_KEYS = 'йцукенгшщзхъфывапролджэячсмитьбюё';
+const LAYOUT = {};
+for (let i = 0; i < EN_KEYS.length; i++) { LAYOUT[EN_KEYS[i]] = RU_KEYS[i]; LAYOUT[EN_KEYS[i].toUpperCase()] = RU_KEYS[i].toUpperCase(); }
+function fixLayout(s) {
+  const letters = s.replace(/[^a-zA-ZЀ-ӿ]/g, '');
+  if (!letters) return s;
+  const lat = (letters.match(/[a-zA-Z]/g) || []).length;
+  if (lat / letters.length < 0.9) return s;
+  /* английский текст не трогаем: у настоящих слов много гласных и нет «;[]» */
+  const words = s.toLowerCase().match(/[a-z;'\[\],.`]+/g) || [];
+  const looksEnglish = words.filter(w => EN_COMMON.has(w)).length;
+  if (looksEnglish >= Math.max(1, words.length * 0.3)) return s;
+  const conv = s.split('').map(ch => LAYOUT[ch] || ch).join('');
+  const ruWords = conv.toLowerCase().match(/[а-яё]+/g) || [];
+  const known = ruWords.filter(w => RU_COMMON.has(w) || RU_COMMON.has(stem(w))).length;
+  return known >= Math.max(1, ruWords.length * 0.3) ? conv : s;
+}
+const EN_COMMON = new Set('the a an is are was were be to of and in on at for with what how why who where when you i me my your it this that do does can could would should will hello hi hey please thanks thank yes no not translate draw make write give tell show help about from by as or if then so but all some any one two three'.split(' '));
+const RU_COMMON = new Set('привет как дела что кто где когда почему зачем сколько это мне меня ты вы он она они мы и в на с по для про не да нет ну а но или если то так все всё есть был была будет можно нужно надо сделай напиши нарисуй начерти переведи реши посчитай объясни расскажи помоги спасибо пока хорошо плохо давай хочу сайт план схема график задача сочинение перевод слово текст число время день год ок окей'.split(' '));
+
+/* --- нормализация --- */
+function norm(s) {
+  return String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/[«»"“”„]/g, '"').replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+}
+const words = s => norm(s).match(/[a-zа-я0-9]+(?:-[a-zа-я0-9]+)*/g) || [];
+
+/* --- облегчённый стеммер русского языка (по мотивам Snowball) --- */
+const RV_RX = /^(.*?[аеиоуыэюя])(.*)$/;
+const PERFECTIVE = /((ив|ивши|ившись|ыв|ывши|ывшись)|((?<=[ая])(в|вши|вшись)))$/;
+const REFLEXIVE = /(с[яь])$/;
+const ADJECTIVE = /(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/;
+const PARTICIPLE = /((ивш|ывш|ующ)|((?<=[ая])(ем|нн|вш|ющ|щ)))$/;
+const VERB = /((ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)|((?<=[ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)))$/;
+const NOUN = /(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/;
+const STEM_CACHE = new Map();
+function stem(w) {
+  w = norm(w);
+  if (w.length < 4 || !/[а-я]/.test(w)) return w;
+  if (STEM_CACHE.has(w)) return STEM_CACHE.get(w);
+  const m = w.match(RV_RX);
+  if (!m) return w;
+  let pre = m[1], rv = m[2];
+  let t = rv.replace(PERFECTIVE, '');
+  if (t === rv) {
+    rv = rv.replace(REFLEXIVE, '');
+    t = rv.replace(ADJECTIVE, '');
+    if (t !== rv) { rv = t.replace(PARTICIPLE, ''); }
+    else { t = rv.replace(VERB, ''); rv = t !== rv ? t : rv.replace(NOUN, ''); }
+  } else rv = t;
+  rv = rv.replace(/и$/, '').replace(/ость?$/, '').replace(/ь$/, '').replace(/нн$/, 'н').replace(/ейше?$/, '');
+  const out = (pre + rv) || w;
+  STEM_CACHE.set(w, out);
+  return out;
+}
+const stems = s => words(s).map(stem);
+
+/* --- расстояние Левенштейна для опечаток --- */
+function lev(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length; if (!b.length) return a.length;
+  let prev = Array.from({length:b.length + 1}, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[b.length];
+}
+/* похоже ли слово на одно из ключевых (с учётом опечаток) */
+function fuzzyHas(tokens, key) {
+  const k = stem(key);
+  for (const t of tokens) {
+    if (t === k || t.startsWith(k) || k.startsWith(t) && t.length >= 4) return true;
+    if (k.length >= 5 && Math.abs(t.length - k.length) <= 2 && lev(t, k) <= (k.length > 7 ? 2 : 1)) return true;
+  }
+  return false;
+}
+
+/* --- числа: «3,5» «2 500» «пять» «полтора» --- */
+const NUM_WORDS = {ноль:0, один:1, одна:1, одно:1, два:2, две:2, три:3, четыре:4, пять:5, шесть:6, семь:7, восемь:8, девять:9, десять:10, одиннадцать:11, двенадцать:12, тринадцать:13, четырнадцать:14, пятнадцать:15, шестнадцать:16, семнадцать:17, восемнадцать:18, девятнадцать:19, двадцать:20, тридцать:30, сорок:40, пятьдесят:50, шестьдесят:60, семьдесят:70, восемьдесят:80, девяносто:90, сто:100, двести:200, триста:300, четыреста:400, пятьсот:500, тысяча:1000, тысячу:1000, миллион:1e6, полтора:1.5, половина:0.5, пол:0.5};
+function numbersIn(s) {
+  const out = [];
+  String(s).replace(/-?\d+(?:[  ]\d{3})*(?:[.,]\d+)?/g, m => { out.push(parseFloat(m.replace(/[  ]/g, '').replace(',', '.'))); return m; });
+  return out;
+}
+function wordsToNumbers(s) {
+  return String(s).replace(/[а-яё]+/gi, w => {
+    const v = NUM_WORDS[w.toLowerCase()];
+    return v === undefined ? w : String(v);
+  });
+}
+
+/* --- форматирование --- */
+function fmt(x, digits = 6) {
+  if (typeof x !== 'number' || !isFinite(x)) return String(x);
+  if (Number.isInteger(x) && Math.abs(x) < 1e15) return x.toLocaleString('ru-RU').replace(/ /g, ' ');
+  const a = Math.abs(x);
+  if (a !== 0 && (a < 1e-6 || a >= 1e15)) return x.toExponential(4).replace('e', '·10^').replace('+', '');
+  return parseFloat(x.toPrecision(digits + 4 > 15 ? 15 : digits + 4)).toLocaleString('ru-RU', {maximumFractionDigits:digits}).replace(/ /g, ' ');
+}
+function plural(n, one, few, many) { n = Math.abs(n) % 100; const n1 = n % 10; if (n > 10 && n < 20) return many; if (n1 > 1 && n1 < 5) return few; if (n1 === 1) return one; return many; }
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const escHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+
+/* --- распознавание намерения (intent) ---
+   Каждое намерение: ключевые основы слов (с весами) + регулярки-триггеры.
+   Побеждает намерение с наибольшим счётом; при равенстве — более конкретное. */
+const INTENTS = [];
+const EXTRA = {};   /* дополнительные навыки: id → функция(text, t, ctx) */
+function intent(id, opt) { INTENTS.push({id, keys:opt.keys || {}, rx:opt.rx || [], anti:opt.anti || [], prio:opt.prio || 0}); }
+function classify(text) {
+  const t = norm(text), tok = stems(text);
+  const scores = [];
+  for (const it of INTENTS) {
+    let s = 0;
+    for (const r of it.rx) if (r.test(t)) s += 3;
+    for (const [k, w] of Object.entries(it.keys)) if (fuzzyHas(tok, k)) s += w;
+    for (const r of it.anti) if (r.test(t)) s -= 4;
+    if (s > 0) scores.push({id:it.id, score:s + it.prio * 0.01});
+  }
+  scores.sort((a, b) => b.score - a.score);
+  return scores;
+}
+
+/* --- извлечение сущностей --- */
+const LANGS = {
+  en:{name:'английский', rx:/англ|english|по-английски/},
+  ru:{name:'русский', rx:/русск|russian|по-русски/},
+  de:{name:'немецкий', rx:/немец|german|deutsch/},
+  fr:{name:'французский', rx:/француз|french/},
+  es:{name:'испанский', rx:/испан|spanish/},
+  it:{name:'итальянский', rx:/итальян|italian/},
+};
+function targetLang(t) {
+  const m = norm(t).match(/(?:^|\s)на ([а-я-]+)|(?:in|to|into) (english|russian|german|french|spanish|italian)/);
+  if (m) { const w = m[1] || m[2]; for (const [k, v] of Object.entries(LANGS)) if (v.rx.test(w)) return k; }
+  for (const [k, v] of Object.entries(LANGS)) if (v.rx.test(norm(t)) && k !== 'ru') return k;
+  return null;
+}
+/* «4х5», «4 на 5», «4*5 м», «4,5 x 3» */
+function sizesIn(s) {
+  const out = [];
+  const rx = /(\d+(?:[.,]\d+)?)\s*(?:м|m|см|мм)?\s*(?:x|х|×|\*|на)\s*(\d+(?:[.,]\d+)?)\s*(мм|см|м|m)?/gi;
+  let m;
+  while ((m = rx.exec(s))) out.push({a:parseFloat(m[1].replace(',', '.')), b:parseFloat(m[2].replace(',', '.')), unit:(m[3] || '').toLowerCase(), at:m.index, raw:m[0]});
+  return out;
+}
+
+Object.assign(SC, {fixLayout, norm, words, stem, stems, lev, fuzzyHas, numbersIn, wordsToNumbers, fmt, plural, pick, cap, escHtml, intent, classify, targetLang, sizesIn, LANGS});
+
+
+/* ============================ 2. МАТЕМАТИКА ============================ */
+
+/* --- лексер --- */
+const FUNCS = {
+  sin:Math.sin, cos:Math.cos, tan:Math.tan, tg:Math.tan, ctg:x => 1 / Math.tan(x), cot:x => 1 / Math.tan(x),
+  asin:Math.asin, acos:Math.acos, atan:Math.atan, arcsin:Math.asin, arccos:Math.acos, arctg:Math.atan,
+  sqrt:Math.sqrt, корень:Math.sqrt, cbrt:Math.cbrt, abs:Math.abs, модуль:Math.abs,
+  ln:Math.log, log:Math.log10, lg:Math.log10, log2:Math.log2, exp:Math.exp,
+  floor:Math.floor, ceil:Math.ceil, round:Math.round,
+};
+const CONSTS = {pi:Math.PI, 'π':Math.PI, пи:Math.PI, e:Math.E};
+function lex(src) {
+  let s = String(src).toLowerCase()
+    .replace(/×|·/g, '*').replace(/÷|:/g, '/').replace(/−|–|—/g, '-').replace(/²/g, '^2').replace(/³/g, '^3').replace(/√/g, 'sqrt')
+    .replace(/(\d),(\d)/g, '$1.$2').replace(/(\d)\s+(?=\d{3}\b)/g, '$1')
+    .replace(/(?<![а-я])в степени(?![а-я])/g, '^').replace(/(?<![а-я])плюс(?![а-я])/g, '+').replace(/(?<![а-я])минус(?![а-я])/g, '-')
+    .replace(/(?<![а-я])(разделить на|поделить на|делить на|разделить|поделить)(?![а-я])/g, '/').replace(/(?<![а-я])(умножить на|умножь на|умножить|на)(?![а-я])/g, '*');
+  const out = []; let i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (/\s/.test(c)) { i++; continue; }
+    if (/[\d.]/.test(c)) { let j = i; while (j < s.length && /[\d.]/.test(s[j])) j++; if (s[j] === 'e' && /[\d+-]/.test(s[j + 1] || '')) { j++; if (/[+-]/.test(s[j])) j++; while (/\d/.test(s[j] || '')) j++; } out.push({t:'num', v:parseFloat(s.slice(i, j))}); i = j; continue; }
+    if (/[a-zа-яπ]/.test(c)) {
+      let j = i; while (j < s.length && /[a-zа-яπ0-9]/.test(s[j])) j++;
+      let w = s.slice(i, j);
+      /* «2x» уже разобрано; «xy» → x*y не поддерживаем, но «sinx» → sin x */
+      const fn = Object.keys(FUNCS).sort((a, b) => b.length - a.length).find(f => w.startsWith(f) && w.length > f.length && /^[xπ(]|^\d/.test(w.slice(f.length)));
+      if (fn) { out.push({t:'fn', v:fn}); i += fn.length; continue; }
+      if (FUNCS[w]) out.push({t:'fn', v:w});
+      else if (w in CONSTS) out.push({t:'num', v:CONSTS[w], name:w});
+      else if (w === 'x' || w === 'х' || w === 'y' || w === 't') out.push({t:'var', v:'x'});
+      else if (w === 'mod') out.push({t:'op', v:'%'});
+      else return null;
+      i = j; continue;
+    }
+    if ('+-*/^()%!,'.includes(c)) { out.push({t:c === '(' || c === ')' ? c : 'op', v:c}); i++; continue; }
+    if (c === '[' || c === '{') { out.push({t:'(', v:'('}); i++; continue; }
+    if (c === ']' || c === '}') { out.push({t:')', v:')'}); i++; continue; }
+    return null;
+  }
+  /* неявное умножение: 2x, 2(…), )(, x( */
+  const res = [];
+  for (let k = 0; k < out.length; k++) {
+    const a = res[res.length - 1], b = out[k];
+    if (a && (a.t === 'num' || a.t === 'var' || a.t === ')' || (a.t === 'op' && a.v === '!')) && (b.t === 'num' || b.t === 'var' || b.t === '(' || b.t === 'fn')) res.push({t:'op', v:'*'});
+    res.push(b);
+  }
+  return res;
+}
+
+/* --- парсер (рекурсивный спуск) → дерево выражения --- */
+function parse(src) {
+  const toks = lex(src);
+  if (!toks || !toks.length) return null;
+  let p = 0;
+  const peek = () => toks[p], next = () => toks[p++];
+  const isOp = v => peek() && peek().t === 'op' && peek().v === v;
+  function expr() { let n = term(); while (isOp('+') || isOp('-')) { const o = next().v; n = {op:o, a:n, b:term()}; } return n; }
+  function term() { let n = unary(); while (isOp('*') || isOp('/') || (isOp('%') && toks[p + 1] && (toks[p + 1].t === 'num' || toks[p + 1].t === '(' || toks[p + 1].t === 'var'))) { const o = next().v; n = {op:o === '%' ? 'mod' : o, a:n, b:unary()}; } return n; }
+  function unary() { if (isOp('-')) { next(); return {op:'neg', a:unary()}; } if (isOp('+')) { next(); return unary(); } return power(); }
+  function power() { let n = postfix(); if (isOp('^')) { next(); return {op:'^', a:n, b:unary()}; } return n; }
+  function postfix() {
+    let n = atom();
+    for (;;) {
+      if (isOp('!')) { next(); n = {op:'!', a:n}; }
+      else if (isOp('%') && !(toks[p + 1] && (toks[p + 1].t === 'num' || toks[p + 1].t === '(' || toks[p + 1].t === 'var'))) { next(); n = {op:'/', a:n, b:{num:100}}; }
+      else return n;
+    }
+  }
+  function atom() {
+    const t = next();
+    if (!t) throw new Error('конец выражения');
+    if (t.t === 'num') return {num:t.v, name:t.name};
+    if (t.t === 'var') return {v:'x'};
+    if (t.t === 'fn') {
+      let arg;
+      if (peek() && peek().t === '(') { next(); arg = expr(); if (!peek() || peek().t !== ')') throw new Error('скобка'); next(); }
+      else arg = power();
+      return {fn:t.v, a:arg};
+    }
+    if (t.t === '(') { const n = expr(); if (!peek() || peek().t !== ')') throw new Error('не закрыта скобка'); next(); return n; }
+    throw new Error('неожиданный символ');
+  }
+  try { const n = expr(); if (p !== toks.length) return null; return n; } catch (e) { return null; }
+}
+function fact(n) { if (n < 0 || !Number.isInteger(n)) return gammaFact(n); if (n > 170) return Infinity; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+function gammaFact(x) { /* приближение Стирлинга для нецелых */ const n = x + 1; return Math.sqrt(2 * Math.PI / n) * Math.pow(n / Math.E * Math.sqrt(n * Math.sinh(1 / n) + 1 / (810 * Math.pow(n, 6))), n); }
+let ANGLE_DEG = false;
+function evalAst(n, x) {
+  if ('num' in n) return n.num;
+  if (n.v) return x;
+  if (n.fn) {
+    let a = evalAst(n.a, x);
+    if (ANGLE_DEG && /^(sin|cos|tan|tg|ctg|cot)$/.test(n.fn)) a = a * Math.PI / 180;
+    let r = FUNCS[n.fn](a);
+    if (ANGLE_DEG && /^(asin|acos|atan|arcsin|arccos|arctg)$/.test(n.fn)) r = r * 180 / Math.PI;
+    return r;
+  }
+  const a = evalAst(n.a, x);
+  switch (n.op) {
+    case 'neg': return -a;
+    case '!': return fact(a);
+    case '+': return a + evalAst(n.b, x);
+    case '-': return a - evalAst(n.b, x);
+    case '*': return a * evalAst(n.b, x);
+    case '/': return a / evalAst(n.b, x);
+    case 'mod': return a % evalAst(n.b, x);
+    case '^': return Math.pow(a, evalAst(n.b, x));
+  }
+  return NaN;
+}
+const hasVar = n => !!n && (n.v ? true : ['a', 'b'].some(k => n[k] && hasVar(n[k])));
+
+/* --- печать выражения --- */
+const PREC = {'+':1, '-':1, '*':2, '/':2, mod:2, neg:3, '^':4, '!':5};
+function show(n, parent = 0) {
+  if (!n) return '';
+  if ('num' in n) return n.name === 'pi' || n.name === 'π' || n.name === 'пи' ? 'π' : fmtPlain(n.num);
+  if (n.v) return 'x';
+  if (n.fn) return n.fn + '(' + show(n.a) + ')';
+  const p = PREC[n.op] || 0;
+  let s;
+  if (n.op === 'neg') s = '-' + show(n.a, 3);
+  else if (n.op === '!') s = show(n.a, 5) + '!';
+  else if (n.op === '^') s = show(n.a, 5) + '^' + show(n.b, 4);
+  else if (n.op === '*' && 'num' in n.a && (n.b.v || n.b.fn || n.b.op === '^')) s = show(n.a, 2) + show(n.b, 2);
+  else s = show(n.a, p) + ' ' + (n.op === '*' ? '·' : n.op === 'mod' ? 'mod' : n.op) + ' ' + show(n.b, p + (n.op === '-' || n.op === '/' ? 1 : 0));
+  return p < parent ? '(' + s + ')' : s;
+}
+const fmtPlain = x => Number.isInteger(x) ? String(x) : String(parseFloat(x.toPrecision(10)));
+
+/* --- символьная производная + упрощение --- */
+const N = v => ({num:v}), X = {v:'x'};
+const isN = (n, v) => n && 'num' in n && (v === undefined || n.num === v);
+function simp(n) {
+  if (!n || 'num' in n || n.v) return n;
+  if (n.fn) { const a = simp(n.a); return isN(a) && !hasVar(a) ? N(FUNCS[n.fn](a.num)) : {fn:n.fn, a}; }
+  const a = simp(n.a), b = n.b ? simp(n.b) : null;
+  if (n.op === 'neg') return isN(a) ? N(-a.num) : a.op === 'neg' ? a.a : {op:'neg', a};
+  if (isN(a) && b && isN(b) && n.op !== '^') return N(evalAst({op:n.op, a, b}));
+  switch (n.op) {
+    case '+': if (isN(a, 0)) return b; if (isN(b, 0)) return a; if (b.op === 'neg') return simp({op:'-', a, b:b.a}); break;
+    case '-': if (isN(b, 0)) return a; if (isN(a, 0)) return simp({op:'neg', a:b}); if (JSON.stringify(a) === JSON.stringify(b)) return N(0); break;
+    case '*':
+      if (isN(a, 0) || isN(b, 0)) return N(0); if (isN(a, 1)) return b; if (isN(b, 1)) return a;
+      if (isN(b) && !isN(a)) return simp({op:'*', a:b, b:a});
+      if (isN(a) && b.op === '*' && isN(b.a)) return simp({op:'*', a:N(a.num * b.a.num), b:b.b});
+      if (isN(a, -1)) return {op:'neg', a:b};
+      break;
+    case '/': if (isN(a, 0)) return N(0); if (isN(b, 1)) return a; break;
+    case '^': if (isN(b, 0)) return N(1); if (isN(b, 1)) return a; if (isN(a) && isN(b)) return N(Math.pow(a.num, b.num)); break;
+  }
+  return b ? {op:n.op, a, b} : {op:n.op, a};
+}
+function deriv(n) {
+  if (!hasVar(n)) return N(0);
+  if (n.v) return N(1);
+  if (n.fn) {
+    const u = n.a, du = deriv(u);
+    const outer = {
+      sin:{fn:'cos', a:u}, cos:{op:'neg', a:{fn:'sin', a:u}}, tan:{op:'/', a:N(1), b:{op:'^', a:{fn:'cos', a:u}, b:N(2)}}, tg:{op:'/', a:N(1), b:{op:'^', a:{fn:'cos', a:u}, b:N(2)}},
+      ln:{op:'/', a:N(1), b:u}, log:{op:'/', a:N(1), b:{op:'*', a:u, b:{fn:'ln', a:N(10)}}}, lg:{op:'/', a:N(1), b:{op:'*', a:u, b:{fn:'ln', a:N(10)}}},
+      exp:{fn:'exp', a:u}, sqrt:{op:'/', a:N(1), b:{op:'*', a:N(2), b:{fn:'sqrt', a:u}}}, корень:{op:'/', a:N(1), b:{op:'*', a:N(2), b:{fn:'sqrt', a:u}}},
+      abs:{op:'/', a:u, b:{fn:'abs', a:u}}, asin:{op:'/', a:N(1), b:{fn:'sqrt', a:{op:'-', a:N(1), b:{op:'^', a:u, b:N(2)}}}},
+      atan:{op:'/', a:N(1), b:{op:'+', a:N(1), b:{op:'^', a:u, b:N(2)}}}, arctg:{op:'/', a:N(1), b:{op:'+', a:N(1), b:{op:'^', a:u, b:N(2)}}},
+    }[n.fn];
+    if (!outer) return null;
+    return simp({op:'*', a:outer, b:du});
+  }
+  const {a, b} = n;
+  switch (n.op) {
+    case 'neg': return simp({op:'neg', a:deriv(a)});
+    case '+': case '-': return simp({op:n.op, a:deriv(a), b:deriv(b)});
+    case '*': return simp({op:'+', a:{op:'*', a:deriv(a), b}, b:{op:'*', a, b:deriv(b)}});
+    case '/': return simp({op:'/', a:{op:'-', a:{op:'*', a:deriv(a), b}, b:{op:'*', a, b:deriv(b)}}, b:{op:'^', a:b, b:N(2)}});
+    case '^':
+      if (!hasVar(b)) return simp({op:'*', a:{op:'*', a:b, b:{op:'^', a, b:N(b.num !== undefined ? b.num - 1 : NaN)}}, b:deriv(a)});
+      if (!hasVar(a)) return simp({op:'*', a:{op:'*', a:n, b:{fn:'ln', a}}, b:deriv(b)});
+      return simp({op:'*', a:n, b:{op:'+', a:{op:'*', a:deriv(b), b:{fn:'ln', a}}, b:{op:'/', a:{op:'*', a:b, b:deriv(a)}, b:a}}});
+  }
+  return null;
+}
+
+/* --- многочлен: коэффициенты через выборку значений (до 4-й степени) --- */
+function polyCoeffs(ast) {
+  const xs = [-2, -1, 0, 1, 2, 3], ys = xs.map(x => evalAst(ast, x));
+  if (ys.some(y => !isFinite(y))) return null;
+  /* решаем систему Вандермонда 5×5 для степени ≤ 4 */
+  const n = 5, A = xs.slice(0, n).map(x => [1, x, x * x, x ** 3, x ** 4]), B = ys.slice(0, n);
+  const c = gauss(A, B);
+  if (!c) return null;
+  const chk = c.reduce((s, k, i) => s + k * 3 ** i, 0);
+  if (Math.abs(chk - ys[5]) > 1e-6 * Math.max(1, Math.abs(ys[5]))) return null;
+  return c.map(v => Math.abs(v - Math.round(v)) < 1e-9 ? Math.round(v) : v);
+}
+function gauss(A, B) {
+  const n = B.length, M = A.map((r, i) => [...r, B[i]]);
+  for (let i = 0; i < n; i++) {
+    let mx = i; for (let r = i + 1; r < n; r++) if (Math.abs(M[r][i]) > Math.abs(M[mx][i])) mx = r;
+    if (Math.abs(M[mx][i]) < 1e-12) return null;
+    [M[i], M[mx]] = [M[mx], M[i]];
+    for (let r = 0; r < n; r++) if (r !== i) { const f = M[r][i] / M[i][i]; for (let k = i; k <= n; k++) M[r][k] -= f * M[i][k]; }
+  }
+  return M.map((r, i) => r[n] / r[i]);
+}
+function polyStr(c) {
+  const parts = [];
+  for (let i = c.length - 1; i >= 0; i--) {
+    const k = c[i]; if (Math.abs(k) < 1e-12) continue;
+    const ak = Math.abs(k), sign = k < 0 ? '−' : '+';
+    const coef = (ak === 1 && i > 0) ? '' : fmtPlain(ak);
+    const pw = i === 0 ? '' : i === 1 ? 'x' : 'x' + (i === 2 ? '²' : i === 3 ? '³' : '⁴');
+    parts.push({sign, s:coef + pw});
+  }
+  if (!parts.length) return '0';
+  return parts.map((p, i) => i === 0 ? (p.sign === '−' ? '−' : '') + p.s : ` ${p.sign} ${p.s}`).join('');
+}
+
+/* --- решение уравнений --- */
+function solveEquation(src) {
+  const sides = src.split('=');
+  if (sides.length !== 2) return null;
+  const L = parse(sides[0]), R = parse(sides[1]);
+  if (!L || !R) return null;
+  const F = {op:'-', a:L, b:R};
+  if (!hasVar(F)) return null;
+  const steps = [];
+  const c = polyCoeffs(F);
+  if (c) {
+    while (c.length > 1 && Math.abs(c[c.length - 1]) < 1e-12) c.pop();
+    const deg = c.length - 1;
+    steps.push(`Переносим всё в левую часть: **${polyStr(c)} = 0**`);
+    if (deg === 0) return {steps, roots:[], note:Math.abs(c[0]) < 1e-12 ? 'Равенство верно при любом x — решений бесконечно много.' : 'Получилось неверное равенство — решений нет.'};
+    if (deg === 1) {
+      const x = -c[0] / c[1];
+      steps.push(`Линейное уравнение: ${fmtPlain(c[1])}x = ${fmtPlain(-c[0])}`, `x = ${fmtPlain(-c[0])} / ${fmtPlain(c[1])} = **${fmt(x)}**`);
+      return {steps, roots:[x]};
+    }
+    if (deg === 2) {
+      const [cc, b, a] = c, D = b * b - 4 * a * cc;
+      steps.push(`Квадратное уравнение: a = ${fmtPlain(a)}, b = ${fmtPlain(b)}, c = ${fmtPlain(cc)}`, `Дискриминант: D = b² − 4ac = ${fmtPlain(b)}² − 4·${fmtPlain(a)}·${fmtPlain(cc)} = **${fmt(D)}**`);
+      if (D < -1e-12) {
+        const re = -b / (2 * a), im = Math.sqrt(-D) / (2 * a);
+        steps.push('D < 0 — действительных корней нет.', `Комплексные корни: x = ${fmt(re)} ± ${fmt(Math.abs(im))}i`);
+        return {steps, roots:[]};
+      }
+      if (Math.abs(D) < 1e-12) { const x = -b / (2 * a); steps.push(`D = 0 — один корень: x = −b / 2a = **${fmt(x)}**`); return {steps, roots:[x]}; }
+      const sq = Math.sqrt(D), x1 = (-b - sq) / (2 * a), x2 = (-b + sq) / (2 * a);
+      steps.push(`D > 0 — два корня: x = (−b ± √D) / 2a`, `√D = ${fmt(sq)}`, `x₁ = (${fmtPlain(-b)} − ${fmt(sq)}) / ${fmtPlain(2 * a)} = **${fmt(x1)}**`, `x₂ = (${fmtPlain(-b)} + ${fmt(sq)}) / ${fmtPlain(2 * a)} = **${fmt(x2)}**`);
+      steps.push(`Проверка по теореме Виета: x₁ + x₂ = ${fmt(x1 + x2)} (= −b/a = ${fmt(-b / a)}), x₁·x₂ = ${fmt(x1 * x2)} (= c/a = ${fmt(cc / a)})`);
+      return {steps, roots:[Math.min(x1, x2), Math.max(x1, x2)]};
+    }
+    steps.push(`Уравнение ${deg}-й степени — ищу корни численно.`);
+  } else steps.push('Уравнение не сводится к многочлену — ищу корни численно (метод деления отрезка пополам).');
+  const roots = numericRoots(x => evalAst(F, x));
+  steps.push(roots.length ? 'Найденные корни: ' + roots.map(r => '**' + fmt(r, 6) + '**').join(', ') : 'На отрезке от −1000 до 1000 корней не найдено.');
+  return {steps, roots};
+}
+function numericRoots(f, lo = -1000, hi = 1000) {
+  const roots = [], N = 20000, h = (hi - lo) / N;
+  let x0 = lo, y0 = f(x0);
+  for (let i = 1; i <= N; i++) {
+    const x1 = lo + i * h, y1 = f(x1);
+    if (isFinite(y0) && isFinite(y1)) {
+      if (y0 === 0) roots.push(x0);
+      else if (y0 * y1 < 0 && Math.abs(y0 - y1) < 1e6) {
+        let a = x0, b = x1, fa = y0;
+        for (let k = 0; k < 80; k++) { const m = (a + b) / 2, fm = f(m); if (fa * fm <= 0) b = m; else { a = m; fa = fm; } }
+        roots.push((a + b) / 2);
+      }
+    }
+    x0 = x1; y0 = y1;
+  }
+  return roots.map(r => Math.abs(r - Math.round(r)) < 1e-7 ? Math.round(r) : r).filter((r, i, arr) => arr.findIndex(q => Math.abs(q - r) < 1e-6) === i).slice(0, 12);
+}
+/* система двух линейных уравнений: «2x+3y=7, x-y=1» */
+function solveSystem(src) {
+  const eqs = src.split(/[,;\n]|\bи\b/).map(s => s.trim()).filter(s => s.includes('='));
+  if (eqs.length !== 2 || !/y/.test(src)) return null;
+  const coef = eq => {
+    const [l, r] = eq.split('=');
+    const f = (x, y) => { const sub = s => s.replace(/y/g, '(' + y + ')').replace(/x/g, '(' + x + ')'); const a = parse(sub(l)), b = parse(sub(r)); return a && b ? evalAst(a) - evalAst(b) : NaN; };
+    const c = f(0, 0), a = f(1, 0) - c, b = f(0, 1) - c;
+    return isFinite(a + b + c) ? [a, b, -c] : null;
+  };
+  const e1 = coef(eqs[0]), e2 = coef(eqs[1]);
+  if (!e1 || !e2) return null;
+  const [a1, b1, c1] = e1, [a2, b2, c2] = e2;
+  const D = a1 * b2 - a2 * b1;
+  const steps = [`Метод Крамера: D = ${fmtPlain(a1)}·${fmtPlain(b2)} − ${fmtPlain(a2)}·${fmtPlain(b1)} = **${fmt(D)}**`];
+  if (Math.abs(D) < 1e-12) { steps.push('D = 0 — система не имеет единственного решения (решений нет или бесконечно много).'); return {steps}; }
+  const Dx = c1 * b2 - c2 * b1, Dy = a1 * c2 - a2 * c1;
+  steps.push(`Dx = ${fmt(Dx)}, Dy = ${fmt(Dy)}`, `x = Dx / D = **${fmt(Dx / D)}**, y = Dy / D = **${fmt(Dy / D)}**`);
+  return {steps, x:Dx / D, y:Dy / D};
+}
+
+/* --- теория чисел --- */
+const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a; };
+const lcm = (a, b) => Math.abs(a * b) / gcd(a, b);
+function isPrime(n) { if (n < 2 || !Number.isInteger(n)) return false; if (n < 4) return true; if (n % 2 === 0 || n % 3 === 0) return false; for (let i = 5; i * i <= n; i += 6) if (n % i === 0 || n % (i + 2) === 0) return false; return true; }
+function factorize(n) { const f = []; let d = 2; while (n > 1 && d * d <= n) { while (n % d === 0) { f.push(d); n /= d; } d++; } if (n > 1) f.push(n); return f; }
+function toFraction(x, maxDen = 10000) {
+  let best = [Math.round(x), 1], err = Math.abs(x - best[0]);
+  for (let d = 2; d <= maxDen; d++) { const n = Math.round(x * d), e = Math.abs(x - n / d); if (e < err - 1e-15) { best = [n, d]; err = e; if (e < 1e-12) break; } }
+  return err < 1e-9 ? best : null;
+}
+
+/* --- число прописью --- */
+const ONES = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять', 'десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+const TENS = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+const HUNDS = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+function triad(n, fem) {
+  const h = Math.floor(n / 100), r = n % 100, out = [];
+  if (h) out.push(HUNDS[h]);
+  if (r < 20) { if (r) out.push(fem && r === 1 ? 'одна' : fem && r === 2 ? 'две' : ONES[r]); }
+  else { out.push(TENS[Math.floor(r / 10)]); const o = r % 10; if (o) out.push(fem && o === 1 ? 'одна' : fem && o === 2 ? 'две' : ONES[o]); }
+  return out.join(' ');
+}
+function numToWords(n) {
+  if (!Number.isInteger(n) || Math.abs(n) >= 1e15) return null;
+  if (n === 0) return 'ноль';
+  const neg = n < 0; n = Math.abs(n);
+  const groups = [['', '', '', false], ['тысяча', 'тысячи', 'тысяч', true], ['миллион', 'миллиона', 'миллионов', false], ['миллиард', 'миллиарда', 'миллиардов', false], ['триллион', 'триллиона', 'триллионов', false]];
+  const parts = [];
+  for (let i = 0; n > 0; i++, n = Math.floor(n / 1000)) {
+    const t = n % 1000; if (!t) continue;
+    const [one, few, many, fem] = groups[i];
+    parts.unshift(triad(t, fem) + (i ? ' ' + plural(t, one, few, many) : ''));
+  }
+  return (neg ? 'минус ' : '') + parts.join(' ');
+}
+
+/* --- системы счисления, римские --- */
+function toRoman(n) { if (n <= 0 || n >= 4000) return null; const m = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']]; let s = ''; for (const [v, r] of m) while (n >= v) { s += r; n -= v; } return s; }
+function fromRoman(s) { const v = {I:1, V:5, X:10, L:50, C:100, D:500, M:1000}; let t = 0; s = s.toUpperCase(); for (let i = 0; i < s.length; i++) { const a = v[s[i]], b = v[s[i + 1]] || 0; if (!a) return null; t += a < b ? -a : a; } return t; }
+
+/* --- статистика --- */
+function stats(nums) {
+  const s = [...nums].sort((a, b) => a - b), n = s.length, sum = s.reduce((a, b) => a + b, 0), mean = sum / n;
+  const med = n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2;
+  const sd = Math.sqrt(s.reduce((a, b) => a + (b - mean) ** 2, 0) / n);
+  const counts = {}; s.forEach(x => counts[x] = (counts[x] || 0) + 1);
+  const maxC = Math.max(...Object.values(counts)), mode = maxC > 1 ? Object.keys(counts).filter(k => counts[k] === maxC).map(Number) : [];
+  return {n, sum, mean, med, min:s[0], max:s[n - 1], sd, mode};
+}
+
+Object.assign(SC, {parse, evalAst, show, deriv, simp, solveEquation, solveSystem, numericRoots, polyCoeffs, polyStr, isPrime, factorize, gcd, lcm, toFraction, numToWords, toRoman, fromRoman, stats, hasVar});
+
+
+/* ============================ 3. ЕДИНИЦЫ ИЗМЕРЕНИЯ ============================ */
+/* [названия/синонимы, множитель к базовой единице] */
+const UNITS = {
+  длина:{base:'м', u:[
+    [['мм', 'миллиметр', 'mm'], 0.001], [['см', 'сантиметр', 'cm'], 0.01], [['дм', 'дециметр'], 0.1], [['м', 'метр', 'm'], 1], [['км', 'километр', 'km'], 1000],
+    [['дюйм', 'inch', 'in', '"'], 0.0254], [['фут', 'ft', 'foot', 'feet'], 0.3048], [['ярд', 'yd', 'yard'], 0.9144], [['миля', 'mile', 'mi'], 1609.344], [['морская миля', 'nmi'], 1852]]},
+  масса:{base:'кг', u:[
+    [['мг', 'миллиграмм', 'mg'], 1e-6], [['г', 'грамм', 'гр', 'g'], 0.001], [['кг', 'килограмм', 'kg'], 1], [['ц', 'центнер'], 100], [['т', 'тонна', 't'], 1000],
+    [['фунт', 'lb', 'pound'], 0.45359237], [['унция', 'oz', 'ounce'], 0.028349523125], [['карат', 'ct'], 0.0002]]},
+  время:{base:'с', u:[
+    [['мс', 'миллисекунд', 'ms'], 0.001], [['с', 'сек', 'секунд', 's'], 1], [['мин', 'минут', 'min'], 60], [['ч', 'час', 'h'], 3600],
+    [['сут', 'сутки', 'день', 'дня', 'дней', 'day'], 86400], [['недел', 'week'], 604800], [['месяц', 'month'], 2629746], [['год', 'лет', 'year'], 31556952]]},
+  площадь:{base:'м²', u:[
+    [['мм2', 'мм²', 'кв мм'], 1e-6], [['см2', 'см²', 'кв см'], 1e-4], [['м2', 'м²', 'кв м', 'квадратный метр', 'квадратных метр'], 1], [['сотк', 'сотка', 'ар'], 100],
+    [['га', 'гектар'], 1e4], [['км2', 'км²', 'кв км'], 1e6], [['акр', 'acre'], 4046.8564224], [['фут2', 'sq ft'], 0.09290304]]},
+  объём:{base:'л', u:[
+    [['мл', 'миллилитр', 'ml'], 0.001], [['л', 'литр', 'l'], 1], [['м3', 'м³', 'куб', 'кубометр'], 1000], [['см3', 'см³'], 0.001],
+    [['галлон', 'gal', 'gallon'], 3.785411784], [['пинт', 'pint'], 0.473176473], [['стакан', 'cup'], 0.25], [['ложк', 'столовая ложка', 'tbsp'], 0.015], [['чайная ложка', 'tsp'], 0.005]]},
+  скорость:{base:'м/с', u:[
+    [['м/с', 'метров в секунду', 'm/s'], 1], [['км/ч', 'километров в час', 'кмч', 'km/h', 'kmh'], 1 / 3.6], [['миль/ч', 'mph'], 0.44704], [['узел', 'узлов', 'knot'], 0.514444], [['мах', 'mach'], 343]]},
+  данные:{base:'Б', u:[
+    [['бит', 'bit'], 0.125], [['байт', 'б', 'byte'], 1], [['кб', 'килобайт', 'kb'], 1024], [['мб', 'мегабайт', 'mb'], 1024 ** 2], [['гб', 'гигабайт', 'gb'], 1024 ** 3], [['тб', 'терабайт', 'tb'], 1024 ** 4]]},
+  давление:{base:'Па', u:[
+    [['па', 'паскаль', 'pa'], 1], [['кпа', 'kpa'], 1000], [['мпа', 'mpa'], 1e6], [['бар', 'bar'], 1e5], [['атм', 'атмосфер', 'atm'], 101325], [['мм рт', 'мм ртутного', 'mmhg'], 133.322], [['psi'], 6894.757]]},
+  энергия:{base:'Дж', u:[
+    [['дж', 'джоуль', 'j'], 1], [['кдж', 'kj'], 1000], [['кал', 'калори', 'cal'], 4.184], [['ккал', 'kcal'], 4184], [['втч', 'вт·ч', 'wh'], 3600], [['квтч', 'квт·ч', 'kwh'], 3.6e6]]},
+  мощность:{base:'Вт', u:[[['вт', 'ватт', 'w'], 1], [['квт', 'kw'], 1000], [['мвт'], 1e6], [['лс', 'л.с', 'лошадин', 'hp'], 735.49875]]},
+};
+const TEMP = [[['°c', 'c', 'цельси', 'градус'], 'C'], [['°f', 'f', 'фаренгейт'], 'F'], [['k', 'кельвин'], 'K']];
+function findUnit(w) {
+  w = norm(w).replace(/\.$/, '');
+  if (!w) return null;
+  let best = null;
+  for (const [cat, d] of Object.entries(UNITS)) for (const [names, k] of d.u) for (const n of names) {
+    const ok = w === n || (n.length >= 3 && w.startsWith(n)) || (w.length >= 4 && n.startsWith(w));
+    if (ok && (!best || n.length > best.len)) best = {cat, k, name:names[0], len:n.length};
+  }
+  return best;
+}
+function findTemp(w) { w = norm(w); for (const [names, t] of TEMP) for (const n of names) if (w === n || (n.length > 2 && w.startsWith(n))) return t; return null; }
+function convertUnits(text) {
+  const t = norm(text).replace(/(\d),(\d)/g, '$1.$2');
+  const m = t.match(/(-?\d+(?:\.\d+)?)\s*([a-zа-я°²³/.·"]+(?: [а-я]+)?)\s+(?:в|во|to|in|=)\s+([a-zа-я°²³/.·"]+(?: [а-я]+)?)/);
+  if (!m) return null;
+  const v = parseFloat(m[1]);
+  const t1 = findTemp(m[2]), t2 = findTemp(m[3]);
+  if (t1 && t2 && t1 !== t2) {
+    const toC = {C:x => x, F:x => (x - 32) * 5 / 9, K:x => x - 273.15}[t1](v);
+    const r = {C:toC, F:toC * 9 / 5 + 32, K:toC + 273.15}[t2];
+    const sym = {C:'°C', F:'°F', K:'K'};
+    return `**${fmt(v)} ${sym[t1]} = ${fmt(r, 2)} ${sym[t2]}**\n\nФормула: ${t1 === 'C' && t2 === 'F' ? '°F = °C × 9/5 + 32' : t1 === 'F' && t2 === 'C' ? '°C = (°F − 32) × 5/9' : 'K = °C + 273,15'}`;
+  }
+  const u1 = findUnit(m[2]), u2 = findUnit(m[3]);
+  if (!u1 || !u2) return null;
+  if (u1.cat !== u2.cat) return `Нельзя перевести ${u1.cat} в ${u2.cat} — это разные величины.`;
+  const r = v * u1.k / u2.k;
+  return `**${fmt(v)} ${u1.name} = ${fmt(r, 6)} ${u2.name}**\n\n1 ${u1.name} = ${fmt(u1.k / u2.k, 8)} ${u2.name} (${u1.cat}).`;
+}
+
+/* ============================ 4. РИСОВАНИЕ (SVG) ============================ */
+const svgOpen = (w, h) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><rect width="100%" height="100%" fill="#fff"/>` +
+  '<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 10 5 0 9z" fill="#2563eb"/></marker></defs>';
+const T = (x, y, s, o = {}) => `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="Arial, sans-serif" font-size="${o.size || 14}" fill="${o.fill || '#111'}" text-anchor="${o.anchor || 'middle'}"${o.weight ? ` font-weight="${o.weight}"` : ''}${o.rot ? ` transform="rotate(${o.rot} ${x.toFixed(1)} ${y.toFixed(1)})"` : ''}>${escHtml(s)}</text>`;
+/* размерная линия с выносными линиями */
+function dim(x1, y1, x2, y2, label, off = 24) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, nx = -dy / L * off, ny = dx / L * off;
+  const ax = x1 + nx, ay = y1 + ny, bx = x2 + nx, by = y2 + ny;
+  const ang = Math.atan2(dy, dx) * 180 / Math.PI, rot = ang > 90 || ang < -90 ? ang + 180 : ang;
+  return `<g stroke="#2563eb" stroke-width="1"><line x1="${x1}" y1="${y1}" x2="${ax + nx * 0.25}" y2="${ay + ny * 0.25}"/><line x1="${x2}" y1="${y2}" x2="${bx + nx * 0.25}" y2="${by + ny * 0.25}"/>` +
+    `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" marker-start="url(#ar)" marker-end="url(#ar)"/></g>` +
+    T((ax + bx) / 2 + nx * 0.28, (ay + by) / 2 + ny * 0.28 + 4, label, {size:13, fill:'#2563eb', rot});
+}
+function stamp(w, h, title, scale, units) {
+  const x = w - 250, y = h - 58;
+  return `<g stroke="#111" stroke-width="1.2" fill="none"><rect x="${x}" y="${y}" width="240" height="48"/><line x1="${x}" y1="${y + 24}" x2="${x + 240}" y2="${y + 24}"/><line x1="${x + 150}" y1="${y + 24}" x2="${x + 150}" y2="${y + 48}"/></g>` +
+    T(x + 120, y + 17, title, {size:13, weight:'bold'}) + T(x + 75, y + 41, 'Swarmind Core', {size:11, fill:'#555'}) + T(x + 195, y + 41, `${scale} · ${units}`, {size:11});
+}
+
+/* --- план квартиры/дома по списку комнат --- */
+const ROOM_WORDS = [
+  [/гостин|зал/, 'Гостиная'], [/спальн/, 'Спальня'], [/детск/, 'Детская'], [/кухн/, 'Кухня'], [/ванн/, 'Ванная'], [/туалет|санузел|с\/у/, 'Санузел'],
+  [/коридор|прихож/, 'Прихожая'], [/кабинет/, 'Кабинет'], [/балкон|лодж/, 'Балкон'], [/гардероб/, 'Гардероб'], [/кладов/, 'Кладовая'], [/комнат/, 'Комната'], [/гараж/, 'Гараж'], [/столов/, 'Столовая'],
+];
+function parseRooms(text) {
+  const t = norm(text), rooms = [];
+  const rx = /([а-я/]+)[^\d,;]{0,12}?(\d+(?:[.,]\d+)?)\s*(?:м)?\s*(?:x|х|×|\*|на)\s*(\d+(?:[.,]\d+)?)/g;
+  let m;
+  while ((m = rx.exec(t))) {
+    const nm = (ROOM_WORDS.find(([r]) => r.test(m[1])) || [, cap(m[1])])[1];
+    rooms.push({name:nm, w:parseFloat(m[2].replace(',', '.')), h:parseFloat(m[3].replace(',', '.'))});
+  }
+  if (rooms.length) return rooms;
+  /* «квартира 40 м²», «двушка 55 метров» — типовая планировка */
+  const area = (t.match(/(\d+(?:[.,]\d+)?)\s*(?:м2|м²|кв|квадрат|метр)/) || [])[1];
+  const total = area ? parseFloat(area.replace(',', '.')) : 40;
+  const k = /(тр[её]шк|трехкомн|3.?комн|три комнат)/.test(t) ? 3 : /(двушк|двухкомн|2.?комн|две комнат)/.test(t) ? 2 : /студи/.test(t) ? 0 : /дом/.test(t) ? 3 : 1;
+  const plan = k === 0 ? [['Студия', .62], ['Кухня-ниша', .14], ['Санузел', .1], ['Прихожая', .14]]
+    : k === 1 ? [['Комната', .45], ['Кухня', .24], ['Санузел', .11], ['Прихожая', .2]]
+    : k === 2 ? [['Гостиная', .3], ['Спальня', .24], ['Кухня', .18], ['Санузел', .09], ['Прихожая', .19]]
+    : [['Гостиная', .26], ['Спальня', .18], ['Детская', .16], ['Кухня', .15], ['Санузел', .08], ['Прихожая', .17]];
+  return plan.map(([name, f]) => { const a = total * f, r = name === 'Прихожая' || name === 'Санузел' ? 1.6 : 1.25; const w = Math.sqrt(a * r); return {name, w:+w.toFixed(1), h:+(a / w).toFixed(1)}; });
+}
+/* раскладка: комнаты в два ряда, ряды выравниваются по общей ширине */
+function floorPlan(text) {
+  const rooms = parseRooms(text);
+  if (!rooms.length) return null;
+  const sorted = [...rooms].sort((a, b) => b.w * b.h - a.w * a.h);
+  const rows = [[], []];
+  let w0 = 0, w1 = 0;
+  for (const r of sorted) { if (w0 <= w1) { rows[0].push(r); w0 += r.w; } else { rows[1].push(r); w1 += r.w; } }
+  const W = Math.max(w0, w1), H0 = Math.max(...rows[0].map(r => r.h)), H1 = rows[1].length ? Math.max(...rows[1].map(r => r.h)) : 0;
+  const S = Math.min(560 / W, 330 / (H0 + H1)), pad = 70, Wpx = W * S, Hpx = (H0 + H1) * S;
+  const vw = Math.max(Wpx + pad * 2, 520), vh = Hpx + pad * 2 + 70;
+  let g = svgOpen(Math.round(vw), Math.round(vh)), x0 = (vw - Wpx) / 2, y0 = pad;
+  const wall = 6, cells = [];
+  rows.forEach((row, ri) => {
+    const rowW = row.reduce((s, r) => s + r.w, 0), stretch = W / (rowW || 1), Hrow = ri ? H1 : H0;
+    let x = x0;
+    for (const r of row) { const w = r.w * stretch * S, h = Hrow * S; cells.push({...r, x, y:y0 + (ri ? H0 * S : 0), wpx:w, hpx:h, rw:r.w * stretch, rh:Hrow}); x += w; }
+  });
+  for (const c of cells) {
+    g += `<rect x="${c.x}" y="${c.y}" width="${c.wpx}" height="${c.hpx}" fill="${/Санузел|Ванн/.test(c.name) ? '#eef6ff' : /Кухн/.test(c.name) ? '#fff8e6' : /Балкон/.test(c.name) ? '#f1f5f1' : '#fafafa'}" stroke="#111" stroke-width="${wall}"/>`;
+    g += T(c.x + c.wpx / 2, c.y + c.hpx / 2 - 4, c.name, {size:Math.min(15, c.wpx / 7), weight:'bold'});
+    g += T(c.x + c.wpx / 2, c.y + c.hpx / 2 + 14, `${fmt(c.rw * c.rh, 1)} м²`, {size:12, fill:'#555'});
+    /* дверь: проём в нижней/верхней стене с дугой открывания */
+    const dw = Math.min(0.9 * S, c.wpx * 0.4), dx = c.x + c.wpx * 0.15, dy = c.y === y0 ? c.y + c.hpx : c.y;
+    g += `<line x1="${dx}" y1="${dy}" x2="${dx + dw}" y2="${dy}" stroke="#fff" stroke-width="${wall + 2}"/>`;
+    const sgn = c.y === y0 ? -1 : 1;
+    g += `<path d="M${dx} ${dy} L${dx} ${dy + sgn * dw} A${dw} ${dw} 0 0 ${sgn > 0 ? 0 : 1} ${dx + dw} ${dy}" fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+    /* окно у наружных стен */
+    if (!/Санузел|Прихожая|Гардероб|Кладовая/.test(c.name)) {
+      const wy = c.y === y0 ? c.y : c.y + c.hpx, wx = c.x + c.wpx * 0.55, ww = Math.min(1.4 * S, c.wpx * 0.35);
+      g += `<g stroke="#111" stroke-width="1.4"><rect x="${wx}" y="${wy - 4}" width="${ww}" height="8" fill="#dbeafe"/><line x1="${wx}" y1="${wy}" x2="${wx + ww}" y2="${wy}"/></g>`;
+    }
+  }
+  g += dim(x0, y0 + Hpx, x0 + Wpx, y0 + Hpx, `${fmt(W * 1000, 0)} мм`, 34) + dim(x0 + Wpx, y0, x0 + Wpx, y0 + Hpx, `${fmt((H0 + H1) * 1000, 0)} мм`, 34);
+  const total = cells.reduce((s, c) => s + c.rw * c.rh, 0);
+  g += stamp(vw, vh, `План · ${fmt(total, 1)} м²`, `1:${Math.round(1000 / S)}`, 'мм') + '</svg>';
+  const table = '| Помещение | Размер, м | Площадь, м² |\n|---|---|---|\n' + cells.map(c => `| ${c.name} | ${fmt(c.rw, 2)} × ${fmt(c.rh, 2)} | ${fmt(c.rw * c.rh, 1)} |`).join('\n') + `\n| **Итого** | ${fmt(W, 2)} × ${fmt(H0 + H1, 2)} | **${fmt(total, 1)}** |`;
+  return {svg:g, table, total};
+}
+
+/* --- деталь: пластина/брусок с отверстиями --- */
+function partDrawing(text) {
+  const t = norm(text), sz = sizesIn(t);
+  if (!sz.length) return null;
+  const {a:W, b:H} = sz[0], unit = sz[0].unit || 'мм';
+  const hole = (t.match(/отверсти[а-я]*\s*(?:диаметром|d|ø|⌀)?\s*(\d+(?:[.,]\d+)?)/) || [])[1];
+  const holes = /(четыр|4)\s*отверст/.test(t) ? 4 : /(два|2)\s*отверст/.test(t) ? 2 : hole ? 1 : 0;
+  const d = hole ? parseFloat(hole.replace(',', '.')) : Math.min(W, H) * 0.2;
+  const S = Math.min(460 / W, 260 / H), pad = 80, w = W * S, h = H * S, vw = w + pad * 2 + 20, vh = h + pad * 2 + 70;
+  let g = svgOpen(Math.round(vw), Math.round(vh));
+  const x = pad, y = pad;
+  g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f5f7fa" stroke="#111" stroke-width="2.5"/>`;
+  const centers = holes === 4 ? [[0.15, 0.2], [0.85, 0.2], [0.15, 0.8], [0.85, 0.8]] : holes === 2 ? [[0.2, 0.5], [0.8, 0.5]] : holes ? [[0.5, 0.5]] : [];
+  for (const [cx, cy] of centers) {
+    const px = x + w * cx, py = y + h * cy, r = d * S / 2;
+    g += `<circle cx="${px}" cy="${py}" r="${r}" fill="#fff" stroke="#111" stroke-width="2"/>` +
+      `<g stroke="#d33" stroke-width="0.9" stroke-dasharray="12 3 2 3"><line x1="${px - r - 10}" y1="${py}" x2="${px + r + 10}" y2="${py}"/><line x1="${px}" y1="${py - r - 10}" x2="${px}" y2="${py + r + 10}"/></g>`;
+  }
+  if (centers.length) {
+    const [cx, cy] = centers[0], px = x + w * cx, py = y + h * cy;
+    g += `<line x1="${px + d * S / 2 * 0.7}" y1="${py - d * S / 2 * 0.7}" x2="${px + d * S / 2 + 30}" y2="${py - d * S / 2 - 30}" stroke="#2563eb"/>` + T(px + d * S / 2 + 34, py - d * S / 2 - 34, `${holes > 1 ? holes + ' отв. ' : ''}⌀${fmt(d)}`, {size:13, fill:'#2563eb', anchor:'start'});
+  }
+  g += dim(x, y + h, x + w, y + h, `${fmt(W)}`, 30) + dim(x + w, y, x + w, y + h, `${fmt(H)}`, 30);
+  if (centers.length && holes !== 1) g += dim(x, y, x + w * centers[0][0], y, fmt(W * centers[0][0]), -24);
+  g += stamp(vw, vh, 'Деталь · вид сверху', `M 1:${fmt(1 / S * (unit === 'м' ? 1000 : 1), 1)}`, unit) + '</svg>';
+  return {svg:g, W, H, d, holes, unit};
+}
+
+/* --- график функции --- */
+function plotFunction(exprSrc, from = -10, to = 10) {
+  const ast = parse(exprSrc);
+  if (!ast || !hasVar(ast)) return null;
+  const W = 640, H = 420, pad = 44, n = 400, pts = [];
+  for (let i = 0; i <= n; i++) { const x = from + (to - from) * i / n, y = evalAst(ast, x); pts.push([x, isFinite(y) ? y : NaN]); }
+  const ys = pts.map(p => p[1]).filter(isFinite).sort((a, b) => a - b);
+  if (!ys.length) return null;
+  let lo = ys[Math.floor(ys.length * 0.02)], hi = ys[Math.ceil(ys.length * 0.98) - 1];
+  if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
+  const m = (hi - lo) * 0.1; lo -= m; hi += m;
+  if (lo > 0) lo = Math.min(lo, -m); if (hi < 0) hi = Math.max(hi, m);
+  const X = x => pad + (x - from) / (to - from) * (W - 2 * pad), Y = y => H - pad - (y - lo) / (hi - lo) * (H - 2 * pad);
+  let g = svgOpen(W, H);
+  const step = v => { const p = Math.pow(10, Math.floor(Math.log10(v / 8))); return [1, 2, 5, 10].map(k => k * p).find(s => v / s <= 10); };
+  const sx = step(to - from), sy = step(hi - lo);
+  g += '<g stroke="#e5e7eb" stroke-width="1">';
+  for (let x = Math.ceil(from / sx) * sx; x <= to; x += sx) g += `<line x1="${X(x)}" y1="${pad / 2}" x2="${X(x)}" y2="${H - pad / 2}"/>`;
+  for (let y = Math.ceil(lo / sy) * sy; y <= hi; y += sy) g += `<line x1="${pad / 2}" y1="${Y(y)}" x2="${W - pad / 2}" y2="${Y(y)}"/>`;
+  g += '</g><g stroke="#111" stroke-width="1.5">' + `<line x1="${pad / 2}" y1="${Y(0)}" x2="${W - pad / 2}" y2="${Y(0)}" marker-end="url(#ar)"/><line x1="${X(0)}" y1="${H - pad / 2}" x2="${X(0)}" y2="${pad / 2}" marker-end="url(#ar)"/></g>`;
+  for (let x = Math.ceil(from / sx) * sx; x <= to; x += sx) if (Math.abs(x) > 1e-9) g += T(X(x), Y(0) + 16, fmtPlain(+x.toFixed(6)), {size:11, fill:'#555'});
+  for (let y = Math.ceil(lo / sy) * sy; y <= hi; y += sy) if (Math.abs(y) > 1e-9) g += T(X(0) - 6, Y(y) + 4, fmtPlain(+y.toFixed(6)), {size:11, fill:'#555', anchor:'end'});
+  g += T(W - pad / 2 - 4, Y(0) - 8, 'x', {size:14, weight:'bold'}) + T(X(0) + 12, pad / 2 + 4, 'y', {size:14, weight:'bold'});
+  let d = '', pen = false;
+  for (const [x, y] of pts) {
+    if (!isFinite(y) || y < lo - (hi - lo) || y > hi + (hi - lo)) { pen = false; continue; }
+    d += (pen ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(Math.max(lo - (hi - lo) * 0.05, Math.min(hi + (hi - lo) * 0.05, y))).toFixed(1); pen = true;
+  }
+  g += `<path d="${d}" fill="none" stroke="#e11d48" stroke-width="2.5"/>`;
+  const roots = numericRoots(x => evalAst(ast, x), from, to).slice(0, 6);
+  for (const r of roots) g += `<circle cx="${X(r)}" cy="${Y(0)}" r="4.5" fill="#2563eb"/>` + T(X(r), Y(0) - 10, fmt(r, 2), {size:11, fill:'#2563eb'});
+  const y0 = evalAst(ast, 0);
+  if (isFinite(y0) && y0 >= lo && y0 <= hi) g += `<circle cx="${X(0)}" cy="${Y(y0)}" r="4" fill="#16a34a"/>`;
+  g += T(pad + 8, pad / 2 + 14, 'y = ' + show(ast), {size:15, weight:'bold', anchor:'start', fill:'#e11d48'}) + '</svg>';
+  return {svg:g, ast, roots, y0};
+}
+
+/* --- диаграммы: «продажи: январь 10, февраль 15» --- */
+function parseSeries(text) {
+  const items = [];
+  const rx = /([a-zа-яё][a-zа-яё ./-]{0,24}?)\s*[:\-—=]?\s*(-?\d+(?:[.,]\d+)?)\s*%?/gi;
+  let m;
+  const body = text.includes(':') ? text.slice(text.indexOf(':') + 1) : text;
+  while ((m = rx.exec(body))) {
+    const label = m[1].trim().replace(/^(и|а|,)\s+/, '');
+    if (!label || /^(диаграмм|график|гистограмм|круговая|столбчат|построй|нарисуй|сделай|покажи)/i.test(label)) continue;
+    items.push({label:cap(label), v:parseFloat(m[2].replace(',', '.'))});
+  }
+  return items.slice(0, 14);
+}
+const PALETTE = ['#2563eb', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#64748b', '#14b8a6', '#a855f7', '#eab308', '#0ea5e9'];
+function barChart(items, title) {
+  const W = 640, H = 400, pad = 56, max = Math.max(...items.map(i => i.v), 0), min = Math.min(0, ...items.map(i => i.v));
+  const bw = (W - pad * 2) / items.length, Y = v => H - pad - (v - min) / ((max - min) || 1) * (H - pad * 2);
+  let g = svgOpen(W, H) + T(W / 2, 28, title || 'Диаграмма', {size:17, weight:'bold'});
+  for (let k = 0; k <= 4; k++) { const v = min + (max - min) * k / 4; g += `<line x1="${pad}" y1="${Y(v)}" x2="${W - pad / 2}" y2="${Y(v)}" stroke="#e5e7eb"/>` + T(pad - 8, Y(v) + 4, fmt(v, 1), {size:11, fill:'#666', anchor:'end'}); }
+  items.forEach((it, i) => {
+    const x = pad + i * bw + bw * 0.15, y = Math.min(Y(it.v), Y(0)), h = Math.abs(Y(it.v) - Y(0));
+    g += `<rect x="${x}" y="${y}" width="${bw * 0.7}" height="${Math.max(h, 1)}" rx="4" fill="${PALETTE[i % PALETTE.length]}"/>` +
+      T(x + bw * 0.35, y - 6, fmt(it.v, 2), {size:12, weight:'bold'}) + T(x + bw * 0.35, H - pad + 18, it.label.slice(0, 12), {size:11, fill:'#333'});
+  });
+  return g + `<line x1="${pad}" y1="${Y(0)}" x2="${W - pad / 2}" y2="${Y(0)}" stroke="#111"/></svg>`;
+}
+function pieChart(items, title) {
+  const W = 640, H = 400, cx = 210, cy = 215, R = 150, total = items.reduce((s, i) => s + Math.max(0, i.v), 0) || 1;
+  let g = svgOpen(W, H) + T(W / 2, 30, title || 'Круговая диаграмма', {size:17, weight:'bold'}), a0 = -Math.PI / 2;
+  items.forEach((it, i) => {
+    const frac = Math.max(0, it.v) / total, a1 = a0 + frac * Math.PI * 2, large = frac > 0.5 ? 1 : 0;
+    const p = a => [cx + R * Math.cos(a), cy + R * Math.sin(a)], [x0, y0] = p(a0), [x1, y1] = p(a1);
+    g += frac >= 0.9999 ? `<circle cx="${cx}" cy="${cy}" r="${R}" fill="${PALETTE[i % PALETTE.length]}"/>` : `<path d="M${cx} ${cy}L${x0} ${y0}A${R} ${R} 0 ${large} 1 ${x1} ${y1}Z" fill="${PALETTE[i % PALETTE.length]}" stroke="#fff" stroke-width="2"/>`;
+    if (frac > 0.04) { const [tx, ty] = [cx + R * 0.62 * Math.cos((a0 + a1) / 2), cy + R * 0.62 * Math.sin((a0 + a1) / 2)]; g += T(tx, ty + 5, Math.round(frac * 100) + '%', {size:13, fill:'#fff', weight:'bold'}); }
+    g += `<rect x="400" y="${80 + i * 24}" width="14" height="14" rx="3" fill="${PALETTE[i % PALETTE.length]}"/>` + T(422, 92 + i * 24, `${it.label} — ${fmt(it.v, 2)}`, {size:13, anchor:'start'});
+    a0 = a1;
+  });
+  return g + '</svg>';
+}
+
+/* --- геометрические фигуры с расчётами --- */
+function shapeDrawing(text) {
+  const t = norm(text), nums = numbersIn(t);
+  let g, info;
+  if (/круг|окружн/.test(t) && nums.length) {
+    const r = /диаметр/.test(t) ? nums[0] / 2 : nums[0];
+    g = svgOpen(420, 360) + `<circle cx="210" cy="180" r="130" fill="#eef6ff" stroke="#111" stroke-width="2.5"/><g stroke="#d33" stroke-dasharray="12 3 2 3"><line x1="60" y1="180" x2="360" y2="180"/><line x1="210" y1="30" x2="210" y2="330"/></g>` +
+      `<line x1="210" y1="180" x2="${210 + 130 * Math.cos(-0.6)}" y2="${180 + 130 * Math.sin(-0.6)}" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ar)"/>` + T(270, 140, `R = ${fmt(r)}`, {fill:'#2563eb'}) + '</svg>';
+    info = `- Радиус R = ${fmt(r)}, диаметр D = ${fmt(2 * r)}\n- Длина окружности: C = 2πR = **${fmt(2 * Math.PI * r, 4)}**\n- Площадь круга: S = πR² = **${fmt(Math.PI * r * r, 4)}**`;
+  } else if (/треуг/.test(t) && nums.length >= 3) {
+    const [a, b, c] = nums;
+    if (a + b <= c || a + c <= b || b + c <= a) return {error:`Треугольник со сторонами ${a}, ${b}, ${c} не существует: сумма двух любых сторон должна быть больше третьей.`};
+    const p = (a + b + c) / 2, S = Math.sqrt(p * (p - a) * (p - b) * (p - c));
+    const Ax = 0, Ay = 0, Bx = c, By = 0, Cx = (b * b + c * c - a * a) / (2 * c), Cy = Math.sqrt(Math.max(0, b * b - Cx * Cx));
+    const minX = Math.min(Ax, Cx), maxX = Math.max(Bx, Cx), k = Math.min(340 / (maxX - minX), 230 / (Cy || 1)), ox = 60 - minX * k, oy = 300;
+    const P = (x, y) => [ox + x * k, oy - y * k], [ax, ay] = P(Ax, Ay), [bx, by] = P(Bx, By), [qx, qy] = P(Cx, Cy);
+    g = svgOpen(460, 360) + `<polygon points="${ax},${ay} ${bx},${by} ${qx},${qy}" fill="#fff8e6" stroke="#111" stroke-width="2.5"/>` +
+      T(ax - 10, ay + 16, 'A') + T(bx + 10, by + 16, 'B') + T(qx, qy - 10, 'C') +
+      T((ax + bx) / 2, ay + 20, `c = ${fmt(c)}`, {fill:'#2563eb'}) + T((bx + qx) / 2 + 26, (by + qy) / 2, `a = ${fmt(a)}`, {fill:'#2563eb'}) + T((ax + qx) / 2 - 26, (ay + qy) / 2, `b = ${fmt(b)}`, {fill:'#2563eb'}) + '</svg>';
+    const ang = (x, y, z) => Math.acos((y * y + z * z - x * x) / (2 * y * z)) * 180 / Math.PI;
+    const kind = Math.abs(a * a + b * b - c * c) < 1e-9 || Math.abs(a * a + c * c - b * b) < 1e-9 || Math.abs(b * b + c * c - a * a) < 1e-9 ? 'прямоугольный' : (a === b && b === c) ? 'равносторонний' : (a === b || b === c || a === c) ? 'равнобедренный' : 'разносторонний';
+    info = `- Вид: **${kind}**\n- Периметр: P = a + b + c = **${fmt(a + b + c)}**\n- Площадь (формула Герона): p = ${fmt(p)}, S = √(p(p−a)(p−b)(p−c)) = **${fmt(S, 4)}**\n- Углы: ∠A ≈ ${fmt(ang(a, b, c), 2)}°, ∠B ≈ ${fmt(ang(b, a, c), 2)}°, ∠C ≈ ${fmt(ang(c, a, b), 2)}°`;
+  } else if (/(прямоуг|квадрат)/.test(t) && nums.length) {
+    const a = nums[0], b = /квадрат/.test(t) ? a : (nums[1] || a), k = Math.min(320 / a, 220 / b);
+    g = svgOpen(460, 340) + `<rect x="${230 - a * k / 2}" y="${160 - b * k / 2}" width="${a * k}" height="${b * k}" fill="#eef6ff" stroke="#111" stroke-width="2.5"/>` +
+      `<line x1="${230 - a * k / 2}" y1="${160 + b * k / 2}" x2="${230 + a * k / 2}" y2="${160 - b * k / 2}" stroke="#888" stroke-dasharray="5 4"/>` +
+      dim(230 - a * k / 2, 160 + b * k / 2, 230 + a * k / 2, 160 + b * k / 2, fmt(a), 26) + dim(230 + a * k / 2, 160 - b * k / 2, 230 + a * k / 2, 160 + b * k / 2, fmt(b), 26) + '</svg>';
+    info = `- Периметр: P = 2(a + b) = **${fmt(2 * (a + b))}**\n- Площадь: S = a·b = **${fmt(a * b)}**\n- Диагональ: d = √(a² + b²) = **${fmt(Math.hypot(a, b), 4)}**`;
+  } else return null;
+  return {svg:g, info};
+}
+
+/* --- схемы Mermaid: из шагов «A -> B -> C» или по известной теме --- */
+const FLOWS = {
+  'интернет':'flowchart LR\n  A["💻 Твой компьютер"] --> B["📶 Wi-Fi роутер"] --> C["🏢 Провайдер"] --> D["🌐 DNS: имя → IP-адрес"]\n  D --> E["🛰️ Магистральные сети"] --> F["🖥️ Сервер сайта"]\n  F -- "HTML, картинки" --> A',
+  'фотосинтез':'flowchart LR\n  S["☀️ Свет"] --> L["🌿 Лист (хлорофилл)"]\n  W["💧 Вода H₂O"] --> L\n  C["CO₂ из воздуха"] --> L\n  L --> G["🍬 Глюкоза"]\n  L --> O["O₂ кислород"]',
+  'круговорот воды':'flowchart TD\n  A["🌊 Океан"] -- "испарение" --> B["☁️ Облака"]\n  B -- "осадки" --> C["🌧️ Дождь и снег"]\n  C --> D["🏞️ Реки и подземные воды"]\n  D -- "сток" --> A',
+  'алгоритм':'flowchart TD\n  A(["Начало"]) --> B["Ввод данных"]\n  B --> C{"Условие выполнено?"}\n  C -- "да" --> D["Действие 1"]\n  C -- "нет" --> E["Действие 2"]\n  D --> F(["Конец"])\n  E --> F',
+  'бизнес':'flowchart LR\n  A["💡 Идея"] --> B["🔍 Анализ рынка"] --> C["📋 Бизнес-план"] --> D["💰 Финансирование"]\n  D --> E["🚀 Запуск"] --> F["📈 Продвижение"] --> G["🔁 Анализ и рост"]',
+  'проект':'gantt\n  title План проекта\n  dateFormat YYYY-MM-DD\n  section Подготовка\n  Идея и цели :a1, 2026-01-01, 7d\n  Исследование :a2, after a1, 10d\n  section Работа\n  Разработка :b1, after a2, 21d\n  Тестирование :b2, after b1, 7d\n  section Финиш\n  Запуск :c1, after b2, 3d',
+  'компьютер':'flowchart TD\n  CPU["🧠 Процессор"] <--> RAM["⚡ Оперативная память"]\n  CPU <--> GPU["🎮 Видеокарта"] --> MON["🖥️ Монитор"]\n  RAM <--> SSD["💾 Накопитель SSD"]\n  KB["⌨️ Клавиатура и мышь"] --> CPU\n  PSU["🔌 Блок питания"] -.-> CPU',
+  'пищеварен':'flowchart TD\n  A["👄 Рот: измельчение, слюна"] --> B["Пищевод"] --> C["Желудок: желудочный сок"]\n  C --> D["Тонкий кишечник: всасывание"] --> E["Толстый кишечник: вода"] --> F["Выведение"]',
+};
+function flowchart(text) {
+  const t = norm(text);
+  for (const [k, v] of Object.entries(FLOWS)) if (t.includes(k)) return v;
+  const body = text.includes(':') ? text.slice(text.indexOf(':') + 1) : text;
+  const steps = body.split(/\s*(?:->|→|=>|,|;|(?<![а-яё])потом(?![а-яё])|(?<![а-яё])затем(?![а-яё])|\n)\s*/i).map(s => s.trim()).filter(s => s && s.length < 60);
+  if (steps.length < 2) return null;
+  return 'flowchart TD\n' + steps.map((s, i) => `  S${i}["${s.replace(/"/g, "'")}"]`).join('\n') + '\n' + steps.slice(1).map((_, i) => `  S${i} --> S${i + 1}`).join('\n');
+}
+
+/* --- логотип по названию --- */
+function logo(text) {
+  const nm = (text.match(/[«"]([^»"]{1,30})[»"]/) || text.match(/(?:логотип|лого|иконк[ау])\s+(?:для\s+)?([A-Za-zА-Яа-яЁё0-9 ]{2,24})/i) || [])[1] || 'Swarmind';
+  const name = nm.trim(), ini = name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 360;
+  const c1 = `hsl(${h},78%,52%)`, c2 = `hsl(${(h + 40) % 360},85%,45%)`;
+  const shape = h % 3 === 0 ? '<circle cx="110" cy="110" r="86" fill="url(#lg)"/>' : h % 3 === 1 ? '<rect x="24" y="24" width="172" height="172" rx="44" fill="url(#lg)"/>' : '<path d="M110 20 188 65v90l-78 45-78-45V65z" fill="url(#lg)"/>';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 220" width="560" height="220"><rect width="100%" height="100%" fill="#fff"/><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>${shape}` +
+    `<text x="110" y="128" font-family="Arial Black, Arial, sans-serif" font-size="64" font-weight="900" fill="#fff" text-anchor="middle">${escHtml(ini)}</text>` +
+    `<text x="225" y="122" font-family="Arial, sans-serif" font-size="${Math.min(52, 640 / Math.max(4, name.length))}" font-weight="800" fill="#111">${escHtml(name)}</text><rect x="228" y="140" width="80" height="6" rx="3" fill="${c1}"/></svg>`;
+}
+
+Object.assign(SC, {convertUnits, floorPlan, partDrawing, plotFunction, parseSeries, barChart, pieChart, shapeDrawing, flowchart, logo});
+
+
+/* ============================ 5. ГЕНЕРАТОР САЙТОВ ============================ */
+/* Тематики: тексты, разделы, цвета и эмодзи под каждую. */
+const SITE_THEMES = [
+  {id:'cafe', rx:/кофе|кафе|ресторан|пекарн|бар|пицц|суши|еда|кондитер|столов|бургер/, name:'Кофейня', emoji:'☕', c:['#6f4e37', '#c08552', '#fff8f0'],
+   hero:'Свежая обжарка каждое утро', sub:'Кофе, который хочется пить медленно. Уютный зал, домашняя выпечка и музыка без спешки.', cta:'Посмотреть меню',
+   feats:[['🌱', 'Отборные зёрна', 'Работаем напрямую с фермерами Эфиопии и Колумбии.'], ['🥐', 'Выпечка с утра', 'Круассаны и синнабоны из собственной пекарни.'], ['🛋️', 'Уютный зал', 'Розетки у каждого столика и быстрый Wi-Fi.']],
+   menu:[['Эспрессо', 150], ['Капучино', 220], ['Латте', 240], ['Раф ванильный', 280], ['Круассан', 180], ['Чизкейк', 290]], menuTitle:'Меню'},
+  {id:'shop', rx:/магазин|shop|товар|интернет-магаз|одежд|кроссов|техник|цвет[оы]|подар/, name:'Магазин', emoji:'🛍️', c:['#111827', '#f43f5e', '#fff1f2'],
+   hero:'Вещи, которые хочется носить', sub:'Новая коллекция уже в продаже. Доставка по всей стране за 1–3 дня.', cta:'В каталог',
+   feats:[['🚚', 'Быстрая доставка', 'Отправляем в день заказа.'], ['↩️', 'Лёгкий возврат', '30 дней на обмен без вопросов.'], ['💳', 'Оплата при получении', 'Картой или наличными курьеру.']],
+   menu:[['Худи Oversize', 3490], ['Футболка Basic', 1290], ['Джинсы Straight', 4590], ['Кроссовки Run', 6990], ['Кепка', 990], ['Рюкзак City', 3990]], menuTitle:'Хиты продаж'},
+  {id:'portfolio', rx:/портфол|резюме|о себе|личн|визитк|фотограф|дизайнер|художник|программист/, name:'Портфолио', emoji:'🎨', c:['#0f172a', '#6366f1', '#eef2ff'],
+   hero:'Создаю то, что запоминается', sub:'Дизайн, фото и веб-проекты для людей и брендов. Посмотрите работы — и давайте сделаем ваш проект.', cta:'Смотреть работы',
+   feats:[['✨', 'Идея', 'Начинаю с вашей цели, а не с картинки.'], ['🎯', 'Детали', 'Каждый пиксель на своём месте.'], ['⏱️', 'Сроки', 'Сдаю вовремя — всегда.']],
+   menu:[['Брендинг кофейни', 0], ['Сайт для студии йоги', 0], ['Фотосессия «Город»', 0], ['Приложение для заметок', 0], ['Логотип для IT', 0], ['Обложка альбома', 0]], menuTitle:'Работы'},
+  {id:'fitness', rx:/спорт|фитнес|тренаж|зал|йог|бокс|танц|бассейн|тренер/, name:'Фитнес-клуб', emoji:'💪', c:['#0b0f19', '#22c55e', '#ecfdf5'],
+   hero:'Стань сильнее уже в этом месяце', sub:'Современный зал, опытные тренеры и программы под любую цель. Первая тренировка — бесплатно.', cta:'Записаться',
+   feats:[['🏋️', 'Новое оборудование', 'Более 120 тренажёров.'], ['👟', 'Персональные тренировки', 'План под твою цель.'], ['🕐', 'Открыто 24/7', 'Тренируйся когда удобно.']],
+   menu:[['Разовое посещение', 600], ['Абонемент на месяц', 3500], ['Абонемент на год', 29000], ['Персональная тренировка', 1800], ['Групповые занятия', 500], ['Заморозка', 0]], menuTitle:'Цены'},
+  {id:'school', rx:/школ|курс|обучен|репетит|урок|академ|английск|онлайн-курс/, name:'Онлайн-школа', emoji:'🎓', c:['#1e1b4b', '#f59e0b', '#fffbeb'],
+   hero:'Учись тому, что нужно в жизни', sub:'Живые уроки с преподавателем, домашние задания с проверкой и сертификат в конце.', cta:'Выбрать курс',
+   feats:[['👩‍🏫', 'Сильные преподаватели', 'Практики с опытом от 5 лет.'], ['📱', 'Учись с телефона', 'Уроки в записи и онлайн.'], ['🏆', 'Результат', '9 из 10 учеников достигают цели.']],
+   menu:[['Английский с нуля', 4900], ['Подготовка к ОГЭ', 3900], ['Подготовка к ЕГЭ', 5900], ['Программирование на Python', 6900], ['Рисование', 3500], ['Пробный урок', 0]], menuTitle:'Курсы'},
+  {id:'beauty', rx:/салон|красот|маникюр|парикмах|барбер|спа|косметолог|ресниц/, name:'Салон красоты', emoji:'💅', c:['#3b0a2a', '#e879a6', '#fdf2f8'],
+   hero:'Время для себя', sub:'Маникюр, стрижки и уход от мастеров с опытом. Запись онлайн за минуту.', cta:'Записаться',
+   feats:[['💎', 'Премиум-материалы', 'Только проверенные бренды.'], ['🧼', 'Стерильно', 'Инструменты проходят 3 этапа обработки.'], ['☕', 'Уютно', 'Кофе и чай для гостей.']],
+   menu:[['Маникюр с покрытием', 1800], ['Педикюр', 2300], ['Женская стрижка', 2000], ['Мужская стрижка', 1200], ['Окрашивание', 4500], ['Уход для лица', 3000]], menuTitle:'Услуги'},
+  {id:'tech', rx:/it|стартап|приложени|сервис|saas|программ|разработ|бот|нейросет|ии|компани/, name:'IT-стартап', emoji:'🚀', c:['#020617', '#38bdf8', '#f0f9ff'],
+   hero:'Автоматизируй рутину за 5 минут', sub:'Сервис, который экономит команде 10 часов в неделю. Подключение без программистов.', cta:'Попробовать бесплатно',
+   feats:[['⚡', 'Быстрый старт', 'Готов к работе за 5 минут.'], ['🔒', 'Безопасно', 'Шифрование и резервные копии.'], ['📊', 'Аналитика', 'Понятные отчёты в реальном времени.']],
+   menu:[['Старт', 0], ['Команда', 990], ['Бизнес', 2990], ['Корпоративный', 9900], ['API-доступ', 1990], ['Внедрение', 15000]], menuTitle:'Тарифы'},
+];
+const DEFAULT_THEME = {id:'generic', name:'Мой сайт', emoji:'🌟', c:['#111827', '#f59e0b', '#fffbeb'], hero:'Добро пожаловать', sub:'Здесь начинается что-то интересное. Расскажите о себе посетителям.', cta:'Узнать больше',
+  feats:[['🌟', 'Качество', 'Делаем на совесть.'], ['🤝', 'Забота', 'Отвечаем на любые вопросы.'], ['⚡', 'Скорость', 'Быстро и без лишних слов.']], menu:[['Услуга 1', 1000], ['Услуга 2', 2000], ['Услуга 3', 3000]], menuTitle:'Услуги'};
+
+function siteName(text, th) {
+  const q = text.match(/[«"]([^»"]{1,40})[»"]/);
+  if (q) return q[1].trim();
+  const m = text.match(/(?:называ[а-я]*|назван[а-я]*|для)\s+([A-ZА-ЯЁ][\wА-Яа-яЁё-]{1,24})/);
+  return m ? m[1] : th.name;
+}
+function makeSite(text) {
+  const t = norm(text);
+  const th = SITE_THEMES.find(x => x.rx.test(t)) || DEFAULT_THEME;
+  const name = siteName(text, th), [dark, acc, soft] = th.c;
+  const dm = /т[её]мн|dark|ночн/.test(t);
+  const bg = dm ? dark : '#ffffff', fg = dm ? '#f1f5f9' : '#111827', card = dm ? 'rgba(255,255,255,.06)' : soft;
+  const priceCell = p => p ? `${p.toLocaleString('ru-RU')} ₽` : th.id === 'portfolio' ? 'Смотреть →' : 'Бесплатно';
+  const items = th.menu.map(([n, p], i) => `      <article class="item reveal"><div class="ph" style="--h:${(i * 47) % 360}">${th.emoji}</div><h3>${escHtml(n)}</h3><p class="price">${priceCell(p)}</p></article>`).join('\n');
+  const feats = th.feats.map(([e, h, p]) => `      <div class="feat reveal"><div class="ic">${e}</div><h3>${escHtml(h)}</h3><p>${escHtml(p)}</p></div>`).join('\n');
+  const html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtml(name)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:${bg};--fg:${fg};--acc:${acc};--dark:${dark};--card:${card};--muted:${dm ? '#94a3b8' : '#6b7280'}}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid color-mix(in srgb,var(--fg) 10%,transparent)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;font-size:20px}
+.logo span{color:var(--acc)}
+.links{display:flex;gap:26px;font-weight:600}
+.links a:hover{color:var(--acc)}
+.burger{display:none;background:none;border:0;font-size:26px;color:var(--fg);cursor:pointer}
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;background:var(--acc);color:#fff;font-weight:800;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px color-mix(in srgb,var(--acc) 45%,transparent)}
+.hero{padding:110px 0 90px;text-align:center;background:radial-gradient(1000px 420px at 50% -10%,color-mix(in srgb,var(--acc) 28%,transparent),transparent)}
+.hero h1{font-size:clamp(36px,6vw,68px);line-height:1.05;letter-spacing:-.03em;margin-bottom:18px}
+.hero p{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:640px;margin:0 auto 32px}
+section{padding:80px 0}
+h2{font-size:clamp(28px,4vw,42px);text-align:center;margin-bottom:40px;letter-spacing:-.02em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.feat,.item{background:var(--card);border-radius:22px;padding:28px;transition:transform .25s}
+.feat:hover,.item:hover{transform:translateY(-4px)}
+.ic{font-size:36px;margin-bottom:10px}
+.feat p{color:var(--muted)}
+.ph{height:150px;border-radius:16px;display:grid;place-items:center;font-size:54px;margin-bottom:16px;background:linear-gradient(135deg,hsl(var(--h) 80% 75%),var(--acc))}
+.price{color:var(--acc);font-weight:800;font-size:18px}
+.contact{background:var(--card);border-radius:28px;padding:44px;max-width:620px;margin:0 auto}
+form{display:grid;gap:14px}
+input,textarea{width:100%;padding:14px 16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--fg) 18%,transparent);background:var(--bg);color:var(--fg);font:inherit}
+.err{color:#ef4444;font-size:14px;min-height:20px}
+.ok{color:#16a34a;font-weight:700}
+footer{padding:40px 0;text-align:center;color:var(--muted);border-top:1px solid color-mix(in srgb,var(--fg) 10%,transparent)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:720px){.links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);padding:10px 20px}.links.open{display:flex}.links a{padding:12px 0}.burger{display:block}.hero{padding:70px 0 60px}section{padding:56px 0}.contact{padding:26px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <a class="logo" href="#">${th.emoji} ${escHtml(name)}<span>.</span></a>
+  <nav class="links" id="links"><a href="#about">О нас</a><a href="#list">${escHtml(th.menuTitle)}</a><a href="#contact">Контакты</a></nav>
+  <button class="burger" id="burger" aria-label="Меню">☰</button>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <h1>${escHtml(th.hero)}</h1>
+  <p>${escHtml(th.sub)}</p>
+  <a class="btn" href="#list">${escHtml(th.cta)}</a>
+</div></section>
+
+<section id="about"><div class="wrap">
+  <h2>Почему выбирают нас</h2>
+  <div class="grid">
+${feats}
+  </div>
+</div></section>
+
+<section id="list"><div class="wrap">
+  <h2>${escHtml(th.menuTitle)}</h2>
+  <div class="grid">
+${items}
+  </div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <h2>Свяжитесь с нами</h2>
+  <div class="contact reveal">
+    <form id="form" novalidate>
+      <input id="name" placeholder="Ваше имя">
+      <input id="phone" placeholder="Телефон, например +7 900 123-45-67">
+      <textarea id="msg" rows="4" placeholder="Сообщение"></textarea>
+      <div class="err" id="err"></div>
+      <button class="btn" type="submit">Отправить</button>
+    </form>
+  </div>
+</div></section>
+
+<footer>© ${new Date().getFullYear()} ${escHtml(name)} · Сделано в Swarmind.ai</footer>
+
+<script>
+// меню на телефоне
+document.getElementById('burger').onclick = () => document.getElementById('links').classList.toggle('open');
+// плавное появление блоков при прокрутке
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.15});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+// проверка формы
+document.getElementById('form').onsubmit = e => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim(), phone = document.getElementById('phone').value.replace(/\\D/g, ''), err = document.getElementById('err');
+  if (name.length < 2) { err.textContent = 'Введите имя'; return; }
+  if (phone.length < 10) { err.textContent = 'Введите телефон полностью'; return; }
+  err.textContent = '';
+  e.target.innerHTML = '<p class="ok">Спасибо, ' + name.replace(/</g, '&lt;') + '! Мы перезвоним в течение 15 минут.</p>';
+};
+<\/script>
+</body>
+</html>`;
+  return {html, theme:th, name};
+}
+
+/* --- браузерные игры --- */
+function makeGame(text) {
+  const t = norm(text);
+  if (/змейк|snake/.test(t)) return {name:'Змейка', html:`<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Змейка</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0f172a;color:#e2e8f0;font-family:system-ui}canvas{background:#111827;border-radius:14px;box-shadow:0 20px 60px #0008;max-width:94vw}h1{margin:10px 0;text-align:center}.pad{display:grid;grid-template-columns:repeat(3,64px);gap:8px;justify-content:center;margin-top:12px}.pad button{height:56px;font-size:24px;border:0;border-radius:12px;background:#1e293b;color:#fff}</style></head>
+<body><div><h1>🐍 Змейка · <span id="s">0</span></h1><canvas id="c" width="400" height="400"></canvas>
+<div class="pad"><span></span><button data-d="0,-1">⬆</button><span></span><button data-d="-1,0">⬅</button><button data-d="0,1">⬇</button><button data-d="1,0">➡</button></div></div>
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d'), N = 20, S = 20;
+let snake, dir, food, score, alive;
+function reset() { snake = [{x:10, y:10}]; dir = {x:1, y:0}; score = 0; alive = true; place(); }
+function place() { do { food = {x:Math.floor(Math.random() * N), y:Math.floor(Math.random() * N)}; } while (snake.some(p => p.x === food.x && p.y === food.y)); }
+function turn(dx, dy) { if (dx !== -dir.x || dy !== -dir.y) dir = {x:dx, y:dy}; if (!alive) reset(); }
+addEventListener('keydown', e => { const k = {ArrowUp:[0,-1], ArrowDown:[0,1], ArrowLeft:[-1,0], ArrowRight:[1,0], w:[0,-1], s:[0,1], a:[-1,0], d:[1,0]}[e.key]; if (k) { e.preventDefault(); turn(...k); } });
+document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => turn(...b.dataset.d.split(',').map(Number)));
+function step() {
+  if (alive) {
+    const h = {x:(snake[0].x + dir.x + N) % N, y:(snake[0].y + dir.y + N) % N};
+    if (snake.some(p => p.x === h.x && p.y === h.y)) alive = false;
+    else { snake.unshift(h); if (h.x === food.x && h.y === food.y) { score++; place(); } else snake.pop(); }
+  }
+  x.fillStyle = '#111827'; x.fillRect(0, 0, 400, 400);
+  x.fillStyle = '#ef4444'; x.beginPath(); x.arc(food.x * S + 10, food.y * S + 10, 8, 0, 7); x.fill();
+  snake.forEach((p, i) => { x.fillStyle = i ? '#22c55e' : '#86efac'; x.fillRect(p.x * S + 1, p.y * S + 1, S - 2, S - 2); });
+  document.getElementById('s').textContent = score;
+  if (!alive) { x.fillStyle = '#000a'; x.fillRect(0, 0, 400, 400); x.fillStyle = '#fff'; x.font = 'bold 28px system-ui'; x.textAlign = 'center'; x.fillText('Игра окончена: ' + score, 200, 190); x.font = '16px system-ui'; x.fillText('Нажми стрелку, чтобы начать заново', 200, 225); }
+}
+reset(); setInterval(step, 110);
+<\/script></body></html>`};
+  if (/кликер|clicker|тапал|хомяк/.test(t)) return {name:'Кликер', html:`<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Кликер</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;text-align:center;background:linear-gradient(160deg,#1e1b4b,#4c1d95);color:#fff;font-family:system-ui}#coin{font-size:120px;background:none;border:0;cursor:pointer;transition:transform .08s;user-select:none}#coin:active{transform:scale(.9)}.shop{display:grid;gap:10px;margin-top:20px}.shop button{padding:12px 18px;border-radius:12px;border:0;background:#fbbf24;font-weight:700;cursor:pointer}.shop button:disabled{opacity:.4}</style></head>
+<body><div><h1>💰 <span id="m">0</span></h1><p>в секунду: <span id="ps">0</span></p><button id="coin">🪙</button>
+<div class="shop"><button id="b1">+1 за клик — <span id="c1">10</span></button><button id="b2">Авто +1/сек — <span id="c2">50</span></button></div></div>
+<script>
+let m = +(localStorage.m || 0), per = +(localStorage.per || 1), auto = +(localStorage.auto || 0), c1 = +(localStorage.c1 || 10), c2 = +(localStorage.c2 || 50);
+const $ = id => document.getElementById(id);
+function draw() { $('m').textContent = Math.floor(m); $('ps').textContent = auto; $('c1').textContent = c1; $('c2').textContent = c2; $('b1').disabled = m < c1; $('b2').disabled = m < c2; Object.assign(localStorage, {m, per, auto, c1, c2}); }
+$('coin').onclick = () => { m += per; draw(); };
+$('b1').onclick = () => { if (m >= c1) { m -= c1; per++; c1 = Math.round(c1 * 1.6); draw(); } };
+$('b2').onclick = () => { if (m >= c2) { m -= c2; auto++; c2 = Math.round(c2 * 1.7); draw(); } };
+setInterval(() => { m += auto / 10; draw(); }, 100); draw();
+<\/script></body></html>`};
+  return {name:'Угадай число', html:`<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Угадай число</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f0f9ff;font-family:system-ui;text-align:center}.card{background:#fff;padding:36px;border-radius:24px;box-shadow:0 20px 50px #0002;max-width:360px}input{font-size:28px;width:140px;text-align:center;padding:8px;border-radius:12px;border:2px solid #cbd5e1}button{margin-top:14px;padding:12px 26px;font-size:18px;border:0;border-radius:12px;background:#2563eb;color:#fff;cursor:pointer}#h{min-height:28px;font-size:20px;margin-top:14px}</style></head>
+<body><div class="card"><h1>🎯 Угадай число</h1><p>Я загадал число от 1 до 100</p><input id="g" type="number" min="1" max="100"><br><button id="b">Проверить</button><div id="h"></div><p id="t"></p></div>
+<script>
+let n = Math.ceil(Math.random() * 100), tries = 0;
+const h = document.getElementById('h'), g = document.getElementById('g');
+document.getElementById('b').onclick = () => {
+  const v = +g.value; if (!v) return; tries++;
+  if (v === n) { h.textContent = '🎉 Угадал за ' + tries + ' попыток! Сыграем ещё?'; n = Math.ceil(Math.random() * 100); tries = 0; }
+  else h.textContent = v < n ? '⬆ Больше' : '⬇ Меньше';
+  document.getElementById('t').textContent = tries ? 'Попыток: ' + tries : ''; g.select();
+};
+g.addEventListener('keydown', e => e.key === 'Enter' && document.getElementById('b').click());
+<\/script></body></html>`};
+}
+
+Object.assign(SC, {makeSite, makeGame, SITE_THEMES});
+
+
+/* ============================ 6. ПЕРЕВОДЧИК ============================ */
+/* Словарь «рус|eng» — основы русских слов, чтобы ловить разные формы. */
+const DICT_SRC = `
+привет|hello;здравствуй|hello;пока|bye;до свидания|goodbye;спасибо|thank you;пожалуйста|please;да|yes;нет|no;извини|sorry;доброе утро|good morning;добрый день|good afternoon;добрый вечер|good evening;спокойной ночи|good night;
+я|I;ты|you;вы|you;он|he;она|she;оно|it;мы|we;они|they;меня|me;тебя|you;его|him;её|her;нас|us;их|them;мой|my;моя|my;моё|my;мои|my;твой|your;твоя|your;наш|our;ваш|your;
+это|this;то|that;здесь|here;там|there;сейчас|now;сегодня|today;завтра|tomorrow;вчера|yesterday;всегда|always;никогда|never;иногда|sometimes;часто|often;очень|very;тоже|too;уже|already;ещё|still;только|only;
+и|and;или|or;но|but;если|if;потому что|because;когда|when;где|where;что|what;кто|who;почему|why;как|how;сколько|how much;какой|which;
+быть|be;есть|is;был|was;будет|will be;иметь|have;делать|do;сделать|make;идти|go;иду|go;пойти|go;ехать|go;бежать|run;прийти|come;приходить|come;видеть|see;смотреть|watch;слушать|listen;слышать|hear;говорить|speak;сказать|say;
+знать|know;знаю|know;думать|think;думаю|think;хотеть|want;хочу|want;любить|love;люблю|love;нравится|like;мочь|can;могу|can;должен|must;нужно|need;надо|need;работать|work;работаю|work;учиться|study;учусь|study;учить|learn;читать|read;писать|write;
+играть|play;играю|play;жить|live;живу|live;спать|sleep;есть еду|eat;пить|drink;купить|buy;продать|sell;платить|pay;помочь|help;помоги|help;ждать|wait;жди|wait;открыть|open;закрыть|close;начать|start;закончить|finish;понимать|understand;понимаю|understand;
+дом|house;дома|at home;квартира|apartment;комната|room;кухня|kitchen;школа|school;университет|university;работа|work;город|city;страна|country;улица|street;магазин|shop;рынок|market;больница|hospital;аптека|pharmacy;вокзал|station;аэропорт|airport;гостиница|hotel;ресторан|restaurant;кафе|cafe;
+мама|mom;папа|dad;мать|mother;отец|father;брат|brother;сестра|sister;сын|son;дочь|daughter;семья|family;друг|friend;подруга|friend;человек|person;люди|people;ребёнок|child;дети|children;мальчик|boy;девочка|girl;мужчина|man;женщина|woman;учитель|teacher;ученик|student;врач|doctor;
+вода|water;еда|food;хлеб|bread;молоко|milk;чай|tea;кофе|coffee;сок|juice;мясо|meat;рыба|fish;яблоко|apple;сыр|cheese;суп|soup;сахар|sugar;соль|salt;завтрак|breakfast;обед|lunch;ужин|dinner;
+время|time;день|day;ночь|night;утро|morning;вечер|evening;неделя|week;месяц|month;год|year;час|hour;минута|minute;зима|winter;весна|spring;лето|summer;осень|autumn;
+книга|book;ручка|pen;стол|table;стул|chair;окно|window;дверь|door;машина|car;телефон|phone;компьютер|computer;деньги|money;работы|jobs;игра|game;музыка|music;фильм|movie;песня|song;картина|picture;собака|dog;кошка|cat;кот|cat;птица|bird;лошадь|horse;
+солнце|sun;луна|moon;звезда|star;небо|sky;море|sea;река|river;лес|forest;гора|mountain;дерево|tree;цветок|flower;дождь|rain;снег|snow;ветер|wind;погода|weather;
+большой|big;маленький|small;хороший|good;хорошо|well;плохой|bad;плохо|badly;новый|new;старый|old;молодой|young;красивый|beautiful;умный|smart;добрый|kind;весёлый|cheerful;грустный|sad;счастливый|happy;быстрый|fast;быстро|quickly;медленно|slowly;горячий|hot;холодный|cold;тёплый|warm;
+красный|red;синий|blue;зелёный|green;жёлтый|yellow;чёрный|black;белый|white;
+один|one;два|two;три|three;четыре|four;пять|five;шесть|six;семь|seven;восемь|eight;девять|nine;десять|ten;сто|hundred;тысяча|thousand;
+в|in;на|on;под|under;над|above;с|with;без|without;для|for;из|from;к|to;о|about;про|about;у|at;до|before;после|after;через|through;
+мир|world;жизнь|life;любовь|love;дружба|friendship;мечта|dream;надежда|hope;правда|truth;свобода|freedom;война|war;история|history;язык|language;слово|word;вопрос|question;ответ|answer;проблема|problem;идея|idea`;
+const PHRASES = [
+  ['как дела', 'how are you'], ['как тебя зовут', "what's your name"], ['меня зовут', 'my name is'], ['я люблю тебя', 'I love you'], ['сколько стоит', 'how much is it'],
+  ['где находится', 'where is'], ['я не понимаю', "I don't understand"], ['говорите по-английски', 'do you speak English'], ['приятно познакомиться', 'nice to meet you'],
+  ['с днём рождения', 'happy birthday'], ['с новым годом', 'happy New Year'], ['удачи', 'good luck'], ['всё хорошо', 'everything is fine'], ['не за что', "you're welcome"],
+  ['я хочу есть', "I'm hungry"], ['я устал', "I'm tired"], ['который час', 'what time is it'], ['помогите', 'help me'], ['до завтра', 'see you tomorrow'], ['я из россии', "I'm from Russia"],
+];
+const RU_EN = new Map(), EN_RU = new Map();
+for (const pair of DICT_SRC.replace(/\n/g, '').split(';')) {
+  const [ru, en] = pair.split('|').map(s => s && s.trim());
+  if (!ru || !en) continue;
+  RU_EN.set(norm(ru), en);
+  if (!EN_RU.has(en.toLowerCase())) EN_RU.set(en.toLowerCase(), ru);
+}
+for (const [ru, en] of PHRASES) { RU_EN.set(norm(ru), en); EN_RU.set(en.toLowerCase(), ru); }
+const RU_STEMS = new Map([...RU_EN.keys()].filter(k => !k.includes(' ')).map(k => [stem(k), k]));
+/* транслитерация для неизвестных слов */
+const TR = {а:'a', б:'b', в:'v', г:'g', д:'d', е:'e', ё:'yo', ж:'zh', з:'z', и:'i', й:'y', к:'k', л:'l', м:'m', н:'n', о:'o', п:'p', р:'r', с:'s', т:'t', у:'u', ф:'f', х:'kh', ц:'ts', ч:'ch', ш:'sh', щ:'shch', ъ:'', ы:'y', ь:'', э:'e', ю:'yu', я:'ya'};
+const translit = s => s.split('').map(c => { const l = c.toLowerCase(), r = TR[l]; return r === undefined ? c : c === l ? r : cap(r); }).join('');
+function translateText(text, to) {
+  const src = text.replace(/^.*?(?:переведи|перевод|translate)[^:]*:\s*/i, '').replace(/^(?:на|in|to|into) [а-яa-z-]+(?:ий|ом)?\s+/i, '').replace(/["«»]/g, '').trim();
+  if (!src) return null;
+  const isRu = /[а-яё]/i.test(src);
+  if (!to) to = isRu ? 'en' : 'ru';
+  if (!['en', 'ru'].includes(to)) return {src, out:null, note:`Swarmind Core пока переводит только между русским и английским. Для ${LANGS[to] ? LANGS[to].name + 'ого' : 'этого'} языка подключи облачную нейросеть или Swarmind Mind.`};
+  const dir = isRu ? RU_EN : EN_RU, toks = src.split(/(\s+|[.,!?;:])/).filter(x => x !== '');
+  const out = [], unknown = [];
+  for (let i = 0; i < toks.length; i++) {
+    const tk = toks[i];
+    if (/^\s+$|^[.,!?;:]$/.test(tk)) { out.push(tk); continue; }
+    /* сначала фразы до 4 слов */
+    let done = false;
+    for (let len = 7; len >= 3; len -= 2) {
+      const chunk = toks.slice(i, i + len).join('');
+      const v = dir.get(norm(chunk)) || dir.get(chunk.toLowerCase());
+      if (v) { out.push(v); i += len - 1; done = true; break; }
+    }
+    if (done) continue;
+    const low = norm(tk);
+    let v = dir.get(low) || dir.get(tk.toLowerCase());
+    if (!v && isRu) { const k = RU_STEMS.get(stem(low)); if (k) v = RU_EN.get(k); }
+    if (!v && !isRu) { const base = low.replace(/(ing|ed|es|s)$/, ''); v = EN_RU.get(base) || EN_RU.get(base + 'e'); }
+    if (v) out.push(v); else { unknown.push(tk); out.push(isRu ? translit(tk) : tk); }
+  }
+  let res = out.join('').replace(/\s+([.,!?])/g, '$1').trim();
+  res = res.charAt(0).toUpperCase() + res.slice(1);
+  return {src, out:res, to, unknown};
+}
+function lookupWord(w) {
+  const k = norm(w);
+  if (RU_EN.has(k)) return {ru:k, en:RU_EN.get(k)};
+  const s = RU_STEMS.get(stem(k)); if (s) return {ru:s, en:RU_EN.get(s)};
+  if (EN_RU.has(k)) return {ru:EN_RU.get(k), en:k};
+  return null;
+}
+
+/* ============================ 7. СОЧИНЕНИЯ ============================ */
+/* банк аргументов по темам: реальные произведения и их герои */
+const ESSAY_BANK = {
+  дружба:{thesis:'настоящая дружба — это готовность быть рядом не только в радости, но и в беде', args:[
+    ['А. С. Пушкин, «Капитанская дочка»', 'Пётр Гринёв и Маша Миронова поддерживают друг друга в самые опасные минуты: Маша едет к императрице, чтобы спасти Петра. Верность оказывается сильнее страха.'],
+    ['Антуан де Сент-Экзюпери, «Маленький принц»', 'Лис объясняет Принцу: «Ты навсегда в ответе за тех, кого приручил». Дружба — это ответственность и время, отданное другому.'],
+    ['Н. В. Гоголь, «Тарас Бульба»', 'Тарас говорит о товариществе как о самой святой связи: «Нет уз святее товарищества». Казаки готовы отдать жизнь за друзей.']]},
+  доброта:{thesis:'доброта — это не слабость, а сила, которая меняет мир вокруг',
+    args:[['В. Г. Распутин, «Уроки французского»', 'Учительница Лидия Михайловна рискует работой, чтобы помочь голодному ученику, и делает это незаметно, сохраняя его достоинство.'],
+      ['М. А. Шолохов, «Судьба человека»', 'Андрей Соколов, потерявший на войне всё, усыновляет сироту Ванюшку. Доброта спасает обоих.'],
+      ['Ф. М. Достоевский, «Преступление и наказание»', 'Соня Мармеладова, сама живущая в нищете, сострадает Раскольникову и помогает ему вернуться к людям.']]},
+  родина:{thesis:'любовь к Родине проявляется не в громких словах, а в поступках',
+    args:[['Л. Н. Толстой, «Война и мир»', 'Капитан Тушин без пафоса и приказов героически удерживает батарею при Шенграбене. Настоящий патриотизм скромен.'],
+      ['М. Ю. Лермонтов, «Бородино»', 'Старый солдат рассказывает о битве: «Ребята! не Москва ль за нами?» — люди готовы умереть за свою землю.'],
+      ['Б. Л. Васильев, «А зори здесь тихие…»', 'Пять девушек-зенитчиц ценой жизни останавливают немецких диверсантов.']]},
+  совесть:{thesis:'совесть — внутренний судья, от которого невозможно скрыться',
+    args:[['Ф. М. Достоевский, «Преступление и наказание»', 'Раскольников оправдывает убийство теорией, но муки совести оказываются сильнее любых доводов.'],
+      ['В. Быков, «Сотников»', 'Рыбак спасает жизнь предательством, но понимает, что жить с этим невозможно.'],
+      ['А. С. Пушкин, «Борис Годунов»', 'Царь Борис мучается совестью: «И мальчики кровавые в глазах…»']]},
+  семья:{thesis:'семья — это опора, которая формирует человека',
+    args:[['Л. Н. Толстой, «Война и мир»', 'Семья Ростовых — пример любви и открытости: в этом доме рады каждому, и дети вырастают искренними людьми.'],
+      ['А. С. Пушкин, «Капитанская дочка»', 'Отец напутствует Петра: «Береги честь смолоду» — и этот завет определяет всю его жизнь.'],
+      ['Л. Улицкая, «Дочь Бухары»', 'Мать всю жизнь посвящает дочери, и эта жертвенная любовь — основа семьи.']]},
+  природа:{thesis:'человек — часть природы и в ответе за неё',
+    args:[['В. Г. Распутин, «Прощание с Матёрой»', 'Затопление острова ради электростанции показывает, как человек ради выгоды разрушает свою память и землю.'],
+      ['В. П. Астафьев, «Царь-рыба»', 'Браконьер Игнатьич, поймав огромного осетра, оказывается на краю гибели и понимает, что природа не прощает жадности.'],
+      ['М. М. Пришвин, «Кладовая солнца»', 'Дети учатся понимать лес и болото: природа помогает тем, кто к ней внимателен.']]},
+  книги:{thesis:'книги делают человека умнее, добрее и свободнее',
+    args:[['Р. Брэдбери, «451° по Фаренгейту»', 'В мире, где сжигают книги, люди теряют способность думать и чувствовать. Монтэг возвращает себе человечность через чтение.'],
+      ['М. Горький, «Детство»', 'Книги помогают Алёше выдержать жестокость окружающей жизни и увидеть другой, лучший мир.'],
+      ['Жизненный пример', 'Многие выдающиеся люди называют чтение главной причиной своих успехов: книга даёт опыт тысяч чужих жизней.']]},
+  выбор:{thesis:'жизненный выбор определяет, каким человеком мы станем',
+    args:[['А. С. Пушкин, «Капитанская дочка»', 'Гринёв выбирает честь и отказывается присягать Пугачёву, а Швабрин выбирает предательство — и теряет всё.'],
+      ['М. А. Булгаков, «Мастер и Маргарита»', 'Пилат выбирает страх за карьеру вместо справедливости и платит за это вечными муками.'],
+      ['И. С. Тургенев, «Отцы и дети»', 'Базаров выбирает отрицание всего, но любовь показывает, что жить без чувств нельзя.']]},
+  мечта:{thesis:'мечта даёт человеку силы двигаться вперёд',
+    args:[['А. Грин, «Алые паруса»', 'Ассоль верит в мечту вопреки насмешкам, и Грэй делает чудо своими руками: «Чудеса надо делать самому».'],
+      ['П. Коэльо, «Алхимик»', 'Сантьяго отправляется за мечтой и понимает, что путь к ней меняет его самого.'],
+      ['Жизненный пример', 'Юрий Гагарин мечтал о небе с детства — и стал первым человеком в космосе.']]},
+  война:{thesis:'война проверяет человека на прочность и показывает его истинную суть',
+    args:[['М. А. Шолохов, «Судьба человека»', 'Андрей Соколов проходит плен и теряет семью, но сохраняет человечность.'],
+      ['Л. Н. Толстой, «Война и мир»', 'Пьер Безухов на Бородинском поле понимает, что сила народа — в простых людях.'],
+      ['Б. Л. Васильев, «В списках не значился»', 'Лейтенант Плужников в одиночку защищает Брестскую крепость, и враги отдают ему честь.']]},
+  любовь:{thesis:'настоящая любовь способна на самопожертвование',
+    args:[['М. А. Булгаков, «Мастер и Маргарита»', 'Маргарита готова на всё ради Мастера — даже стать королевой бала у Воланда.'],
+      ['А. И. Куприн, «Гранатовый браслет»', 'Желтков любит Веру тихо и бескорыстно, ничего не прося взамен.'],
+      ['А. С. Пушкин, «Евгений Онегин»', 'Татьяна сохраняет верность долгу, хотя продолжает любить Онегина.']]},
+  технологии:{thesis:'технологии — мощный инструмент, но важно, кто и как им пользуется',
+    args:[['Р. Брэдбери, «Будет ласковый дождь»', 'Умный дом продолжает работать после гибели людей — техника без человека теряет смысл.'],
+      ['М. Шелли, «Франкенштейн»', 'Учёный создаёт жизнь, но не берёт за неё ответственность — и творение оборачивается против него.'],
+      ['Жизненный пример', 'Интернет и нейросети помогают учиться и лечить людей, но могут и распространять ложь — всё зависит от нас.']]},
+};
+const ESSAY_ALIASES = [[/друж|друз|товарищ/, 'дружба'], [/добр|милосерд|сострадан|помощ/, 'доброта'], [/родин|патриот|отечеств/, 'родина'], [/совест|чест/, 'совесть'], [/семь|родител|мам|отц|отец/, 'семья'],
+  [/природ|эколог|лес|животн/, 'природа'], [/книг|чтен|литератур/, 'книги'], [/выбор|решени/, 'выбор'], [/мечт|цел/, 'мечта'], [/войн|подвиг|героизм/, 'война'], [/любов|любл/, 'любовь'], [/технолог|интернет|гаджет|компьютер|нейросет|(?<![а-я])ии(?![а-я])/, 'технологии']];
+function essayTopic(text) {
+  const q = text.match(/[«"]([^»"]{3,80})[»"]/);
+  const topic = q ? q[1] : (text.match(/(?:на тему|тема|про|о)\s+(.{3,80}?)(?:[.!?]|для|$)/i) || [])[1];
+  const key = (ESSAY_ALIASES.find(([rx]) => rx.test(norm(topic || text))) || [])[1];
+  return {topic:(topic || '').trim(), key};
+}
+function writeEssay(text) {
+  const {topic, key} = essayTopic(text);
+  const grade = +((norm(text).match(/(\d{1,2})\s*класс/) || [])[1] || 0);
+  const ege = /егэ/.test(norm(text)), oge = /огэ/.test(norm(text));
+  const b = ESSAY_BANK[key];
+  /* «про дружбу» → тема «Дружба»: короткую тему в косвенном падеже заменяем на название из банка */
+  const quoted = /[«"]/.test(text);
+  const T0 = topic && (quoted || topic.split(/\s+/).length > 2 || !key) ? cap(topic.replace(/[?]$/, '')) : (key ? cap(key) : 'Сочинение');
+  if (!b) return null;
+  const n = grade && grade < 7 ? 2 : 3;
+  const intro = pick([
+    `Над вопросом «${T0}» люди задумываются во все времена. Каждый отвечает на него по-своему, но, на мой взгляд, ${b.thesis}.`,
+    `Что значит «${T0.toLowerCase()}»? На первый взгляд ответ прост, но чем больше об этом думаешь, тем глубже он становится. Я считаю, что ${b.thesis}.`,
+  ]);
+  const links = ['Обратимся к литературе.', 'Вспомним ещё один пример.', 'Эту мысль подтверждает и другой пример.'];
+  const body = b.args.slice(0, n).map(([src, txt], i) => `${links[i]} ${/Жизненный/.test(src) ? '' : `В произведении ${src} `}${txt} ${pick(['Этот пример показывает, что', 'Отсюда видно, что', 'Так автор доказывает, что'])} ${b.thesis}.`.replace(/\s+/g, ' '));
+  const outro = pick([`Таким образом, ${b.thesis}. Об этом стоит помнить каждому из нас — не только на уроке литературы, но и в жизни.`, `Подводя итог, можно сказать: ${b.thesis}. И я хочу, чтобы в моей жизни это было не просто словами.`]);
+  let out = `### ${T0}\n\n${intro}\n\n${body.join('\n\n')}\n\n${outro}`;
+  const wc = out.split(/\s+/).length;
+  out += `\n\n_≈ ${wc} ${plural(wc, 'слово', 'слова', 'слов')}${ege ? ' · для ЕГЭ проверь, что сформулирована проблема исходного текста и позиция автора' : oge ? ' · для ОГЭ 9.3 этого объёма хватает (от 70 слов)' : ''}._`;
+  return out;
+}
+
+/* ============================ 8. БАЗА ЗНАНИЙ ============================ */
+const CAPITALS = `россия:Москва;сша:Вашингтон;франция:Париж;германия:Берлин;великобритания:Лондон;англия:Лондон;италия:Рим;испания:Мадрид;китай:Пекин;япония:Токио;индия:Нью-Дели;бразилия:Бразилиа;канада:Оттава;австралия:Канберра;
+турция:Анкара;египет:Каир;казахстан:Астана;украина:Киев;беларусь:Минск;белоруссия:Минск;польша:Варшава;чехия:Прага;австрия:Вена;швейцария:Берн;швеция:Стокгольм;норвегия:Осло;финляндия:Хельсинки;дания:Копенгаген;нидерланды:Амстердам;
+бельгия:Брюссель;португалия:Лиссабон;греция:Афины;мексика:Мехико;аргентина:Буэнос-Айрес;корея:Сеул;южная корея:Сеул;северная корея:Пхеньян;вьетнам:Ханой;таиланд:Бангкок;индонезия:Джакарта;иран:Тегеран;израиль:Иерусалим;
+оаэ:Абу-Даби;саудовская аравия:Эр-Рияд;узбекистан:Ташкент;киргизия:Бишкек;кыргызстан:Бишкек;таджикистан:Душанбе;туркмения:Ашхабад;азербайджан:Баку;армения:Ереван;грузия:Тбилиси;молдавия:Кишинёв;молдова:Кишинёв;
+латвия:Рига;литва:Вильнюс;эстония:Таллин;венгрия:Будапешт;румыния:Бухарест;болгария:София;сербия:Белград;хорватия:Загреб;ирландия:Дублин;исландия:Рейкьявик;монголия:Улан-Батор;пакистан:Исламабад;афганистан:Кабул;
+куба:Гавана;чили:Сантьяго;перу:Лима;колумбия:Богота;венесуэла:Каракас;нигерия:Абуджа;юар:Претория;кения:Найроби;марокко:Рабат;алжир:Алжир;эфиопия:Аддис-Абеба;новая зеландия:Веллингтон;филиппины:Манила;малайзия:Куала-Лумпур;сингапур:Сингапур`;
+const CAP = new Map(CAPITALS.replace(/\n/g, '').split(';').map(x => x.split(':')));
+const PLANETS = [['Меркурий', '0,39 а.е.', '4 879 км', 'самая маленькая и близкая к Солнцу, год длится 88 дней'], ['Венера', '0,72 а.е.', '12 104 км', 'самая горячая планета (≈ 465 °C) из-за парникового эффекта'],
+  ['Земля', '1 а.е.', '12 742 км', 'единственная известная планета с жизнью'], ['Марс', '1,52 а.е.', '6 779 км', 'красная планета, на ней самый высокий вулкан — Олимп'], ['Юпитер', '5,2 а.е.', '139 820 км', 'самая большая планета, газовый гигант с Большим красным пятном'],
+  ['Сатурн', '9,5 а.е.', '116 460 км', 'знаменит кольцами изо льда и камней'], ['Уран', '19,2 а.е.', '50 724 км', 'вращается «лёжа на боку»'], ['Нептун', '30 а.е.', '49 244 км', 'самые сильные ветры в Солнечной системе — до 2 100 км/ч']];
+const ELEMENTS = 'H Водород 1,008;He Гелий 4,003;Li Литий 6,94;Be Бериллий 9,012;B Бор 10,81;C Углерод 12,011;N Азот 14,007;O Кислород 15,999;F Фтор 18,998;Ne Неон 20,18;Na Натрий 22,99;Mg Магний 24,305;Al Алюминий 26,982;Si Кремний 28,085;P Фосфор 30,974;S Сера 32,06;Cl Хлор 35,45;Ar Аргон 39,948;K Калий 39,098;Ca Кальций 40,078;Fe Железо 55,845;Cu Медь 63,546;Zn Цинк 65,38;Ag Серебро 107,87;Au Золото 196,97;Hg Ртуть 200,59;Pb Свинец 207,2;U Уран 238,03'
+  .split(';').map((s, i) => { const [sym, name, m] = s.split(' '); return {sym, name, m, n:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 26, 29, 30, 47, 79, 80, 82, 92][i]}; });
+const DEFS = {
+  'фотосинтез':'процесс, при котором растения на свету превращают углекислый газ и воду в глюкозу и кислород. Происходит в хлоропластах благодаря хлорофиллу: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂.',
+  'атом':'мельчайшая частица химического элемента. Состоит из ядра (протоны и нейтроны) и электронов вокруг него.',
+  'молекула':'наименьшая частица вещества, сохраняющая его химические свойства; состоит из атомов, связанных химическими связями.',
+  'клетка':'основная структурная единица всех живых организмов. Есть оболочка, цитоплазма и (у эукариот) ядро с ДНК.',
+  'днк':'дезоксирибонуклеиновая кислота — молекула, хранящая наследственную информацию. Имеет форму двойной спирали.',
+  'гравитация':'взаимное притяжение тел, имеющих массу. Сила тяготения: F = G·m₁·m₂/r², G ≈ 6,67·10⁻¹¹ Н·м²/кг².',
+  'скорость':'физическая величина, показывающая, какое расстояние тело проходит за единицу времени: v = s / t.',
+  'сила':'мера воздействия одного тела на другое; второй закон Ньютона: F = m·a. Измеряется в ньютонах (Н).',
+  'энергия':'способность тела совершать работу. Кинетическая Eк = mv²/2, потенциальная Eп = mgh. Измеряется в джоулях.',
+  'электричество':'явления, связанные с движением и взаимодействием заряженных частиц. Закон Ома: I = U / R.',
+  'алгоритм':'точная последовательность шагов, приводящая к решению задачи. Свойства: дискретность, понятность, определённость, результативность.',
+  'программирование':'создание инструкций для компьютера на языке программирования (Python, JavaScript и др.).',
+  'нейросеть':'математическая модель из множества связанных «нейронов», которая учится на примерах находить закономерности: распознавать картинки, переводить, писать тексты.',
+  'искусственный интеллект':'область науки о создании систем, способных выполнять задачи, которые обычно требуют человеческого мышления: понимать речь, учиться, решать задачи.',
+  'интернет':'всемирная сеть компьютеров, обменивающихся данными по общим протоколам (TCP/IP). Сайты работают поверх неё через протокол HTTP.',
+  'демократия':'форма правления, при которой власть принадлежит народу и осуществляется через выборы и представителей.',
+  'экономика':'наука и система отношений о производстве, распределении и потреблении благ в условиях ограниченных ресурсов.',
+  'инфляция':'рост общего уровня цен, из-за которого деньги со временем покупают меньше товаров.',
+  'метафора':'скрытое сравнение: перенос свойств одного предмета на другой по сходству («золотая осень», «море цветов»).',
+  'эпитет':'образное определение, которое придаёт выразительность («хрустальный звон», «весёлый ветер»).',
+  'олицетворение':'наделение неживых предметов свойствами живых («солнце улыбается», «ветер воет»).',
+  'гипербола':'художественное преувеличение («сто раз говорил», «море слёз»).',
+  'существительное':'часть речи, обозначающая предмет и отвечающая на вопросы «кто?» или «что?».',
+  'глагол':'часть речи, обозначающая действие или состояние и отвечающая на вопросы «что делать?», «что сделать?».',
+  'прилагательное':'часть речи, обозначающая признак предмета; отвечает на вопросы «какой?», «чей?».',
+  'наречие':'неизменяемая часть речи, обозначающая признак действия («быстро», «вчера», «далеко»).',
+  'периметр':'сумма длин всех сторон фигуры. Для прямоугольника P = 2(a + b).',
+  'площадь':'величина, показывающая размер поверхности фигуры. Прямоугольник: S = a·b, круг: S = πr², треугольник: S = ½·a·h.',
+  'теорема пифагора':'в прямоугольном треугольнике квадрат гипотенузы равен сумме квадратов катетов: c² = a² + b².',
+  'дискриминант':'для уравнения ax² + bx + c = 0: D = b² − 4ac. D > 0 — два корня, D = 0 — один, D < 0 — действительных корней нет.',
+  'производная':'скорость изменения функции. Например, (xⁿ)′ = n·xⁿ⁻¹, (sin x)′ = cos x. Swarmind Core умеет считать производные — напиши «производная x^3 + sin(x)».',
+  'вулкан':'геологическое образование, через которое из недр Земли на поверхность выходит магма (лава), газы и пепел.',
+  'климат':'многолетний режим погоды в местности. Отличается от погоды тем, что описывает средние условия за десятилетия.',
+  'экосистема':'сообщество живых организмов и среды их обитания, связанных обменом веществ и энергии.',
+  'биткоин':'первая криптовалюта (2009), цифровые деньги на основе блокчейна без центрального банка.',
+  'блокчейн':'цепочка блоков данных, где каждый блок ссылается на предыдущий; изменить старые записи практически невозможно.',
+};
+const PEOPLE = {
+  'пушкин':'Александр Сергеевич Пушкин (1799–1837) — великий русский поэт, создатель современного русского литературного языка. «Евгений Онегин», «Капитанская дочка», сказки.',
+  'лермонтов':'Михаил Юрьевич Лермонтов (1814–1841) — поэт и прозаик. «Герой нашего времени», «Мцыри», «Бородино».',
+  'толстой':'Лев Николаевич Толстой (1828–1910) — писатель и мыслитель. «Война и мир», «Анна Каренина».',
+  'достоевский':'Фёдор Михайлович Достоевский (1821–1881) — писатель. «Преступление и наказание», «Братья Карамазовы», «Идиот».',
+  'гоголь':'Николай Васильевич Гоголь (1809–1852) — писатель. «Мёртвые души», «Ревизор», «Вечера на хуторе близ Диканьки».',
+  'чехов':'Антон Павлович Чехов (1860–1904) — писатель и драматург, мастер короткого рассказа. «Вишнёвый сад», «Чайка».',
+  'гагарин':'Юрий Алексеевич Гагарин (1934–1968) — первый человек в космосе: 12 апреля 1961 года на корабле «Восток-1» облетел Землю за 108 минут.',
+  'ломоносов':'Михаил Васильевич Ломоносов (1711–1765) — учёный-энциклопедист, основатель Московского университета.',
+  'менделеев':'Дмитрий Иванович Менделеев (1834–1907) — химик, открыл периодический закон и создал таблицу химических элементов (1869).',
+  'петр':'Пётр I Великий (1672–1725) — первый российский император, основал Санкт-Петербург, провёл масштабные реформы.',
+  'эйнштейн':'Альберт Эйнштейн (1879–1955) — физик, создатель теории относительности (E = mc²), Нобелевская премия 1921 года.',
+  'ньютон':'Исаак Ньютон (1643–1727) — физик и математик, открыл закон всемирного тяготения и три закона механики.',
+  'наполеон':'Наполеон Бонапарт (1769–1821) — император Франции. В 1812 году его армия вторглась в Россию и потерпела поражение.',
+  'шекспир':'Уильям Шекспир (1564–1616) — английский драматург и поэт. «Гамлет», «Ромео и Джульетта», «Король Лир».',
+  'да винчи':'Леонардо да Винчи (1452–1519) — итальянский художник, учёный и изобретатель. «Мона Лиза», «Тайная вечеря».',
+  'королев':'Сергей Павлович Королёв (1907–1966) — главный конструктор советской космической программы: первый спутник и полёт Гагарина.',
+};
+const FORMULAS = {
+  'скорост':'v = s / t (скорость = путь / время); s = v·t; t = s / v',
+  'плотност':'ρ = m / V (плотность = масса / объём)',
+  'давлен':'p = F / S (давление = сила / площадь); в жидкости p = ρ·g·h',
+  'ома':'I = U / R (сила тока = напряжение / сопротивление)',
+  'мощност':'N = A / t (мощность = работа / время); в электричестве P = U·I',
+  'работ':'A = F·s (работа = сила × путь)',
+  'кинетическ':'Eк = m·v² / 2',
+  'потенциальн':'Eп = m·g·h',
+  'ньютон':'F = m·a (второй закон Ньютона)',
+  'площадь круг':'S = π·r²',
+  'длина окружн':'C = 2·π·r',
+  'объем шар':'V = 4/3·π·r³',
+  'пифагор':'c² = a² + b²',
+  'дискриминант':'D = b² − 4ac, x = (−b ± √D) / 2a',
+  'архимед':'Fа = ρж·g·Vт (выталкивающая сила)',
+  'теплот':'Q = c·m·(t₂ − t₁)',
+};
+function knowledge(text) {
+  const t = norm(text);
+  let m = t.match(/столиц[а-я]*\s+(?:страны\s+)?([а-я -]+?)(?:\?|$)/) || t.match(/([а-я -]+?)\s*[-—–]?\s*столиц/);
+  if (m) {
+    const c = m[1].trim().replace(/^(у|в)\s+/, '');
+    for (const [k, v] of CAP) if (c === k || stem(c) === stem(k) || c.startsWith(k.slice(0, -1))) return `Столица — **${v}**.`;
+  }
+  if (/планет/.test(t)) {
+    const p = PLANETS.find(([n]) => t.includes(stem(norm(n))));
+    if (p) return `**${p[0]}** — расстояние от Солнца ${p[1]}, диаметр ${p[2]}. ${cap(p[3])}.`;
+    if (/сколько|какие|список|все|солнечн/.test(t)) return 'В Солнечной системе **8 планет** (по порядку от Солнца):\n\n' + PLANETS.map(([n, d, s, f], i) => `${i + 1}. **${n}** — ${f}`).join('\n') + '\n\nЗапомнить порядок: «**М**ы **В**се **З**наем: **М**ама **Ю**ли **С**ела **У**тром **Н**а пилюли».';
+  }
+  const el = ELEMENTS.find(e => new RegExp('(^|[^а-я])' + stem(norm(e.name))).test(t) || new RegExp('(^|\\s)' + e.sym.toLowerCase() + '(\\s|$|\\?)').test(t) && /элемент|химич|масс/.test(t));
+  if (el && /элемент|химич|масс|атом|таблиц|номер/.test(t)) return `**${el.name} (${el.sym})** — порядковый номер ${el.n}, атомная масса ${el.m}.`;
+  if (/формул/.test(t)) { for (const [k, v] of Object.entries(FORMULAS)) if (t.includes(k)) return `**Формула:** ${v}`; }
+  m = t.match(/(?:кто так(?:ой|ая|ие)|кто был[аи]?|расскажи (?:про|о)|что известно о)\s+([а-я ]+)/);
+  const who = m ? m[1] : (/^кто\s/.test(t) ? t.replace(/^кто\s+/, '') : '');
+  if (who) for (const [k, v] of Object.entries(PEOPLE)) if (stem(who).includes(stem(k)) || who.includes(k)) return v;
+  m = t.match(/(?:что так(?:ое|ая|ой)|что значит|что означает|определение|объясни(?: что такое)?|расскажи (?:про|о))\s+([а-я ]+?)(?:\?|$)/);
+  const what = m ? m[1].trim() : '';
+  if (what) {
+    for (const [k, v] of Object.entries(DEFS)) if (what === k || stem(what) === stem(k) || what.includes(k) || k.includes(what) && what.length > 4) return `**${cap(k)}** — ${v}`;
+    for (const [k, v] of Object.entries(PEOPLE)) if (what.includes(k)) return v;
+  }
+  if (/скорость света/.test(t)) return 'Скорость света в вакууме — **299 792 458 м/с** (≈ 300 000 км/с).';
+  if (/высочайш|самая высокая гора|эверест/.test(t)) return 'Самая высокая гора — **Эверест (Джомолунгма)**, 8 848,86 м над уровнем моря.';
+  if (/самая длинная река/.test(t)) return 'Самая длинная река мира — **Нил** (≈ 6 650 км) или **Амазонка** (по некоторым измерениям ≈ 6 990 км). В России — **Лена** (4 400 км) или система **Обь–Иртыш** (5 410 км).';
+  if (/самое глубокое озеро|байкал/.test(t)) return '**Байкал** — самое глубокое озеро на Земле: 1 642 м. В нём около 20 % пресной озёрной воды планеты.';
+  if (/сколько (?:людей|человек) (?:на земле|в мире)|население земли/.test(t)) return 'Население Земли — **около 8,2 млрд человек** (оценка ООН на 2025 год).';
+  return null;
+}
+
+Object.assign(SC, {translateText, lookupWord, translit, writeEssay, essayTopic, knowledge, ESSAY_BANK});
+
+
+/* ============================ 12. ЗНАКОМСТВО И ПАМЯТЬ ============================ */
+/* Core запоминает собеседника через служебный тег <remember> — приложение сохраняет его в «Обо мне». */
+intent('intro', {rx:[/меня зовут|мо[её] имя|я\s+[-—]?\s*[А-ЯЁA-Z]?[а-яё]+,?\s+мне\s+\d+|мне\s+\d{1,2}\s+(лет|год)|я учусь в|я из\s|я живу в/i], prio:7});
+EXTRA.intro = (text, t) => {
+  const facts = [], said = [];
+  const nm = text.match(/(?:меня зовут|мо[её] имя)\s+([А-ЯЁA-Zа-яёa-z][а-яёa-z-]{1,20})/i);
+  if (nm) { const n = cap(nm[1]); facts.push(`Пользователя зовут ${n}`); said.push(`Приятно познакомиться, **${n}**! 🤝`); }
+  const age = t.match(/мне\s+(\d{1,2})\s*(лет|год)/);
+  if (age) { facts.push(`Пользователю ${age[1]} ${plural(+age[1], 'год', 'года', 'лет')}`); said.push(+age[1] < 18 ? `${age[1]} — отличный возраст, чтобы учиться всему новому.` : 'Запомнил твой возраст.'); }
+  const grade = t.match(/(?:учусь|я)\s+в\s+(\d{1,2})\s*(?:-?м|-?ом)?\s*класс/);
+  if (grade) { facts.push(`Учится в ${grade[1]} классе`); said.push(`${grade[1]} класс — буду объяснять с примерами под школьную программу.`); }
+  const city = text.match(/я (?:из|живу в)\s+([А-ЯЁ][а-яё-]+(?:\s[А-ЯЁ][а-яё-]+)?)/);
+  if (city) { facts.push(`Живёт: ${city[1]}`); said.push(`${city[1]} — здорово!`); }
+  if (!facts.length) return null;
+  return said.join(' ') + ' Чем займёмся?' + facts.map(f => `<remember>${f}</remember>`).join('');
+};
+
+/* ============================ 13. ОРФОГРАФИЯ ============================ */
+/* частые ошибки: [неправильно, правильно, подсказка] */
+const TYPOS = `извени|извини;извените|извините;сдесь|здесь;щас|сейчас;сечас|сейчас;сегодня|сегодня;седня|сегодня;вообщем|в общем;вобщем|в общем;в общем то|в общем-то;
+по моему|по-моему;потомучто|потому что;потому-что|потому что;чтобы|чтобы;что бы|чтобы;также|также;пожалуйсто|пожалуйста;пожалуста|пожалуйста;пожалуйсто|пожалуйста;
+агенство|агентство;адекватно|адекватно;ихний|их;ихние|их;ложить|класть;ложи|клади;координально|кардинально;компания|компания;прецендент|прецедент;инциндент|инцидент;
+будующий|будущий;будующее|будущее;девчёнка|девчонка;жюри|жюри;брошура|брошюра;парашут|парашют;какбудто|как будто;как-будто|как будто;вкратце|вкратце;в кратце|вкратце;
+нечаянно|нечаянно;нечайно|нечаянно;што|что;штобы|чтобы;чтоли|что ли;расчитать|рассчитать;раcчёт|расчёт;рассчёт|расчёт;скучать|скучать;участвовать|участвовать;учавствовать|участвовать;чувствовать|чувствовать;чуствовать|чувствовать;
+здраствуйте|здравствуйте;здраствуй|здравствуй;лесница|лестница;прийти|прийти;прийдти|прийти;придти|прийти;зделать|сделать;зделал|сделал;сдесь|здесь;интересно|интересно;интерестно|интересно;
+неочень|не очень;немогу|не могу;нехочу|не хочу;незнаю|не знаю;неважно|неважно;ничо|ничего;чо|что;шо|что;мб|может быть;спс|спасибо;пж|пожалуйста;плз|пожалуйста;кароче|короче;
+медленно|медленно;медлено|медленно;деревяный|деревянный;стекляный|стеклянный;оловяный|оловянный;серебрянный|серебряный;кожанный|кожаный;ветреный|ветреный;
+тренеровка|тренировка;тренеровать|тренировать;обезательно|обязательно;обязательно|обязательно;вообще|вообще;вобще|вообще;ваще|вообще;соревнование|соревнование;соревнавание|соревнование;
+калидор|коридор;колидор|коридор;экспрессо|эспрессо;беспланый|бесплатный;безплатно|бесплатно;бесплатно|бесплатно;разщитать|рассчитать;вкусный|вкусный;фкусный|вкусный`;
+const TYPO = new Map(TYPOS.replace(/\n/g, '').split(';').map(p => p.split('|')).filter(([a, b]) => a && b && a !== b));
+const RULES = [
+  [/(?<![а-яё])(не)(хочу|могу|знаю|буду|было|надо|нужно|люблю|понимаю)(?![а-яё])/gi, '«не» с глаголами пишется раздельно: «не $2»', (m, a, b) => 'не ' + b],
+  [/(жы|шы)/gi, 'ЖИ и ШИ пиши с буквой И', m => m[0] + 'и'],
+  [/(?<![а-яё])(ча|ща)(?=[а-яё])|(чя|щя)/gi, 'ЧА и ЩА пиши с буквой А', m => m.replace(/я/, 'а')],
+  [/(чю|щю)/gi, 'ЧУ и ЩУ пиши с буквой У', m => m.replace(/ю/, 'у')],
+  [/(?<![а-яё])(чк|чн)ь/gi, 'в сочетаниях ЧК и ЧН мягкий знак не пишется', m => m.slice(0, 2)],
+];
+function spellCheck(src) {
+  let fixed = src;
+  const notes = [];
+  fixed = fixed.replace(/[а-яё-]+/gi, w => {
+    const c = TYPO.get(w.toLowerCase());
+    if (!c) return w;
+    notes.push(`«${w}» → «${c}»`);
+    return w[0] === w[0].toUpperCase() ? cap(c) : c;
+  });
+  for (const [rx, hint, fn] of RULES) {
+    fixed = fixed.replace(rx, (...a) => { const r = fn(...a); if (r !== a[0]) notes.push(`«${a[0]}» → «${r}» (${hint.replace('$2', a[2] || '')})`); return r; });
+  }
+  fixed = fixed.replace(/\s+([,.!?:;])/g, '$1').replace(/([,.!?:;])(?=[А-Яа-яЁё])/g, '$1 ').replace(/\s{2,}/g, ' ');
+  fixed = fixed.replace(/(^|[.!?]\s+)([а-яё])/g, (m, a, b) => a + b.toUpperCase());
+  return {fixed, notes};
+}
+intent('spell', {rx:[/провер[а-я]* (текст|ошибк|орфограф|грамот)|исправь (ошибк|текст)|найди ошибк/], prio:6});
+EXTRA.spell = text => {
+  const body = text.includes(':') ? text.slice(text.indexOf(':') + 1).trim() : text.replace(/^.*?(ошибки|текст)\s*/i, '');
+  if (!body || body.length < 3) return 'Пришли текст после двоеточия, например: «проверь текст: я незнаю што делать».';
+  const {fixed, notes} = spellCheck(body);
+  return notes.length ? `**Исправленный текст:**\n\n> ${fixed}\n\n**Что исправил (${notes.length}):**\n${[...new Set(notes)].map(n => '- ' + n).join('\n')}\n\n_Офлайн-проверка ловит частые ошибки; для полной проверки пунктуации подключи нейросеть._`
+    : `Частых ошибок не нашёл 👍\n\n> ${fixed}\n\n_Я проверяю распространённые ошибки и правила (ЖИ-ШИ, «не» с глаголами и др.); сложную пунктуацию лучше проверить нейросетью._`;
+};
+
+/* ============================ 14. ТЕКСТОВЫЕ ИНСТРУМЕНТЫ ============================ */
+intent('textTools', {rx:[/(посчитай|сколько) (слов|символ|букв)|в верхний регистр|заглавными|в нижний регистр|наоборот|переверни текст|транслит|убери пробел/], prio:6});
+EXTRA.textTools = (text, t) => {
+  const body = text.includes(':') ? text.slice(text.indexOf(':') + 1).trim() : '';
+  if (!body) return 'Пришли текст после двоеточия, например: «посчитай слова: …».';
+  if (/слов|символ|букв/.test(t)) {
+    const w = body.split(/\s+/).filter(Boolean).length, ch = body.length, nos = body.replace(/\s/g, '').length, letters = (body.match(/[a-zа-яё]/gi) || []).length;
+    const sentences = (body.match(/[.!?]+(\s|$)/g) || []).length || 1;
+    return `| Показатель | Значение |\n|---|---|\n| Слов | **${w}** |\n| Символов с пробелами | ${ch} |\n| Символов без пробелов | ${nos} |\n| Букв | ${letters} |\n| Предложений | ${sentences} |\n| Время чтения | ≈ ${Math.max(1, Math.round(w / 180))} мин |`;
+  }
+  if (/верхн|заглавн/.test(t)) return body.toUpperCase();
+  if (/нижн/.test(t)) return body.toLowerCase();
+  if (/наоборот|переверн/.test(t)) return [...body].reverse().join('');
+  if (/транслит/.test(t)) return translit(body);
+  if (/пробел/.test(t)) return body.replace(/\s+/g, '');
+  return null;
+};
+
+/* ============================ 15. ФИЗИКА: ЗАДАЧИ ПО ФОРМУЛАМ ============================ */
+/* величины: [обозначение, названия, единица СИ] */
+const QTY = [
+  ['v', /скорост/, 'м/с'], ['s', /путь|расстояни|пройд/, 'м'], ['t', /врем/, 'с'], ['m', /масс/, 'кг'], ['a', /ускорени/, 'м/с²'], ['F', /сил[аыу]/, 'Н'],
+  ['V', /объ[её]м/, 'м³'], ['ρ', /плотност/, 'кг/м³'], ['p', /давлени/, 'Па'], ['S', /площад/, 'м²'], ['h', /высот|глубин/, 'м'],
+  ['U', /напряжени/, 'В'], ['I', /сила тока|ток[а]?(?![а-я])/, 'А'], ['R', /сопротивлени/, 'Ом'], ['P', /мощност/, 'Вт'], ['A', /работ/, 'Дж'], ['E', /энерги/, 'Дж'],
+];
+const LAWS = [
+  ['s = v·t', {s:q => q.v * q.t, v:q => q.s / q.t, t:q => q.s / q.v}],
+  ['F = m·a', {F:q => q.m * q.a, m:q => q.F / q.a, a:q => q.F / q.m}],
+  ['ρ = m / V', {ρ:q => q.m / q.V, m:q => q.ρ * q.V, V:q => q.m / q.ρ}],
+  ['p = F / S', {p:q => q.F / q.S, F:q => q.p * q.S, S:q => q.F / q.p}],
+  ['I = U / R', {I:q => q.U / q.R, U:q => q.I * q.R, R:q => q.U / q.I}],
+  ['P = U·I', {P:q => q.U * q.I, U:q => q.P / q.I, I:q => q.P / q.U}],
+  ['A = F·s', {A:q => q.F * q.s, F:q => q.A / q.s, s:q => q.A / q.F}],
+  ['P = A / t', {P:q => q.A / q.t, A:q => q.P * q.t, t:q => q.A / q.P}],
+  ['E = m·g·h', {E:q => q.m * 9.8 * q.h, m:q => q.E / (9.8 * q.h), h:q => q.E / (9.8 * q.m)}],
+  ['p = ρ·g·h', {p:q => q.ρ * 9.8 * q.h, h:q => q.p / (9.8 * q.ρ), ρ:q => q.p / (9.8 * q.h)}],
+];
+const TO_SI = [[/км\/ч|км в час/, 1 / 3.6], [/мин(ут)?(?![а-я])/, 60], [/час|ч(?![а-я])/, 3600], [/км(?![а-я/])/, 1000], [/см(?![а-я])/, 0.01], [/мм(?![а-я])/, 0.001], [/г(?![а-я])|грамм/, 0.001], [/т(?![а-я])|тонн/, 1000], [/кн(?![а-я])/, 1000], [/ква?т|kw/, 1000], [/ком(?![а-я])/, 1000]];
+function physicsSolve(text) {
+  const t = norm(text);
+  const want = (t.match(/(?:найд[а-я]*|определ[а-я]*|вычисл[а-я]*|чему равн[а-я]*|какова|каков|какой|какую|сколько)\s+(.+)$/) || [])[1];
+  if (!want) return null;
+  const known = {}, used = [];
+  const given = t.slice(0, t.indexOf(want));
+  for (const [sym, rx] of QTY) {
+    const m = given.match(new RegExp('(?:' + rx.source + ')[а-я]*\\s*(?:равн[а-я]*|=|составляет|—|-)?\\s*(\\d+(?:[.,]\\d+)?)\\s*([а-яa-z/²³]*)'));
+    if (!m) continue;
+    let v = parseFloat(m[m.length - 2].replace(',', '.')), unit = m[m.length - 1] || '';
+    for (const [urx, k] of TO_SI) if (urx.test(unit)) { v *= k; break; }
+    known[sym] = v; used.push(`${sym} = ${fmt(v, 6)} ${QTY.find(q => q[0] === sym)[2]}`);
+  }
+  /* величины без названия узнаём по единицам: «2 часа» — время, «150 км» — путь, «60 кг» — масса */
+  const byUnit = [['t', /(\d+(?:[.,]\d+)?)\s*(час[а-я]*|ч|мин[а-я]*|сек[а-я]*|с)(?![а-я/])/, u => /^ч/.test(u) ? 3600 : /^м/.test(u) ? 60 : 1, 'с'],
+    ['s', /(\d+(?:[.,]\d+)?)\s*(км|м|см)(?![а-я/])/, u => u === 'км' ? 1000 : u === 'см' ? 0.01 : 1, 'м'],
+    ['m', /(\d+(?:[.,]\d+)?)\s*(кг|г|т)(?![а-я/])/, u => u === 'т' ? 1000 : u === 'г' ? 0.001 : 1, 'кг']];
+  for (const [sym, rx, k, si] of byUnit) {
+    if (known[sym] !== undefined) continue;
+    const m = given.match(rx);
+    if (!m) continue;
+    known[sym] = parseFloat(m[1].replace(',', '.')) * k(m[2]);
+    used.push(`${sym} = ${fmt(known[sym], 6)} ${si}`);
+  }
+  const target = QTY.find(([, rx]) => rx.test(want));
+  if (!target || Object.keys(known).length < 2) return null;
+  for (const [law, f] of LAWS) {
+    const fn = f[target[0]];
+    if (!fn) continue;
+    const r = fn(known);
+    if (isFinite(r)) return `**Дано (в СИ):**\n${used.map(u => '- ' + u).join('\n')}\n\n**Найти:** ${target[0]}\n\n**Решение:** используем формулу **${law}**\n\n${target[0]} = **${fmt(r, 6)} ${target[2]}**` +
+      (target[0] === 'v' ? ` (= ${fmt(r * 3.6, 4)} км/ч)` : target[0] === 't' && r >= 60 ? ` (= ${fmt(r / 60, 4)} мин)` : target[0] === 's' && r >= 1000 ? ` (= ${fmt(r / 1000, 4)} км)` : '') + (law.includes('g') ? '\n\n_g = 9,8 м/с²._' : '');
+  }
+  return null;
+}
+intent('physics', {rx:[/(найд|определ|вычисл|чему равн|каков)[а-я]*.*(скорост|путь|расстояни|врем|сил|масс|давлени|плотност|ток|напряжени|сопротивлени|мощност|работ|энерги)/], prio:4});
+EXTRA.physics = text => physicsSolve(text);
+
+/* ============================ 16. КАЛЕНДАРЬ ============================ */
+const MONTHS = ['январ', 'феврал', 'март', 'апрел', 'ма', 'июн', 'июл', 'август', 'сентябр', 'октябр', 'ноябр', 'декабр'];
+function parseDate(s) {
+  s = norm(s);
+  let m = s.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})/);
+  if (m) { let y = +m[3]; if (y < 100) y += y > 50 ? 1900 : 2000; return new Date(y, +m[2] - 1, +m[1]); }
+  m = s.match(/(\d{1,2})\s+([а-я]+)\s*(\d{4})?/);
+  if (m) { const mi = MONTHS.findIndex(x => m[2].startsWith(x) && !(x === 'ма' && !/^ма[яй]/.test(m[2]))); if (mi >= 0) return new Date(m[3] ? +m[3] : new Date().getFullYear(), mi, +m[1]); }
+  if (/сегодня/.test(s)) return new Date();
+  if (/завтра/.test(s)) { const d = new Date(); d.setDate(d.getDate() + 1); return d; }
+  return null;
+}
+const DAY_MS = 864e5, dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+intent('calendar', {rx:[/сколько дней (до|осталось|между|прошло)|день недели|какой день (был|будет)|сколько мне лет|до нового года|до лета|до дня рождения|какого числа/], prio:5});
+EXTRA.calendar = (text, t) => {
+  const now = dayStart(new Date());
+  if (/до нового года/.test(t)) { const ny = new Date(now.getFullYear() + 1, 0, 1), d = Math.round((ny - now) / DAY_MS); return `До Нового года осталось **${d} ${plural(d, 'день', 'дня', 'дней')}** 🎄`; }
+  if (/до лета/.test(t)) { let s = new Date(now.getFullYear(), 5, 1); if (s <= now) s = new Date(now.getFullYear() + 1, 5, 1); const d = Math.round((s - now) / DAY_MS); return `До лета осталось **${d} ${plural(d, 'день', 'дня', 'дней')}** ☀️`; }
+  const parts = text.split(/\s+(?:и|до|по)\s+/);
+  const dates = [];
+  for (const p of parts) { const d = parseDate(p); if (d && !isNaN(d)) dates.push(dayStart(d)); }
+  if (/сколько мне лет|возраст/.test(t) && dates[0]) {
+    const b = dates[0]; let age = now.getFullYear() - b.getFullYear();
+    if (now < new Date(now.getFullYear(), b.getMonth(), b.getDate())) age--;
+    let next = new Date(now.getFullYear(), b.getMonth(), b.getDate()); if (next < now) next = new Date(now.getFullYear() + 1, b.getMonth(), b.getDate());
+    const dn = Math.round((next - now) / DAY_MS);
+    return `Тебе **${age} ${plural(age, 'год', 'года', 'лет')}**. Ты прожил(а) уже ${fmt(Math.round((now - b) / DAY_MS))} дней. До дня рождения — ${dn} ${plural(dn, 'день', 'дня', 'дней')} 🎂`;
+  }
+  if (/день недели|какой день/.test(t) && dates[0]) return `${dates[0].toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'})} — это **${dates[0].toLocaleDateString('ru-RU', {weekday:'long'})}**.`;
+  if (dates.length >= 2) { const d = Math.round(Math.abs(dates[1] - dates[0]) / DAY_MS); return `Между датами **${d} ${plural(d, 'день', 'дня', 'дней')}** (≈ ${fmt(d / 7, 1)} нед., ≈ ${fmt(d / 30.44, 1)} мес.).`; }
+  if (dates.length === 1) { const d = Math.round((dates[0] - now) / DAY_MS); return d >= 0 ? `До ${dates[0].toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'})} осталось **${d} ${plural(d, 'день', 'дня', 'дней')}**.` : `С ${dates[0].toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'})} прошло **${-d} ${plural(-d, 'день', 'дня', 'дней')}**.`; }
+  return null;
+};
+
+/* ============================ 17. ЗАГАДКИ И СОВЕТЫ ============================ */
+const RIDDLES = [['Зимой и летом одним цветом.', 'Ёлка'], ['Висит груша — нельзя скушать.', 'Лампочка'], ['Сидит дед, во сто шуб одет. Кто его раздевает, тот слёзы проливает.', 'Лук'],
+  ['Без окон, без дверей — полна горница людей.', 'Огурец'], ['Что можно увидеть с закрытыми глазами?', 'Сон'], ['Чем больше из неё берёшь, тем больше она становится.', 'Яма'],
+  ['У него есть ключи, но он не открывает замки.', 'Клавиатура'], ['Что принадлежит тебе, но другие пользуются этим чаще?', 'Твоё имя']];
+intent('riddle', {rx:[/загадк|загадай/], prio:5});
+EXTRA.riddle = () => { const [q, a] = pick(RIDDLES); return `🧩 **Загадка:** ${q}\n\nПодумай минутку… 🤔\n\n\n\n\n\nОтвет: **${a}**\n\nХочешь ещё одну? Напиши «загадка».`; };
+const TIPS = {
+  учеб:['Учись короткими блоками: 25 минут работы, 5 минут отдыха (метод «Помидора»).', 'Объясняй тему вслух, как будто учишь друга — так запоминается в 2 раза лучше.', 'Повторяй материал через 1 день, 3 дня и неделю — интервальные повторения побеждают забывание.', 'Убери телефон в другую комнату на время учёбы.'],
+  сон:['Ложись и вставай в одно и то же время, даже в выходные.', 'За час до сна — без экранов: синий свет мешает выработке мелатонина.', 'В спальне должно быть прохладно (18–20 °C), темно и тихо.', 'Не пей кофе и энергетики после 15:00.'],
+  спорт:['Начни с 3 тренировок в неделю по 30–40 минут.', 'Разминка 5–10 минут обязательна — так меньше травм.', 'Прогресс важнее веса: добавляй нагрузку постепенно.', 'Пей воду и спи 7–9 часов — мышцы растут во время отдыха.'],
+  деньг:['Откладывай 10–20 % от любого дохода сразу, а не «что останется».', 'Записывай расходы месяц — найдёшь, где утекают деньги.', 'Создай подушку безопасности на 3–6 месяцев расходов.', 'Не бери кредиты на развлечения и гаджеты.'],
+  стресс:['Сделай 5 медленных вдохов: вдох на 4 счёта, выдох на 6.', 'Раздели большую проблему на маленькие шаги и сделай первый.', 'Прогулка 20 минут на свежем воздухе реально снижает тревогу.', 'Поговори с близким человеком — не держи всё в себе.'],
+};
+intent('tips', {rx:[/(совет|как (лучше|правильно|научиться)|помоги).*(уч[её]б|учит|запомин|экзамен|сон|спать|высыпат|спорт|трениров|похуд|деньг|копит|эконом|стресс|тревог|нервнича)/, /как (перестать нервничать|начать копить|лучше учиться|высыпаться)/], prio:4});
+EXTRA.tips = (text, t) => {
+  const key = /уч|запомин|экзамен/.test(t) ? 'учеб' : /сон|спать|высыпат/.test(t) ? 'сон' : /спорт|трениров|похуд/.test(t) ? 'спорт' : /деньг|копит|эконом/.test(t) ? 'деньг' : 'стресс';
+  const title = {учеб:'Как учиться эффективнее', сон:'Как высыпаться', спорт:'Как начать тренироваться', деньг:'Как обращаться с деньгами', стресс:'Как справиться со стрессом'}[key];
+  return `**${title}:**\n\n${TIPS[key].map((x, i) => `${i + 1}. ${x}`).join('\n')}\n\nНачни с одного пункта уже сегодня 💪`;
+};
+
+
+/* ============================ 18. СЛУЧАЙНОСТЬ: КУБИК, МОНЕТКА, ПАРОЛИ ============================ */
+function rnd(n) {
+  /* криптостойкий генератор, если доступен */
+  if (window.crypto && crypto.getRandomValues) {
+    const a = new Uint32Array(1);
+    crypto.getRandomValues(a);
+    return a[0] % n;
+  }
+  return Math.floor(Math.random() * n);
+}
+function makePassword(len, opts) {
+  const sets = ['abcdefghijkmnopqrstuvwxyz', 'ABCDEFGHJKLMNPQRSTUVWXYZ', '23456789'];
+  if (opts.symbols) sets.push('!@#$%^&*-_=+?');
+  const all = sets.join('');
+  /* по одному символу из каждого набора — чтобы пароль точно был сложным */
+  const out = sets.map(s => s[rnd(s.length)]);
+  while (out.length < len) out.push(all[rnd(all.length)]);
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = rnd(i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out.join('');
+}
+function passwordStrength(p) {
+  let pool = 0;
+  if (/[a-z]/.test(p)) pool += 26;
+  if (/[A-Z]/.test(p)) pool += 26;
+  if (/\d/.test(p)) pool += 10;
+  if (/[^a-zA-Z0-9]/.test(p)) pool += 15;
+  const bits = Math.round(p.length * Math.log2(pool || 1));
+  return {bits, label: bits < 40 ? 'слабый 😟' : bits < 60 ? 'средний 🙂' : bits < 80 ? 'надёжный 💪' : 'очень надёжный 🛡️'};
+}
+intent('random', {rx:[/брос[а-я]* (кубик|кост|монет)|подбрось монет|орел или решк|случайн[а-я]* числ|выбери (случайно|одн[а-я]*|за меня)|придумай парол|сгенерир[а-я]* парол|сделай парол/], prio:5});
+EXTRA.random = (text, t) => {
+  if (/парол/.test(t)) {
+    const len = Math.min(64, Math.max(8, numbersIn(t)[0] || 14));
+    const list = Array.from({length:3}, () => makePassword(len, {symbols: !/без символ/.test(t)}));
+    const s = passwordStrength(list[0]);
+    return `🔐 **Пароли (${len} символов):**\n\n${list.map(p => '`' + p + '`').join('\n\n')}\n\nСложность: **${s.label}** (≈ ${s.bits} бит).\n\n_Сгенерированы прямо в твоём браузере и никуда не отправляются._`;
+  }
+  if (/монет|орел|решк/.test(t)) return rnd(2) ? '🪙 Выпал **орёл**!' : '🪙 Выпала **решка**!';
+  if (/кубик|кост/.test(t)) {
+    const n = Math.min(10, numbersIn(t)[0] || 1);
+    const r = Array.from({length:n}, () => rnd(6) + 1);
+    const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+    return `🎲 ${r.map(x => faces[x - 1] + ' ' + x).join('  ')}` + (n > 1 ? `\n\nСумма: **${r.reduce((a, b) => a + b, 0)}**` : '');
+  }
+  const range = t.match(/от\s*(-?\d+)\s*до\s*(-?\d+)/);
+  if (range) {
+    const a = +range[1], b = +range[2], lo = Math.min(a, b), hi = Math.max(a, b);
+    return `🎯 Случайное число от ${lo} до ${hi}: **${lo + rnd(hi - lo + 1)}**`;
+  }
+  const opts = text.split(/:\s*/).slice(1).join(':').split(/\s*(?:,|\sили\s)\s*/).filter(Boolean);
+  if (opts.length >= 2) return `🤔 Я выбираю: **${opts[rnd(opts.length)]}**`;
+  return `🎯 Случайное число от 1 до 100: **${rnd(100) + 1}**\n\nМожно так: «случайное число от 5 до 50», «выбери: пицца, суши, бургер».`;
+};
+
+/* ============================ 19. КУЛИНАРИЯ: РЕЦЕПТЫ И ПЕРЕСЧЁТ ============================ */
+const RECIPES = {
+  блины: {serv:4, time:'30 мин', ing:[['молоко', 500, 'мл'], ['яйца', 2, 'шт'], ['мука', 200, 'г'], ['сахар', 1, 'ст. л.'], ['соль', 0.5, 'ч. л.'], ['растительное масло', 2, 'ст. л.']],
+    steps:['Взбей яйца с сахаром и солью.', 'Влей половину молока, всыпь муку и вымешай без комочков.', 'Добавь остальное молоко и масло, дай тесту постоять 15 минут.', 'Жарь на разогретой сковороде по 1 минуте с каждой стороны.']},
+  омлет: {serv:1, time:'10 мин', ing:[['яйца', 2, 'шт'], ['молоко', 50, 'мл'], ['соль', 1, 'щепотка'], ['сливочное масло', 10, 'г']],
+    steps:['Взбей яйца с молоком и солью.', 'Растопи масло на сковороде на среднем огне.', 'Вылей смесь, накрой крышкой и готовь 4–5 минут.']},
+  пицца: {serv:4, time:'1 ч', ing:[['мука', 300, 'г'], ['вода тёплая', 180, 'мл'], ['дрожжи сухие', 7, 'г'], ['оливковое масло', 2, 'ст. л.'], ['томатный соус', 100, 'г'], ['моцарелла', 200, 'г']],
+    steps:['Смешай муку, дрожжи, соль, воду и масло, вымеси тесто 10 минут.', 'Оставь тесто в тепле на 40 минут.', 'Раскатай, смажь соусом, выложи сыр и начинку.', 'Выпекай 10–12 минут при 230 °C.']},
+  сырники: {serv:3, time:'25 мин', ing:[['творог', 400, 'г'], ['яйца', 1, 'шт'], ['сахар', 2, 'ст. л.'], ['мука', 4, 'ст. л.'], ['ванильный сахар', 1, 'ч. л.']],
+    steps:['Разомни творог вилкой, добавь яйцо, сахар и ваниль.', 'Всыпь муку и замеси мягкое тесто.', 'Сформируй шайбы, обваляй в муке.', 'Обжарь по 3 минуты с каждой стороны на среднем огне.']},
+  'салат цезарь': {serv:2, time:'20 мин', ing:[['куриное филе', 250, 'г'], ['салат романо', 1, 'кочан'], ['пармезан', 40, 'г'], ['сухарики', 60, 'г'], ['соус цезарь', 4, 'ст. л.']],
+    steps:['Обжарь филе до готовности и нарежь полосками.', 'Порви листья салата руками.', 'Смешай салат с соусом, добавь курицу и сухарики.', 'Посыпь тёртым пармезаном.']},
+};
+const fmtQty = (x, unit) => {
+  const r = x < 10 ? Math.round(x * 4) / 4 : Math.round(x);
+  return `${fmt(r)} ${unit}`;
+};
+intent('recipe', {rx:[/рецепт|как (при)?готовить|как сделать (блин|омлет|пицц|сырник|салат)|на \d+ (порци|человек)/], prio:5});
+EXTRA.recipe = (text, t) => {
+  const name = Object.keys(RECIPES).find(k => t.includes(k.slice(0, Math.max(4, k.length - 2))));
+  if (!name) return `🍳 Я знаю рецепты: ${Object.keys(RECIPES).map(cap).join(', ')}.\n\nНапиши, например: «рецепт блинов на 6 порций».`;
+  const r = RECIPES[name];
+  const want = +(t.match(/на (\d+) (?:порци|человек|персон)/) || [])[1] || r.serv;
+  const k = want / r.serv;
+  return `## 🍽️ ${cap(name)} — ${want} ${plural(want, 'порция', 'порции', 'порций')}\n\n⏱️ Время: ${r.time}\n\n**Ингредиенты:**\n` +
+    r.ing.map(([n, q, u]) => `- ${cap(n)} — ${fmtQty(q * k, u)}`).join('\n') +
+    `\n\n**Приготовление:**\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nПриятного аппетита! 😋`;
+};
+
+/* ============================ 20. ДЕНЬГИ: ПРОЦЕНТЫ, ВКЛАД, КРЕДИТ, ЧАЕВЫЕ ============================ */
+intent('money', {rx:[/вклад|депозит|кредит|ипотек|чаев|раздели (сч[её]т|чек)|сколько (накоплю|получу|переплат)|скидк[а-я]* \d+/], prio:5});
+EXTRA.money = (text, t) => {
+  const n = numbersIn(t);
+  if (/скидк/.test(t) && n.length >= 2) {
+    const price = Math.max(n[0], n[1]), pct = Math.min(n[0], n[1]);
+    const save = price * pct / 100;
+    return `🏷️ Цена ${fmt(price)} со скидкой ${pct}%: **${fmt(price - save, 2)}** (экономия ${fmt(save, 2)}).`;
+  }
+  if (/чаев|раздели/.test(t) && n.length) {
+    const sum = n[0], people = n[1] || 1, tip = /чаев/.test(t) ? (n[2] || 10) : 0;
+    const total = sum * (1 + tip / 100);
+    return `🧾 Счёт ${fmt(sum)}${tip ? ` + чаевые ${tip}% = **${fmt(total, 2)}**` : ''}` + (people > 1 ? `\n\nНа ${people} ${plural(people, 'человека', 'человек', 'человек')}: **${fmt(total / people, 2)}** с каждого.` : '');
+  }
+  if (/вклад|депозит|накоплю|получу/.test(t) && n.length >= 2) {
+    const sum = n[0], rate = n[1], years = n[2] || 1;
+    const simple = sum * (1 + rate / 100 * years);
+    const monthly = sum * Math.pow(1 + rate / 1200, years * 12);
+    return `💰 Вклад **${fmt(sum)}** под **${rate}%** на ${years} ${plural(years, 'год', 'года', 'лет')}:\n\n| Вариант | Итог | Доход |\n|---|---|---|\n| Без капитализации | ${fmt(simple, 2)} | ${fmt(simple - sum, 2)} |\n| Ежемесячная капитализация | **${fmt(monthly, 2)}** | ${fmt(monthly - sum, 2)} |\n\n_Налоги и условия банка не учтены._`;
+  }
+  if (/кредит|ипотек|переплат/.test(t) && n.length >= 2) {
+    const sum = n[0], rate = n[1], years = n[2] || 1;
+    const i = rate / 1200, m = years * 12;
+    const pay = i ? sum * i / (1 - Math.pow(1 + i, -m)) : sum / m;
+    return `🏦 Кредит **${fmt(sum)}** под **${rate}%** на ${years} ${plural(years, 'год', 'года', 'лет')} (аннуитет):\n\n- Ежемесячный платёж: **${fmt(pay, 2)}**\n- Всего выплатишь: ${fmt(pay * m, 2)}\n- Переплата: **${fmt(pay * m - sum, 2)}**\n\n_Это расчёт, а не финансовый совет: точные условия смотри в договоре банка._`;
+  }
+  return 'Напиши с числами, например: «вклад 100000 под 12% на 3 года», «кредит 500000 под 18% на 5 лет», «раздели счёт 4500 на 3 и чаевые 10».';
+};
+
+/* ============================ 21. ВИКТОРИНА ============================ */
+const QUIZ = [
+  ['Какая планета самая большая в Солнечной системе?', ['Юпитер', 'Сатурн', 'Земля', 'Нептун'], 0],
+  ['Сколько континентов на Земле?', ['5', '6', '7', '8'], 2],
+  ['Кто написал «Евгения Онегина»?', ['Лермонтов', 'Пушкин', 'Толстой', 'Гоголь'], 1],
+  ['Какой газ растения поглощают из воздуха?', ['Кислород', 'Азот', 'Углекислый газ', 'Водород'], 2],
+  ['Сколько будет 7 × 8?', ['54', '56', '58', '64'], 1],
+  ['Самая длинная река в мире?', ['Амазонка', 'Нил', 'Волга', 'Янцзы'], 1],
+  ['В каком году человек впервые полетел в космос?', ['1957', '1961', '1969', '1975'], 1],
+  ['Какой язык программирования работает в браузере?', ['Python', 'C++', 'JavaScript', 'Java'], 2],
+  ['Столица Японии?', ['Киото', 'Осака', 'Токио', 'Сеул'], 2],
+  ['Сколько сторон у шестиугольника?', ['5', '6', '7', '8'], 1],
+];
+let lastQuiz = null;
+intent('quiz', {rx:[/викторин|задай (мне )?вопрос|проверь мои знания|тест на эрудиц/], prio:5});
+EXTRA.quiz = () => {
+  lastQuiz = QUIZ[rnd(QUIZ.length)];
+  const [q, opts] = lastQuiz;
+  return `❓ **${q}**\n\n${opts.map((o, i) => `${'АБВГ'[i]}) ${o}`).join('\n')}\n\nОтветь буквой (А, Б, В или Г).`;
+};
+intent('quizAnswer', {rx:[/^[абвг]\)?\.?$/], prio:9});
+EXTRA.quizAnswer = (text, t) => {
+  if (!lastQuiz) return null;
+  const [, opts, right] = lastQuiz, i = 'абвг'.indexOf(t[0]);
+  lastQuiz = null;
+  return i === right ? `✅ Верно! Это **${opts[right]}**. Ещё вопрос? Напиши «викторина».` : `❌ Не угадал. Правильный ответ: **${'АБВГ'[right]}) ${opts[right]}**. Попробуешь ещё? Напиши «викторина».`;
+};
+
+
+/* ============================ 9. КОД ============================ */
+const CODE = [
+  {rx:/телеграм|telegram|тг.?бот/, title:'Телеграм-бот на Python (aiogram 3)', lang:'python', code:`# pip install aiogram
+import asyncio, os
+from aiogram import Bot, Dispatcher, F
+from aiogram.filters import CommandStart
+from aiogram.types import Message
+
+bot = Bot(os.environ["BOT_TOKEN"])          # токен от @BotFather
+dp = Dispatcher()
+
+@dp.message(CommandStart())
+async def start(msg: Message):
+    await msg.answer(f"Привет, {msg.from_user.first_name}! Напиши мне что-нибудь.")
+
+@dp.message(F.text)
+async def echo(msg: Message):
+    await msg.answer(f"Ты написал: {msg.text}")
+
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())`, how:'1. Получи токен у @BotFather в Telegram.\n2. `pip install aiogram`\n3. Windows: `set BOT_TOKEN=твой_токен`, Mac/Linux: `export BOT_TOKEN=твой_токен`\n4. `python bot.py`'},
+  {rx:/калькулятор/, title:'Калькулятор на Python', lang:'python', code:`def calc(a: float, op: str, b: float) -> float:
+    if op == "+": return a + b
+    if op == "-": return a - b
+    if op == "*": return a * b
+    if op == "/":
+        if b == 0:
+            raise ZeroDivisionError("на ноль делить нельзя")
+        return a / b
+    raise ValueError("неизвестная операция: " + op)
+
+while True:
+    try:
+        a = float(input("Первое число: "))
+        op = input("Операция (+ - * /): ").strip()
+        b = float(input("Второе число: "))
+        print("Результат:", calc(a, op, b))
+    except (ValueError, ZeroDivisionError) as e:
+        print("Ошибка:", e)
+    if input("Ещё? (д/н): ").lower() != "д":
+        break`, how:'Сохрани как `calc.py` и запусти: `python calc.py`'},
+  {rx:/сортир|sort/, title:'Сортировка (быстрая сортировка) на Python и JavaScript', lang:'python', code:`def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    mid = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quick_sort(left) + mid + quick_sort(right)
+
+print(quick_sort([5, 3, 8, 1, 9, 2]))  # [1, 2, 3, 5, 8, 9]
+
+# В реальной жизни проще: sorted(arr) или arr.sort()`, how:'В JavaScript: `[5, 3, 8].sort((a, b) => a - b)`. Сложность быстрой сортировки — в среднем O(n log n).'},
+  {rx:/угада|случайн.*числ|random/, title:'Игра «Угадай число» на Python', lang:'python', code:`import random
+
+secret = random.randint(1, 100)
+tries = 0
+print("Я загадал число от 1 до 100. Угадай!")
+while True:
+    guess = int(input("Твой вариант: "))
+    tries += 1
+    if guess < secret:
+        print("Больше ⬆")
+    elif guess > secret:
+        print("Меньше ⬇")
+    else:
+        print(f"Угадал за {tries} попыток! 🎉")
+        break`, how:'Запуск: `python game.py`'},
+  {rx:/sql|баз[аеу] данн/, title:'Основы SQL', lang:'sql', code:`-- создать таблицу
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT
+);
+
+-- добавить данные
+INSERT INTO users (name, age, city) VALUES ('Аня', 16, 'Москва'), ('Иван', 21, 'Казань');
+
+-- выбрать
+SELECT name, age FROM users WHERE age >= 18 ORDER BY age DESC;
+
+-- посчитать по городам
+SELECT city, COUNT(*) AS cnt, AVG(age) AS avg_age FROM users GROUP BY city;
+
+-- изменить и удалить
+UPDATE users SET city = 'Сочи' WHERE name = 'Иван';
+DELETE FROM users WHERE age < 14;`, how:'Попробовать можно бесплатно в SQLite: `sqlite3 test.db`'},
+  {rx:/fizz|физзбаз|цикл|for/, title:'Циклы в Python', lang:'python', code:`# for по диапазону
+for i in range(1, 6):
+    print(i)          # 1 2 3 4 5
+
+# for по списку
+for fruit in ["яблоко", "груша", "банан"]:
+    print(fruit)
+
+# while с условием
+n = 10
+while n > 0:
+    n -= 3
+print(n)  # -2
+
+# классика: FizzBuzz
+for i in range(1, 16):
+    print("FizzBuzz" if i % 15 == 0 else "Fizz" if i % 3 == 0 else "Buzz" if i % 5 == 0 else i)`, how:''},
+  {rx:/javascript|\bjs\b|кнопк|скрипт для сайт/, title:'JavaScript: кнопка со счётчиком', lang:'html', code:`<button id="btn">Нажато: 0</button>
+<script>
+  let count = 0;
+  const btn = document.getElementById('btn');
+  btn.addEventListener('click', () => {
+    count++;
+    btn.textContent = 'Нажато: ' + count;
+  });
+<\/script>`, how:'Вставь в любую HTML-страницу.'},
+  {rx:/python|питон|пайтон|программ/, title:'Python: с чего начать', lang:'python', code:`# переменные и ввод
+name = input("Как тебя зовут? ")
+age = int(input("Сколько тебе лет? "))
+
+# условия
+if age >= 18:
+    print(f"{name}, ты совершеннолетний")
+else:
+    print(f"{name}, до 18 осталось {18 - age} лет")
+
+# функция и список
+def square(x):
+    return x * x
+
+nums = [1, 2, 3, 4, 5]
+print([square(n) for n in nums])   # [1, 4, 9, 16, 25]`, how:'Скачай Python с python.org, сохрани код в `main.py` и запусти `python main.py`.'},
+];
+function codeAnswer(text) {
+  const t = norm(text), c = CODE.find(x => x.rx.test(t));
+  if (!c) return null;
+  return `**${c.title}**\n\n\`\`\`${c.lang}\n${c.code}\n\`\`\`` + (c.how ? `\n\n**Как запустить:**\n${c.how}` : '');
+}
+
+/* ============================ 10. ХАРАКТЕР И БЕСЕДА ============================ */
+const JOKES = [
+  'Программист ставит на тумбочку два стакана: один с водой — если захочет пить, второй пустой — если не захочет.',
+  '— Почему математики путают Хэллоуин и Рождество?\n— Потому что Oct 31 = Dec 25 😄',
+  'Учитель: «Вовочка, назови два местоимения». Вовочка: «Кто? Я?» — «Молодец, садись, пять».',
+  'Мой код работает, и я не знаю почему. Мой код не работает, и я не знаю почему. Добро пожаловать в программирование!',
+  'Нейросеть спросили: «Ты умнее человека?» Она ответила: «Сначала дождусь, пока вы перезагрузите меня, и уточню».',
+  '— Сколько программистов нужно, чтобы вкрутить лампочку?\n— Ни одного. Это аппаратная проблема.',
+  'Кот смотрит на меня так, будто я должен ему денег. И знаете… он прав: корм закончился.',
+];
+const FACTS = [
+  'Осьминог имеет три сердца и голубую кровь 🐙', 'Мёд не портится: в египетских гробницах находили мёд, которому 3 000 лет 🍯', 'Свет от Солнца идёт до Земли около 8 минут 20 секунд ☀️',
+  'В человеческом теле около 37 триллионов клеток 🧬', 'Бананы — это ягоды, а клубника — нет 🍌', 'Эйфелева башня летом выше на 15 см из-за теплового расширения металла 🗼',
+  'Сердце синего кита весит около 180 кг 🐋', 'На Венере день длиннее года 🪐', 'Байкал содержит около 20 % пресной озёрной воды планеты 💧',
+];
+const MOTIVATION = ['Большие дела делаются маленькими шагами. Сделай сегодня один — и ты уже ближе 💪', 'Ошибки — это не провал, а данные для следующей попытки.', 'Не нужно быть великим, чтобы начать, но нужно начать, чтобы стать великим.', 'Дисциплина — это помнить, чего ты хочешь больше всего, а не того, чего хочешь прямо сейчас.'];
+function smallTalk(text, ctx) {
+  const t = norm(text), name = ctx && ctx.name ? ', ' + ctx.name : '';
+  if (/^(привет|здравств|хай|хей|салют|ку|добр(ое|ый|ой) (утро|день|вечер)|hello|hi|hey)/.test(t)) {
+    const h = new Date().getHours(), tod = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер';
+    return pick([`${tod}${name}! 👋 Я Swarmind Core — собственный движок Swarmind. Чем займёмся: посчитать, начертить, сделать сайт, перевести или написать сочинение?`, `Привет${name}! 🐝 Готов помочь. Могу решить задачу, нарисовать план или график, собрать сайт или игру. Что нужно?`]);
+  }
+  if (/как (у тебя )?дела|как ты|как поживаешь|how are you/.test(t)) return pick(['Отлично! Процессор холодный, мысли быстрые ⚡ А у тебя как?', 'Работаю на полную — и даже без интернета 😎 Как твои дела?']);
+  if (/кто ты|что ты (такое|за)|ты кто|представься|как тебя зовут|твое имя/.test(t)) return 'Я **Swarmind Core** — собственный ИИ-движок Swarmind.ai, написанный с нуля. Работаю прямо в браузере: **без интернета, без ключей и без лимитов**.\n\nЯ умею:\n- 🧮 считать, решать уравнения и системы, брать производные\n- 📐 чертить планы квартир, детали, фигуры, графики функций и диаграммы\n- 🗺️ рисовать схемы\n- 🌐 собирать сайты и браузерные игры\n- 🌍 переводить (русский ↔ английский)\n- ✍️ писать сочинения по литературе\n- 📚 отвечать на вопросы по школьной программе\n- 🔄 переводить единицы измерения\n\nДля свободных разговоров на любые темы подключи облачную нейросеть или Swarmind Mind — я буду работать вместе с ними.';
+  if (/что (ты )?(умеешь|можешь)|помощь|help|команды|возможност/.test(t)) return smallTalk('кто ты');
+  if (/спасибо|благодар|thanks|thank you/.test(t)) return pick(['Пожалуйста! Обращайся 🙌', 'Всегда рад помочь 🐝', 'Не за что! Если что — я тут.']);
+  if (/^(пока|до свидания|бай|увидимся|споки)/.test(t)) return pick(['Пока! Заходи ещё 👋', 'До встречи! Удачного дня ☀️']);
+  if (/шутк|анекдот|рассмеши|пошути/.test(t)) return pick(JOKES);
+  if (/факт|интересн/.test(t)) return 'Интересный факт: ' + pick(FACTS);
+  if (/мотивац|мотивир|вдохнов|нет сил|лень|не хочу ничего/.test(t)) return pick(MOTIVATION);
+  if (/скучно|чем заняться/.test(t)) return 'Давай что-нибудь сделаем! Например:\n- «сделай игру змейка» 🐍\n- «начерти план двушки 55 м²» 📐\n- «график y = sin(x)*x» 📈\n- «расскажи факт» 🤓';
+  if (/(который|сколько) (сейчас )?час|время сейчас|какое время/.test(t)) return `Сейчас **${new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})}**.`;
+  if (/(какое|какой) (сегодня )?(число|день|дата)|сегодня (какое|какой)/.test(t)) return `Сегодня **${new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'})}**.`;
+  if (/брось (кубик|кость)|кубик/.test(t)) return `🎲 Выпало: **${1 + Math.floor(Math.random() * 6)}**`;
+  if (/монетк|орел или решка|орёл или решка/.test(t)) return `🪙 **${Math.random() < 0.5 ? 'Орёл' : 'Решка'}**!`;
+  if (/(случайн|рандомн)[а-я]* числ/.test(t)) { const n = numbersIn(t); const a = n.length >= 2 ? Math.min(n[0], n[1]) : 1, b = n.length >= 2 ? Math.max(n[0], n[1]) : 100; return `🎲 Случайное число от ${a} до ${b}: **${a + Math.floor(Math.random() * (b - a + 1))}**`; }
+  if (/пароль/.test(t)) {
+    const len = Math.min(64, Math.max(8, numbersIn(t)[0] || 16)), chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*?';
+    const arr = new Uint32Array(len); (window.crypto || {getRandomValues:a => a.map(() => Math.random() * 1e9)}).getRandomValues(arr);
+    return `🔐 Надёжный пароль (${len} символов):\n\n\`${[...arr].map(x => chars[x % chars.length]).join('')}\`\n\nСоздан прямо на твоём устройстве и никуда не отправлялся.`;
+  }
+  if (/люблю тебя|ты лучш|ты молодец|ты классн|ты крут/.test(t)) return pick(['Спасибо, очень приятно! 🥰 Ты тоже классный.', 'Ох, я аж зажужжал от радости 🐝']);
+  if (/ты тупой|ты глупый|дурак|бесполезн/.test(t)) return 'Понимаю, бывает обидно, когда не получается 😅 Я — офлайн-движок и в свободной беседе пока слабее больших нейросетей. Подключи облачную нейросеть или Swarmind Mind — а я помогу с расчётами, чертежами, сайтами и переводами.';
+  return null;
+}
+
+/* ============================ 11. МОЗГ: ВЫБОР НАВЫКА ============================ */
+intent('greet', {rx:[/^(привет|здравств|хай|хей|салют|ку|добр(ое|ый|ой) (утро|день|вечер)|hello|hi|hey)([^а-яa-z]|$)/], prio:1});
+intent('talk', {rx:[/как (у тебя )?дела|кто ты|что ты умеешь|спасибо|^пока|шутк|анекдот|факт|мотивац|скучно|котор(ый|ое) час|какое (сегодня )?число|кубик|монетк|пароль|случайн[а-я]* числ/], prio:1});
+intent('convert', {rx:[/\d\s*[a-zа-я°²³/.]+\s+(в|во|to|in)\s+[a-zа-я°]/], keys:{перевед:1, сколько:0.5}, anti:[/перевод|текст|слово|фраз/]});
+intent('equation', {rx:[/=.*[xх]|[xх].*=/, /уравнен/], keys:{реш:1}, prio:3});
+intent('system', {rx:[/систем[ау]/, /[xх].*[yу].*=.*[,;].*=/], prio:4});
+intent('deriv', {rx:[/производн|derivative|d\/dx/], prio:5});
+intent('plot', {rx:[/график\s*(функци[ия])?\s*:?\s*(y\s*=|f\(x\))|построй график|нарисуй график|plot/], prio:5});
+intent('chart', {rx:[/диаграмм|гистограмм/], prio:4});
+intent('calc', {rx:[/^[\d\s+\-*/^().,%×÷:√πe!]+=?\??$/, /сколько будет|посчитай|вычисли|calculate|корень из|в степени|факториал|процент|% от/], prio:2});
+intent('numbers', {rx:[/простое (ли )?число|простым числом|разлож|делител|нод|нок|прописью|римск|в двоичн|в шестнадцатер|среднее|медиан/], prio:3});
+intent('plan', {rx:[/план[а-я]* (квартир|дом|комнат)|планировк|(квартир|дом|двушк|трешк|трёшк|студи)[а-я]*.*(чертеж|черти|план)|(начерти|нарисуй).*(квартир|дом|комнат|кухн)/], prio:6});
+intent('part', {rx:[/детал|пластин|брус|отверсти|чертеж[а-я]* (детал|пласт)/], prio:5});
+intent('shape', {rx:[/(начерти|нарисуй|площадь|периметр).*(треугольн|круг|квадрат|прямоугольн|окружн)/, /(треугольн|круг|квадрат|прямоугольн)[а-я]* со сторон/], prio:5});
+intent('flow', {rx:[/схем|блок-схем|алгоритм.*нарису|mindmap|интеллект-карт|как устроен/], prio:3});
+intent('logo', {rx:[/логотип|(?<![а-я])лого(?![а-я])|иконк/], prio:5});
+intent('game', {rx:[/змейк|кликер|угадай число|сделай (мне )?(браузерную )?игру|напиши игру/], prio:6});
+intent('site', {rx:[/сайт|лендинг|landing|веб.?страниц|html.?страниц|портфолио|интернет.?магазин/], prio:5});
+intent('translate', {rx:[/переведи|перевод|translate|как (будет|сказать) .+ (на|по-)/, /на (английск|русск|немецк|французск|испанск)/], prio:5});
+intent('essay', {rx:[/сочинени|эссе|изложени|рассуждени/], prio:6});
+intent('code', {rx:[/код|программ|python|питон|javascript|\bjs\b|sql|телеграм.?бот|напиши (функци|скрипт)/], prio:3});
+intent('know', {rx:[/столиц|планет|химическ|элемент|формул|кто так|что так|что значит|что означает|определени|расскажи (про|о)|кто был/], prio:2});
+
+const HELP_FOOTER = '\n\n---\n_Это ответ Swarmind Core — собственного офлайн-движка Swarmind. Для свободной беседы на любые темы подключи облачную нейросеть или Swarmind Mind._';
+function exprFrom(text) {
+  return wordsToNumbers(text).replace(/^.*?(сколько будет|посчитай|вычисли|calculate|реши|найди значение|чему равно)\s*/i, '').replace(/[?!]+$/, '').replace(/=\s*$/, '').trim();
+}
+function svgBlock(svg) { return '```svg\n' + svg + '\n```'; }
+
+function answer(raw, ctx = {}) {
+  const fixed = fixLayout(String(raw || '').trim());
+  const text = fixed, t = norm(text);
+  if (!t) return 'Напиши, что сделать — и я помогу 🙂';
+  const layoutNote = fixed !== String(raw).trim() ? `_Похоже, была английская раскладка — я понял: «${fixed}»._\n\n` : '';
+  const ranked = classify(text);
+  const order = ranked.map(r => r.id);
+  for (const id of order.length ? order : ['calc']) {
+    const r = runSkill(id, text, t, ctx);
+    if (r) return layoutNote + r;
+  }
+  /* запасной путь: вдруг это чистое выражение */
+  const c = runSkill('calc', text, t, ctx) || runSkill('know', text, t, ctx) || smallTalk(text, ctx);
+  if (c) return layoutNote + c;
+  return layoutNote + fallbackAnswer(text);
+}
+function fallbackAnswer(text) {
+  return pick(['Хм, это пока за пределами моих навыков 🤔', 'Честно скажу: этого я пока не умею.']) +
+    ' Я — **Swarmind Core**, офлайн-движок, и в свободной беседе слабее больших нейросетей.\n\nЗато могу прямо сейчас:\n' +
+    '- 🧮 «реши x² − 5x + 6 = 0», «производная x^3·sin(x)», «15% от 2400»\n- 📐 «начерти план квартиры 45 м²», «деталь 120x60 с отверстием 10»\n- 📈 «график y = x^2 − 4», «диаграмма: яблоки 5, груши 3, сливы 7»\n' +
+    '- 🌐 «сделай сайт для кофейни», «игра змейка»\n- 🌍 «переведи: я люблю музыку»\n- ✍️ «сочинение на тему дружбы»\n- 📚 «столица Японии», «что такое фотосинтез», «кто такой Гагарин»\n- 🔄 «5 миль в км», «100 °F в °C»\n\n' +
+    'Для ответа на любой вопрос подключи нейросеть: **Настройки → Нейросети** (есть бесплатные).';
+}
+function runSkill(id, text, t, ctx) {
+  if (EXTRA[id]) return EXTRA[id](text, t, ctx);
+  switch (id) {
+    case 'greet': case 'talk': return smallTalk(text, ctx);
+    case 'convert': return convertUnits(text);
+    case 'system': {
+      const r = solveSystem(wordsToNumbers(text).replace(/^[^=]*?(?=[-\d(xy])/i, '').replace(/х/g, 'x').replace(/у/g, 'y'));
+      return r ? '**Решение системы:**\n\n' + r.steps.map(s => '- ' + s).join('\n') : null;
+    }
+    case 'equation': {
+      const src = wordsToNumbers(text).replace(/^.*?(?:реши(?:те)?|решение|найди x|уравнение)\s*:?\s*/i, '').replace(/х/g, 'x').replace(/[?!]+$/, '');
+      const r = solveEquation(src);
+      if (!r) return null;
+      let out = `**Уравнение:** ${src}\n\n` + r.steps.map((s, i) => `${i + 1}. ${s}`).join('\n');
+      if (r.note) out += '\n\n' + r.note;
+      if (r.roots && r.roots.length) out += `\n\n**Ответ:** ${r.roots.map(x => 'x = ' + fmt(x)).join('; ')}`;
+      return out;
+    }
+    case 'deriv': {
+      const src = wordsToNumbers(text).replace(/^.*?(производн[а-я]*|derivative)\s*(от|функции|of)?\s*:?\s*/i, '').replace(/^(y|f\(x\))\s*=\s*/i, '').replace(/[?!]+$/, '');
+      const ast = parse(src);
+      if (!ast) return null;
+      const d = deriv(ast);
+      if (!d) return 'Эту функцию я пока не умею дифференцировать — попробуй записать её через x, +, −, ·, /, ^, sin, cos, ln, exp, sqrt.';
+      const dd = deriv(d);
+      return `**f(x) = ${show(ast)}**\n\n**f′(x) = ${show(d)}**` + (dd ? `\n\nВторая производная: f″(x) = ${show(dd)}` : '') +
+        `\n\nПроверка в точке x = 1: f′(1) = ${fmt(evalAst(d, 1), 6)}` + `\n\n_Правила: (xⁿ)′ = n·xⁿ⁻¹, (uv)′ = u′v + uv′, (u/v)′ = (u′v − uv′)/v², (f(g))′ = f′(g)·g′._`;
+    }
+    case 'plot': {
+      const m = text.match(/(?:y|f\(x\))\s*=\s*([^,;\n]+?)(?:\s+(?:от|на|при|for)(?:\s.*)?)?$/i) || text.match(/график\s*(?:функции)?\s*:?\s*(.+?)(?:\s+(?:от|на|при)(?:\s.*)?)?$/i);
+      if (!m) return null;
+      const range = text.match(/от\s*(-?\d+(?:[.,]\d+)?)\s*до\s*(-?\d+(?:[.,]\d+)?)/);
+      const from = range ? parseFloat(range[1].replace(',', '.')) : -10, to = range ? parseFloat(range[2].replace(',', '.')) : 10;
+      const r = plotFunction(wordsToNumbers(m[1]).replace(/х/g, 'x'), from, to);
+      if (!r) return null;
+      return `**График функции y = ${show(r.ast)}** (x от ${from} до ${to})\n\n` + svgBlock(r.svg) +
+        (r.roots.length ? `\n\nНули функции (пересечения с осью x): ${r.roots.map(x => fmt(x, 3)).join('; ')}.` : '\n\nНа этом отрезке график не пересекает ось x.') +
+        (isFinite(r.y0) ? ` Пересечение с осью y: (0; ${fmt(r.y0, 3)}).` : '');
+    }
+    case 'chart': {
+      const items = parseSeries(text);
+      if (items.length < 2) return 'Дай данные в формате: «диаграмма: яблоки 5, груши 3, сливы 7» — и я нарисую.';
+      const title = (text.match(/^(.*?)(?::|$)/) || [])[1].replace(/(построй|нарисуй|сделай|покажи|круговую|столбчатую|диаграмму|гистограмму)/gi, '').trim();
+      const pie = /кругов|pie|доли|процент/.test(t);
+      const sum = items.reduce((s, i) => s + i.v, 0);
+      return (pie ? '**Круговая диаграмма**' : '**Столбчатая диаграмма**') + '\n\n' + svgBlock(pie ? pieChart(items, cap(title)) : barChart(items, cap(title))) +
+        `\n\nВсего: ${fmt(sum)}, среднее: ${fmt(sum / items.length, 2)}, максимум: ${items.reduce((a, b) => b.v > a.v ? b : a).label}.`;
+    }
+    case 'calc': {
+      const raw = exprFrom(text);
+      let m = norm(raw).match(/(\d+(?:[.,]\d+)?)\s*%\s*(?:от|of)\s*(\d+(?:[.,]\d+)?)/);
+      if (m) { const p = parseFloat(m[1].replace(',', '.')), v = parseFloat(m[2].replace(',', '.')); return `**${fmt(p)}% от ${fmt(v)} = ${fmt(v * p / 100)}**\n\nРасчёт: ${fmt(v)} × ${fmt(p)} / 100.`; }
+      m = norm(raw).match(/(\d+(?:[.,]\d+)?)\s*(?:увелич|\+)[а-я]*\s*(?:на)?\s*(\d+(?:[.,]\d+)?)\s*%/);
+      if (m) { const v = parseFloat(m[1].replace(',', '.')), p = parseFloat(m[2].replace(',', '.')); return `**${fmt(v)} + ${fmt(p)}% = ${fmt(v * (1 + p / 100))}**`; }
+      m = norm(raw).match(/(\d+(?:[.,]\d+)?)\s*(?:уменьш|скидк|-)[а-я]*\s*(?:на)?\s*(\d+(?:[.,]\d+)?)\s*%/);
+      if (m) { const v = parseFloat(m[1].replace(',', '.')), p = parseFloat(m[2].replace(',', '.')); return `**${fmt(v)} − ${fmt(p)}% = ${fmt(v * (1 - p / 100))}** (экономия ${fmt(v * p / 100)})`; }
+      m = norm(raw).match(/корень (?:из|квадратный из)?\s*(\d+(?:[.,]\d+)?)/);
+      if (m) { const v = parseFloat(m[1].replace(',', '.')); return `**√${fmt(v)} = ${fmt(Math.sqrt(v), 8)}**`; }
+      const ast = parse(raw);
+      if (!ast || hasVar(ast)) return null;
+      const v = evalAst(ast);
+      if (typeof v !== 'number' || isNaN(v)) return null;
+      const fr = !Number.isInteger(v) && isFinite(v) ? toFraction(v) : null;
+      return `**${show(ast)} = ${fmt(v, 10)}**` + (fr && fr[1] > 1 && fr[1] < 1000 ? ` (= ${fr[0]}/${fr[1]})` : '') + (!isFinite(v) ? '\n\nДеление на ноль не определено.' : '');
+    }
+    case 'numbers': {
+      const n = numbersIn(text);
+      if (/прост/.test(t) && n.length) { const x = n[0]; return isPrime(x) ? `**${fmt(x)} — простое число** ✅ (делится только на 1 и на себя).` : `**${fmt(x)} — составное число.** Разложение: ${factorize(x).join(' · ')}.`; }
+      if (/разлож|множител/.test(t) && n.length) return `**${fmt(n[0])} = ${factorize(n[0]).join(' · ')}**`;
+      if (/нод/.test(t) && n.length >= 2) return `**НОД(${n.join(', ')}) = ${n.reduce(gcd)}**`;
+      if (/нок/.test(t) && n.length >= 2) return `**НОК(${n.join(', ')}) = ${n.reduce(lcm)}**`;
+      if (/делител/.test(t) && n.length) { const x = n[0], d = []; for (let i = 1; i <= Math.sqrt(x); i++) if (x % i === 0) { d.push(i); if (i !== x / i) d.push(x / i); } return `Делители ${fmt(x)}: ${d.sort((a, b) => a - b).join(', ')} (всего ${d.length}).`; }
+      if (/пропись/.test(t) && n.length) { const w = numToWords(n[0]); return w ? `**${fmt(n[0])}** — ${w}.` : null; }
+      if (/римск/.test(t)) { const r = text.match(/\b[IVXLCDM]+\b/); if (r) return `**${r[0]} = ${fromRoman(r[0])}**`; if (n.length) return `**${fmt(n[0])} = ${toRoman(n[0]) || 'не записывается римскими цифрами (1–3999)'}**`; }
+      if (/двоичн/.test(t) && n.length) return `**${n[0]}₁₀ = ${Math.trunc(n[0]).toString(2)}₂**`;
+      if (/шестнадцат/.test(t) && n.length) return `**${n[0]}₁₀ = ${Math.trunc(n[0]).toString(16).toUpperCase()}₁₆**`;
+      if (/средн|медиан/.test(t) && n.length >= 2) { const s = stats(n); return `Для чисел ${n.join(', ')}:\n- среднее: **${fmt(s.mean, 4)}**\n- медиана: **${fmt(s.med, 4)}**\n- сумма: ${fmt(s.sum)}, мин: ${fmt(s.min)}, макс: ${fmt(s.max)}\n- стандартное отклонение: ${fmt(s.sd, 4)}` + (s.mode.length ? `\n- мода: ${s.mode.join(', ')}` : ''); }
+      return null;
+    }
+    case 'plan': {
+      const r = floorPlan(text);
+      return r ? `**План помещения** — общая площадь ${fmt(r.total, 1)} м²\n\n${svgBlock(r.svg)}\n\n${r.table}\n\n_Можно задать комнаты точно: «план: кухня 3x4, спальня 4x4, ванная 2x2, коридор 2x5»._` : null;
+    }
+    case 'part': {
+      const r = partDrawing(text);
+      return r ? `**Чертёж детали** ${fmt(r.W)}×${fmt(r.H)} ${r.unit}${r.holes ? `, ${r.holes} ${plural(r.holes, 'отверстие', 'отверстия', 'отверстий')} ⌀${fmt(r.d)}` : ''}\n\n${svgBlock(r.svg)}\n\nПлощадь пластины: ${fmt(r.W * r.H - r.holes * Math.PI * r.d * r.d / 4, 2)} ${r.unit}² (с учётом отверстий).` : null;
+    }
+    case 'shape': {
+      const r = shapeDrawing(text);
+      if (!r) return null;
+      return r.error || `${svgBlock(r.svg)}\n\n${r.info}`;
+    }
+    case 'flow': { const f = flowchart(text); return f ? `**Схема**\n\n\`\`\`mermaid\n${f}\n\`\`\`` : null; }
+    case 'logo': return `**Логотип** — нажми ⬇ PNG или ⬇ SVG, чтобы скачать\n\n${svgBlock(logo(text))}`;
+    case 'game': { const g = makeGame(text); return `**Игра «${g.name}»** — нажми «▶ Открыть сайт», чтобы поиграть\n\n\`\`\`html\n${g.html}\n\`\`\``; }
+    case 'site': {
+      if (/игр/.test(t) && !/сайт/.test(t)) return null;
+      const s = makeSite(text);
+      return `**Сайт «${s.name}»** (${s.theme.name.toLowerCase()}) — нажми «▶ Открыть сайт», чтобы посмотреть, или «⬇ .html», чтобы скачать\n\n\`\`\`html\n${s.html}\n\`\`\`\n\nВнутри: меню (с бургером на телефоне), главный экран, преимущества, ${s.theme.menuTitle.toLowerCase()}, форма с проверкой и плавная анимация. Чтобы сайт открывался по ссылке — загрузи файл как index.html на GitHub Pages.` +
+        (s.theme.id === 'generic' ? '\n\n_Подскажи тематику (кофейня, магазин, портфолио, фитнес, школа, салон, IT) — подберу тексты и цвета под неё._' : '');
+    }
+    case 'translate': {
+      const one = text.match(/как (?:будет|сказать|перевести)\s+[«"]?([а-яёa-z-]+)[»"]?\s+(?:на|по-)/i);
+      if (one) { const w = lookupWord(one[1]); if (w) return `**${cap(w.ru)}** → **${w.en}**`; }
+      const r = translateText(text, targetLang(text));
+      if (!r) return 'Напиши текст после двоеточия, например: «переведи: я люблю читать книги».';
+      if (!r.out) return r.note;
+      return `**${r.to === 'en' ? 'English' : 'Русский'}:** ${r.out}` + (r.unknown.length ? `\n\n_Слов ${r.unknown.map(w => '«' + w + '»').join(', ')} нет в моём офлайн-словаре — ${r.to === 'en' ? 'записал их транслитом' : 'оставил как есть'}. Для точного литературного перевода подключи нейросеть._` : '\n\n_Перевод сделан по офлайн-словарю Swarmind Core: сложные фразы проверяй с нейросетью._');
+    }
+    case 'essay': {
+      const e = writeEssay(text);
+      return e || `Пока у меня есть готовые аргументы по темам: ${Object.keys(ESSAY_BANK).join(', ')}. Напиши, например: «сочинение на тему дружбы для 8 класса». Для любых других тем подключи нейросеть — она напишет сочинение с нуля.`;
+    }
+    case 'code': return codeAnswer(text);
+    case 'know': return knowledge(text);
+  }
+  return null;
+}
+
+/* «потоковая» выдача — как у больших нейросетей, по кусочкам */
+async function stream(text, onText, signal, ctx) {
+  const full = answer(text, ctx);
+  const parts = full.match(/[\s\S]{1,48}/g) || [full];
+  let out = '';
+  for (const p of parts) {
+    if (signal && signal.aborted) throw new DOMException('Остановлено', 'AbortError');
+    out += p; onText(out);
+    if (!/```/.test(out) || parts.length < 40) await new Promise(r => setTimeout(r, 8));
+  }
+  return full;
+}
+
+Object.assign(SC, {answer, stream, smallTalk, codeAnswer, runSkill, HELP_FOOTER});
+})();
+</script>
 <script>
 'use strict';
 /* =====================================================================
@@ -542,10 +2589,11 @@ const PRESETS = [
   {id:'groq', kind:'openai', name:'Groq — очень быстрый', short:'Groq', conc:3, base:'https://api.groq.com/openai/v1', tags:[['бесплатно','']], blurb:'Бесплатный тариф с лимитами в минуту и в день.', keyUrl:'https://console.groq.com/keys', prefer:[/gpt-oss-120b/i, /llama-3\.3-70b/i, /kimi/i, /qwen/i, /llama/i]},
   {id:'gemini', kind:'openai', name:'Google Gemini', short:'Gemini', conc:3, base:'https://generativelanguage.googleapis.com/v1beta/openai', tags:[['бесплатно','']], blurb:'Бесплатный тариф с лимитами.', keyUrl:'https://aistudio.google.com/apikey', prefer:[/^gemini-[\d.]+-flash$/i, /flash$/i, /gemini/i]},
   {id:'anthropic', kind:'anthropic', name:'Claude (Anthropic)', short:'Claude', conc:4, base:'https://api.anthropic.com/v1', model:'claude-opus-5-5', models:['claude-opus-5-5','claude-sonnet-5-5','claude-haiku-5-5','claude-fable-5-1'], tags:[['топ по уму','']], blurb:'Одни из самых умных моделей. Оплата за использование.', keyUrl:'https://console.anthropic.com/settings/keys', prefer:[/opus-5-5/, /opus/, /sonnet/]},
-  {id:'openai', kind:'openai', name:'OpenAI (GPT)', short:'OpenAI', conc:4, base:'https://api.openai.com/v1', tags:[], blurb:'Модели GPT. Оплата за использование.', keyUrl:'https://platform.openai.com/api-keys', prefer:[/^gpt-5(\.\d+)?$/, /^gpt-4\.1$/, /^gpt-4o$/]},
+  {id:'openai', kind:'openai', name:'OpenAI (GPT)', short:'OpenAI', conc:4, noBrowser:true, base:'https://api.openai.com/v1', tags:[['⚠️ из браузера часто не работает','']], blurb:'Модели GPT. Оплата за использование. Надёжнее подключать GPT через OpenRouter.', keyUrl:'https://platform.openai.com/api-keys', prefer:[/^gpt-5(\.\d+)?$/, /^gpt-4\.1$/, /^gpt-4o$/]},
   {id:'deepseek', kind:'openai', name:'DeepSeek', short:'DeepSeek', conc:4, base:'https://api.deepseek.com/v1', model:'deepseek-chat', models:['deepseek-chat','deepseek-reasoner'], tags:[['дёшево','']], blurb:'Сильные модели за копейки.', keyUrl:'https://platform.deepseek.com/api_keys',
    note:'Если браузер не пускает запросы к DeepSeek напрямую — подключи DeepSeek через OpenRouter.'},
   {id:'custom', kind:'openai', name:'Свой сервер (OpenAI-совместимый)', short:'Свой ИИ', conc:2, base:'', optKey:true, showBase:true, tags:[], blurb:'Mistral, Together, vLLM, LocalAI и любой другой.'},
+  {id:'core', kind:'core', name:'🧠 Swarmind Core — наш собственный движок', short:'Swarmind Core', conc:8, noKey:true, tags:[['свой код','g'],['без интернета','g'],['мгновенно','g']], blurb:'Написан с нуля: математика, чертежи, графики, сайты, переводчик, сочинения, код, рецепты, деньги. Работает всегда и отвечает, когда облачные ИИ недоступны.'},
 ];
 const P = Object.fromEntries(PRESETS.map(p => [p.id, p]));
 
@@ -821,8 +2869,8 @@ const EXAMPLES = [
 const defaultAgents = () => DEFAULT_AGENTS.map(a => ({...a, on:true, provider:'', model:''}));
 function defaultSettings() {
   const providers = {};
-  for (const p of PRESETS) providers[p.id] = {on:false, key:'', base:p.base || '', model:p.model || ''};
-  return {v:3, providers, main:'', mode:'smart', fastProvider:'', profile:{}, memory:[], learn:true, critic:0, maxAgents:3, fallback:true, effort:'medium', speak:false, voiceSend:true, council:[], agents:defaultAgents()};
+  for (const p of PRESETS) providers[p.id] = {on:p.id === 'core', key:'', base:p.base || '', model:p.model || ''};
+  return {v:4, providers, main:'', mode:'smart', fastProvider:'', profile:{}, memory:[], learn:true, critic:0, maxAgents:3, fallback:true, effort:'medium', speak:false, voiceSend:true, council:[], agents:defaultAgents()};
 }
 function mergeSettings(s) {
   const d = defaultSettings();
@@ -839,6 +2887,8 @@ function mergeSettings(s) {
   if ((s.v || 1) < 2) { out.critic = 0; out.maxAgents = Math.min(+out.maxAgents || 3, 3); out.effort = 'medium'; out.v = 2; }
   /* v3: уровни ума вместо режимов; по умолчанию — «Средний» */
   if ((s.v || 1) < 3) { out.mode = out.mode === 'council' ? 'council' : 'smart'; out.v = 3; }
+  /* v4: появился свой движок Swarmind Core — включаем всем */
+  if ((s.v || 1) < 4) { out.providers.core.on = true; out.v = 4; }
   if (!['fast', 'smart', 'team', 'council'].includes(out.mode)) out.mode = 'smart';
   return out;
 }
@@ -851,12 +2901,16 @@ function isReady(id) {
   const p = P[id], c = S.providers[id];
   if (!p || !c || !c.on) return false;
   if (p.kind === 'webllm') return true;
+  if (p.kind === 'core') return !!window.SwarmCore;
   if (!c.base) return false;
   if (!p.noKey && !p.optKey && !c.key) return false;
   return !!c.model;
 }
 const readyList = () => PRESETS.map(p => p.id).filter(isReady);
-const mainProvider = () => isReady(S.main) ? S.main : (readyList()[0] || '');
+/* нейросети (без нашего движка) — для команды, консилиума и запасного переключения */
+const aiList = () => readyList().filter(id => P[id].kind !== 'core');
+const mainProvider = () => isReady(S.main) ? S.main : (aiList()[0] || (isReady('core') ? 'core' : ''));
+const coreOn = () => isReady('core');
 const modelOf = id => (S.providers[id] && S.providers[id].model) || (id === 'webllm' ? wl.model : '') || '';
 const shortModel = m => String(m || '').split('/').pop().replace(/-q4f(16|32)_\d-MLC$/, '');
 const provLabel = (id, m) => id === 'webllm' ? 'Swarmind ' + (MIND[m || 'mind'] ? MIND[m || 'mind'].name : 'Mind · ' + shortModel(m)) : P[id].short + (m ? ' · ' + shortModel(m) : '');
@@ -905,18 +2959,30 @@ async function readSSE(res, onData) {
 async function httpError(res, who) {
   let t = ''; try { t = await res.text(); } catch (e) {}
   let msg = t;
-  try { const j = JSON.parse(t); msg = (j.error && (j.error.message || j.error)) || j.message || t; } catch (e) {}
+  try { let j = JSON.parse(t); if (Array.isArray(j)) j = j[0] || {}; msg = (j.error && (j.error.message || j.error)) || j.message || j.detail || t; } catch (e) {}
   if (typeof msg !== 'string') msg = JSON.stringify(msg);
-  const hints = {400:'неверный запрос (проверь название модели)', 401:'неверный ключ', 402:'закончились деньги на счёте', 403:'доступ запрещён', 404:'модель или адрес не найдены', 413:'слишком длинный запрос', 429:'лимит запросов исчерпан', 500:'ошибка на стороне сервиса', 503:'сервис перегружен'};
-  const e = new Error(`${who}: ошибка ${res.status}${hints[res.status] ? ' — ' + hints[res.status] : ''}. ${String(msg).slice(0, 260)}`);
-  e.status = res.status; e.retryAfter = +(res.headers.get('retry-after') || 0) || 0; return e;
+  /* понятная причина по тексту ошибки — коды у сервисов разные (Gemini, например, на плохой ключ отвечает 400) */
+  let why = '', kind = '';
+  if (/location is not supported|unsupported_country|country,? region,? or territory|not available in your (country|region)|region.{0,20}not supported|geo.?restrict/i.test(msg)) { why = 'сервис не работает в твоей стране/регионе. Включи VPN или выбери то, что работает везде: OpenRouter, DeepSeek, Swarmind Mind или Swarmind Core'; kind = 'region'; }
+  else if (/api.?key|invalid.{0,12}key|incorrect.{0,12}key|authenticat|unauthori[sz]ed|permission_denied|missing.{0,20}(auth|bearer)/i.test(msg) || res.status === 401) { why = 'ключ не подходит. Проверь, что скопировал его целиком и вставил в карточку именно этого сервиса'; kind = 'key'; }
+  else if (res.status === 429 && /per.?day|daily|quota|requests per day|RPD|free.{0,20}(tier|limit)|exceeded your current quota/i.test(msg)) { why = 'дневной бесплатный лимит закончился. Он обновится завтра — пока подключи ещё одну нейросеть или переключись на «⚡ Быстрый» и Swarmind Core'; kind = 'quota'; }
+  else if (res.status === 429) { why = 'слишком много запросов подряд. Подожди минуту или выбери уровень «🧠 Средний» — он тратит меньше запросов'; kind = 'rate'; }
+  else if (res.status === 402 || /insufficient.{0,20}(balance|funds|credit)|billing|payment required/i.test(msg)) { why = 'закончились деньги на счёте сервиса'; kind = 'money'; }
+  else if (res.status === 404 || /model.{0,40}(not found|does not exist|no longer available|not supported)/i.test(msg)) { why = 'модель не найдена — нажми «Список» в карточке и выбери другую'; kind = 'model'; }
+  else if (res.status === 403) { why = 'доступ запрещён (часто — из-за страны или ключа без прав)'; kind = 'region'; }
+  else if (res.status >= 500) { why = 'сервис сейчас перегружен или сломался — попробуй чуть позже'; kind = 'server'; }
+  else if (res.status === 400) { why = 'сервис не принял запрос — проверь ключ и название модели'; kind = 'bad'; }
+  const e = new Error(`${who}: ${why || 'ошибка ' + res.status}. (${res.status}: ${String(msg).replace(/\s+/g, ' ').slice(0, 200)})`);
+  e.status = res.status; e.kind = kind; e.retryAfter = +(res.headers.get('retry-after') || 0) || 0; return e;
 }
 function netError(e, id) {
   if (e && e.name === 'AbortError') return e;
   const p = P[id];
-  return new Error(`${p.short}: нет связи. ` + (p.local
+  const err = new Error(`${p.short}: нет связи. ` + (p.local
     ? 'Проверь, что программа запущена и сайту разрешён доступ (CORS) — подсказка в «Настройки → Нейросети».'
-    : 'Проверь интернет. Если сервис не пускает запросы из браузера — подключи эту модель через OpenRouter.'));
+    : p.noBrowser ? 'Этот сервис не пускает запросы прямо из браузера. Подключи эти же модели через OpenRouter — там они работают.'
+    : 'Проверь интернет и VPN (сервис может быть заблокирован в твоей стране). Если не помогает — подключи эту модель через OpenRouter.'));
+  err.kind = 'net'; return err;
 }
 
 async function callOpenAI(id, model, system, messages, signal, onText) {
@@ -932,7 +2998,10 @@ async function callOpenAI(id, model, system, messages, signal, onText) {
     catch (e) { throw netError(e, id); }
   };
   let res = await post();
-  if (!res.ok && res.status === 400 && body.reasoning_effort) { delete body.reasoning_effort; res = await post(); }
+  if (!res.ok && res.status === 400 && body.reasoning_effort) {
+    const t = await res.clone().text().catch(() => '');
+    if (!/api.?key|location|region|country/i.test(t)) { delete body.reasoning_effort; res = await post(); }
+  }
   if (!res.ok) throw await httpError(res, p.short);
   let full = '';
   await readSSE(res, j => {
@@ -1033,16 +3102,24 @@ async function callWebLLM(id, model, system, messages, signal, onText, onMeta) {
   } finally { if (signal) signal.removeEventListener('abort', onAbort); }
 }
 
+/* --- Swarmind Core: наш движок (код выше, в отдельном <script>) --- */
+const coreCtx = () => ({name:(S.profile && S.profile.name) || ''});
+function callCore(messages, signal, onText) {
+  const last = [...messages].reverse().find(m => m.role === 'user');
+  const q = curQ || (last && last.content) || '';
+  return window.SwarmCore.stream(q, onText, signal, coreCtx());
+}
 function doCall(id, model, system, messages, signal, onText, onMeta) {
   const k = P[id].kind;
   if (k === 'anthropic') return callAnthropic(id, model, system, messages, signal, onText);
   if (k === 'webllm') return callWebLLM(id, model, system, messages, signal, onText, onMeta);
+  if (k === 'core') return callCore(messages, signal, onText);
   return callOpenAI(id, model, system, messages, signal, onText);
 }
 /* Вызов с автопереключением на другой ИИ при ошибке/лимите */
 async function callLLM({provider, model, system, messages, signal, onText, onMeta, fallback = true}) {
   const order = [provider];
-  if (fallback && S.fallback) for (const id of readyList()) if (id !== provider && (P[id].kind !== 'webllm' || wl.engine)) order.push(id);
+  if (fallback && S.fallback) for (const id of aiList()) if (id !== provider && (P[id].kind !== 'webllm' || wl.engine)) order.push(id);
   let lastErr = null;
   for (const id of order) {
     if (!isReady(id)) continue;
@@ -1408,7 +3485,7 @@ async function runCouncil(am, v, q, hist, signal) {
   const tight = isTight();
   const ctx = historyText(hist, tight);
   let members = (S.council || []).filter(m => isReady(m.provider)).map(m => ({provider:m.provider, model:m.model || modelOf(m.provider)}));
-  if (!members.length) members = readyList().filter(id => P[id].kind !== 'webllm' || wl.engine || id === mainProvider()).slice(0, 5).map(id => ({provider:id, model:modelOf(id)}));
+  if (!members.length) members = aiList().filter(id => P[id].kind !== 'webllm' || wl.engine || id === mainProvider()).slice(0, 5).map(id => ({provider:id, model:modelOf(id)}));
   let jobs;
   if (members.length >= 2) {
     jobs = members.map(m => ({agent:{emoji:'🤖', name:P[m.provider].short}, provider:m.provider, model:m.model, system:SOLO_PROMPT + COMMON(), fallback:false}));
@@ -1506,13 +3583,14 @@ function renderThread() {
   stickBottom = true; scrollBottom(true);
 }
 function renderEmpty() {
-  const ready = readyList().length > 0;
+  const ready = aiList().length > 0, core = coreOn();
   const nm = (S.profile && S.profile.name) ? ', ' + esc(S.profile.name) : '';
+  const exHtml = `<div class="examples">${EXAMPLES.map(e => `<button class="ex" type="button" ${e.fill ? `data-fill="${esc(e.fill)}"` : `data-q="${esc(e.q)}"`}><b>${e.i} ${esc(e.t)}</b><span>${esc(e.q || e.fill + '…')}</span></button>`).join('')}</div>`;
   emptyEl.innerHTML = `<svg class="logo big-logo" viewBox="0 0 64 64" aria-hidden="true">${LOGO.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg><h1>Привет${nm}! Я Swarmind<span class="dotai">.ai</span></h1>` +
     `<p>Чертежи и схемы, сайты, переводы, сочинения, код, задачи, советы — и я подстраиваюсь под тебя. Выбери, с чего начнём, или просто напиши:</p>` +
-    (ready
-      ? `<div class="examples">${EXAMPLES.map(e => `<button class="ex" type="button" ${e.fill ? `data-fill="${esc(e.fill)}"` : `data-q="${esc(e.q)}"`}><b>${e.i} ${esc(e.t)}</b><span>${esc(e.q || e.fill + '…')}</span></button>`).join('')}</div>`
-      : `<div class="setup"><h3>Сначала подключи «мозг» — выбери вариант:</h3><div class="examples">
+    (ready ? exHtml
+      : (core ? `<p class="hint">🧠 Сейчас работает наш движок <b>Swarmind Core</b> — без интернета и ключей: задачи, чертежи, графики, сайты, перевод, сочинения, код. Для свободной беседы подключи нейросеть ниже.</p>` + exHtml : '') +
+        `<div class="setup"><h3>${core ? 'Хочешь умнее? Подключи нейросеть:' : 'Сначала подключи «мозг» — выбери вариант:'}</h3><div class="examples">
           <button class="ex" type="button" data-orlogin style="border-color:var(--acc);background:var(--acc-soft)"><b>⚡ В один клик — бесплатно</b><span>Войди через Google на OpenRouter — ключ и бесплатная умная модель подключатся сами. Ничего искать не нужно.</span></button>
           <button class="ex" type="button" data-setup="webllm"><b>🐝 Swarmind Mind — своя нейросеть</b><span>Бесплатно, без лимитов и ключей, работает даже без интернета. Три размера: Lite, Mind и Pro. Нужен ПК или мощный телефон.</span></button>
           <button class="ex" type="button" data-setup="ollama"><b>💻 Ollama на компьютере</b><span>Бесплатно и без лимитов. Мощные открытые модели на твоём ПК.</span></button>
@@ -1572,12 +3650,24 @@ async function runAssistant(chat) {
   try {
     runEffort = S.mode === 'fast' ? 'low' : S.mode === 'smart' ? 'medium' : '';
     curQ = chat.messages[uIdx].content || q;
-    if (S.mode === 'fast' || S.mode === 'smart') await runSolo(am, v, q, hist, ctrl.signal, S.mode);
+    /* если подключён только наш движок — команда и консилиум не нужны */
+    if ((P[mainProvider()] || {}).kind === 'core' || S.mode === 'fast' || S.mode === 'smart') await runSolo(am, v, q, hist, ctrl.signal, S.mode);
     else if (S.mode === 'council') await runCouncil(am, v, q, hist, ctrl.signal);
     else await runTeam(am, v, q, hist, ctrl.signal);
     am.content = stripThink(am.content).trim();
   } catch (e) {
     if (ctrl.signal.aborted) am.stopped = true;
+    else if (coreOn() && (P[mainProvider()] || {}).kind !== 'core') {
+      /* облачные ИИ не ответили (лимит, страна, ключ) — отвечает наш движок, чтобы чат не оставался пустым */
+      console.error(e);
+      const why = String((e && e.message) || e).replace(/\s*\(\d{3}:[\s\S]*$/, '');
+      try {
+        const r = window.SwarmCore.answer(curQ || q, coreCtx());
+        learn(r);
+        am.content = `> ⚠️ ${why}\n>\n> Пока облачный ИИ недоступен, ответил наш движок **Swarmind Core**.\n\n` + stripThink(r).trim();
+        am.via = 'Swarmind Core (запасной)';
+      } catch (e2) { am.error = (e && e.message) || String(e); }
+    }
     else { am.error = (e && e.message) || String(e); console.error(e); }
   } finally {
     for (const st of am.steps) if (st.status === 'run') { st.status = ctrl.signal.aborted ? 'stop' : 'err'; v.touch(st); }
@@ -1640,11 +3730,22 @@ function tabBrains() {
   return `<label class="field"><span>Главный ИИ — им пользуются все агенты, если не указано иное</span><select data-k="main"></select></label>
   <p class="hint" style="margin:0">Можно включить несколько: если один ИИ не ответит или упрётся в лимит, Swarmind сам переключится на другой. В режиме «Консилиум» они отвечают все вместе.</p>` + PRESETS.map(provCard).join('');
 }
+/* частая ошибка — ключ от одного сервиса вставлен в другой; распознаём по началу ключа */
+const KEY_FMT = {openrouter:[/^sk-or-/, 'sk-or-'], groq:[/^gsk_/, 'gsk_'], gemini:[/^AIza/, 'AIza'], anthropic:[/^sk-ant-/, 'sk-ant-'], openai:[/^sk-(?!ant-|or-)/, 'sk-'], deepseek:[/^sk-(?!ant-|or-|proj-)/, 'sk-']};
+function keyWarn(id, key) {
+  key = String(key || '').trim();
+  if (!key || !KEY_FMT[id]) return '';
+  if (/\s/.test(key)) return '<span class="err">⚠️ В ключе есть пробел или перенос строки — скопируй ключ заново, целиком.</span>';
+  if (KEY_FMT[id][0].test(key)) return '<span class="ok">✓ Похоже на правильный ключ ' + esc(P[id].short) + '</span>';
+  const other = Object.keys(KEY_FMT).find(k => k !== id && KEY_FMT[k][0].test(key) && !['openai', 'deepseek'].includes(k));
+  return `<span class="err">⚠️ Ключ ${esc(P[id].short)} обычно начинается с «${KEY_FMT[id][1]}».${other ? ` Похоже, это ключ <b>${esc(P[other].short)}</b> — вставь его в карточку ${esc(P[other].short)}.` : ' Проверь, что скопировал нужный ключ.'}</span>`;
+}
 function provCard(p) {
   const c = S.providers[p.id], ok = isReady(p.id);
   return `<div class="card prov${c.on ? ' on' : ''}" data-id="${p.id}"><div class="card-h"><label class="sw" title="Включить"><input type="checkbox" data-pk="on"${c.on ? ' checked' : ''}><span></span></label><div class="grow"><div class="pname">${esc(p.name)} ${p.tags.map(([t, cl]) => `<span class="tag ${cl}">${esc(t)}</span>`).join(' ')}</div><div class="hint">${esc(p.blurb)}</div></div><span class="dot${c.on ? (ok ? ' ok' : ' err') : ''}" title="${ok ? 'Готов к работе' : 'Не настроен'}"></span></div>${c.on ? `<div class="card-b">${provBody(p, c)}</div>` : ''}</div>`;
 }
 function provBody(p, c) {
+  if (p.kind === 'core') return `<div class="note">✅ Готов к работе. Ничего настраивать не нужно: движок встроен прямо в Swarmind и работает даже без интернета.<br>Если облачные нейросети не отвечают (лимит, страна, ключ), Swarmind Core ответит вместо них.</div>`;
   let h = (p.note && !GUIDES[p.id] ? `<div class="note">${p.note}</div>` : '') + guideHtml(p, c);
   if (p.kind === 'webllm') {
     if (!('gpu' in navigator)) h += '<div class="note warn">⚠️ Этот браузер не поддерживает WebGPU — Swarmind Mind здесь не запустится. Открой Swarmind в Chrome или Edge, либо выбери Ollama или ключ.</div>';
@@ -1653,13 +3754,13 @@ function provBody(p, c) {
   }
   if (p.id === 'openrouter') h += `<button class="btn primary" data-orlogin type="button">⚡ Подключить автоматически — без поиска ключа</button><div class="hint">Откроется OpenRouter: войди через Google — ключ и бесплатная модель настроятся сами. Ниже — ручной способ, если нужно.</div>`;
   if (p.local || p.showBase) h += `<label class="field"><span>Адрес сервера</span><input data-pk="base" value="${esc(c.base)}" placeholder="https://адрес/v1" spellcheck="false" autocomplete="off"></label>`;
-  if (!p.noKey) h += `<label class="field"><span>API-ключ${p.optKey ? ' (если нужен)' : ''}${p.keyUrl ? ` · <a href="${p.keyUrl}" target="_blank" rel="noopener">получить ключ ↗</a>` : ''}</span><input type="password" data-pk="key" value="${esc(c.key)}" placeholder="вставь ключ сюда" spellcheck="false" autocomplete="off"></label>`;
+  if (!p.noKey) h += `<label class="field"><span>API-ключ${p.optKey ? ' (если нужен)' : ''}${p.keyUrl ? ` · <a href="${p.keyUrl}" target="_blank" rel="noopener">получить ключ ↗</a>` : ''}</span><input type="password" data-pk="key" value="${esc(c.key)}" placeholder="вставь ключ сюда" spellcheck="false" autocomplete="off"></label><div class="key-warn hint">${keyWarn(p.id, c.key)}</div>`;
   else if (p.keyUrl) h += `<div class="hint"><a href="${p.keyUrl}" target="_blank" rel="noopener">${esc(p.keyText || 'Сайт')} ↗</a></div>`;
   return h + `<div class="field"><span>Модель</span><div class="row"><input data-pk="model" list="dl-${p.id}" value="${esc(c.model)}" placeholder="нажми «Список» или впиши название" spellcheck="false" autocomplete="off"><button class="btn small" data-act="models" type="button">Список</button></div><datalist id="dl-${p.id}">${(p.models || []).map(m => `<option value="${esc(m)}"></option>`).join('')}</datalist><div class="pick"></div></div>
     <div class="row wrap"><button class="btn small primary" data-act="test" type="button">Проверить связь</button></div><div class="test-out hint"></div>`;
 }
 function tabAgents() {
-  const provOpts = a => '<option value="">Главный ИИ</option>' + PRESETS.filter(p => S.providers[p.id].on).map(p => `<option value="${p.id}"${a.provider === p.id ? ' selected' : ''}>${esc(p.short)}</option>`).join('');
+  const provOpts = a => '<option value="">Главный ИИ</option>' + PRESETS.filter(p => S.providers[p.id].on && p.kind !== 'core').map(p => `<option value="${p.id}"${a.provider === p.id ? ' selected' : ''}>${esc(p.short)}</option>`).join('');
   return '<p class="hint" style="margin:0">Агенты работают на уровне «🚀 Максимум» — это роли в команде. Меняй их инструкции, отключай лишних, добавляй своих и назначай каждому свой ИИ (например: Редактор и Критик — Claude, остальные — бесплатная модель).</p>' +
     S.agents.map(a => `<details class="card agent" data-id="${esc(a.id)}"><summary class="card-h"><span class="ag-e">${esc(a.emoji)}</span><div class="grow"><b class="ag-n">${esc(a.name)}</b>${a.core ? ' <span class="tag">ядро</span>' : ''}${a.on === false ? ' <span class="tag off">выключен</span>' : ''}<div class="hint">${esc(a.desc || '')}</div></div><span class="hint">${a.provider && S.providers[a.provider] && S.providers[a.provider].on ? esc(P[a.provider].short) : ''}</span><span class="chev">⌄</span></summary><div class="card-b">
       ${a.core ? '' : `<label class="row-check"><span class="sw"><input type="checkbox" data-ak="on"${a.on !== false ? ' checked' : ''}><span></span></span>Агент включён</label>`}
@@ -1761,7 +3862,11 @@ dlgBody.addEventListener('input', e => {
   if (t.type === 'checkbox' || t.tagName === 'SELECT') return;
   const prov = t.closest('.prov'), ag = t.closest('.agent'), mem = t.closest('.member');
   if (t.dataset.pf) { S.profile = {...(S.profile || {}), [t.dataset.pf]:t.value}; saveSoon(); return; }
-  if (prov && t.dataset.pk) { S.providers[prov.dataset.id][t.dataset.pk] = t.value.trim(); saveSoon(); updateDot(prov); return; }
+  if (prov && t.dataset.pk) {
+    S.providers[prov.dataset.id][t.dataset.pk] = t.value.trim(); saveSoon(); updateDot(prov);
+    if (t.dataset.pk === 'key') { const w = $('.key-warn', prov); if (w) w.innerHTML = keyWarn(prov.dataset.id, t.value); }
+    return;
+  }
   if (ag && t.dataset.ak) {
     const a = S.agents.find(x => x.id === ag.dataset.id); if (!a) return;
     a[t.dataset.ak] = t.value; saveSoon();
